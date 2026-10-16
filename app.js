@@ -91,7 +91,9 @@ async function bootTerminal() {
   await wait(260);
   await typeLine("DevQuiz Terminal v1.0.0", "terminal-line brand-line", 28);
   addLine("Java fundamentals challenge loaded.", "terminal-line muted-line");
-  addLine("Escribí code para ejercicios reales o quiz para volver al múltiple choice.", "terminal-line hint-line");
+  addLine("<span class=\"keyword\">code</span> → ejercicios Java reales disponibles:", "terminal-line hint-line");
+  addLine("<span class=\"option-key\">1.</span> Hello World   <span class=\"option-key\">2.</span> Variable   <span class=\"option-key\">3.</span> Concatenación   <span class=\"option-key\">4.</span> Suma", "terminal-line muted-line");
+  addLine("Escribí <strong>code</strong> para empezar o una opción A-D para el quiz múltiple choice.", "terminal-line hint-line");
   await wait(240);
   addLine("────────────────────────────────────────────", "terminal-line divider-line");
   terminalInput.disabled = false;
