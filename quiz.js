@@ -63,23 +63,48 @@ const questions = [
 ];
 
 // Ejercicios locales: el backend los compila y ejecuta como Main.java.
+// El marcador se selecciona automáticamente al cargar el ejercicio.
 const codeExercises = [
   {
-    title: "Hola, Java",
-    prompt: "Escribí un programa que imprima exactamente Hola, Java.",
+    title: "Hello World",
+    prompt: "Imprimí exactamente Hello World en la consola.",
+    expectedOutput: "Hello World",
     starter: `public class Main {
   public static void main(String[] args) {
-    // Escribí tu solución acá.
+    /* YOUR_CODE_HERE */
+  }
+}`
+  },
+  {
+    title: "Declarar una variable",
+    prompt: "Declará una variable llamada nombre con tu nombre e imprimila en la consola.",
+    expectedOutput: "Tu nombre",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    /* YOUR_CODE_HERE */
+  }
+}`
+  },
+  {
+    title: "Concatenar texto",
+    prompt: "Declará nombre y edad, y concatenalos para imprimir: Soy Ada y tengo 20 años.",
+    expectedOutput: "Soy Ada y tengo 20 años.",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    String nombre = "Ada";
+    int edad = 20;
+    /* YOUR_CODE_HERE */
   }
 }`
   },
   {
     title: "Suma simple",
-    prompt: "Completá el programa para imprimir la suma de 7 + 5.",
+    prompt: "Calculá e imprimí el resultado de sumar 7 + 5.",
+    expectedOutput: "12",
     starter: `public class Main {
   public static void main(String[] args) {
     int resultado = 7 + 5;
-    System.out.println(resultado);
+    /* YOUR_CODE_HERE */
   }
 }`
   }

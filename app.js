@@ -67,8 +67,18 @@ function printExercise() {
   updateStatus();
   addLine(`<span class="comment">// ejercicio ${currentExerciseIndex + 1} de ${codeExercises.length}: ${escapeHtml(exercise.title)}</span>`, "terminal-line question-comment");
   addLine(`<span class="hint">${escapeHtml(exercise.prompt)}</span>`, "terminal-line hint-line");
-  addLine("Editá el código y presioná Ctrl + Enter para ejecutar en el backend local.", "terminal-line muted-line");
+  addLine(`<span class="muted-line">Salida esperada: ${escapeHtml(exercise.expectedOutput)}</span>`, "terminal-line expected-output-line");
+  addLine("El cursor ya está ubicado en la respuesta. Escribí ahí y presioná Ctrl + Enter.", "terminal-line muted-line");
   terminalEditor.value = exercise.starter;
+  const answerMarker = "/* YOUR_CODE_HERE */";
+  const answerPosition = exercise.starter.indexOf(answerMarker);
+  if (answerPosition >= 0) {
+    terminalEditor.selectionStart = answerPosition;
+    terminalEditor.selectionEnd = answerPosition + answerMarker.length;
+  } else {
+    terminalEditor.selectionStart = terminalEditor.value.length;
+    terminalEditor.selectionEnd = terminalEditor.value.length;
+  }
   terminalInput.hidden = true;
   terminalEditor.hidden = false;
   terminalEditor.disabled = false;
