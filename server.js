@@ -6,6 +6,8 @@ const os = require("node:os");
 const path = require("node:path");
 const fs = require("node:fs/promises");
 const { spawn } = require("node:child_process");
+const { WebSocketServer } = require("ws");
+const { createBridge } = require("./lsp-bridge");
 
 const HOST = "127.0.0.1";
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
@@ -22,7 +24,20 @@ const CONTENT_TYPES = {
   "/index.html": "text/html; charset=utf-8",
   "/app.js": "text/javascript; charset=utf-8",
   "/quiz.js": "text/javascript; charset=utf-8",
+  "/editor-adapter.js": "text/javascript; charset=utf-8",
   "/styles.css": "text/css; charset=utf-8",
+};
+const VENDOR_ROOT = path.resolve(__dirname, "node_modules/monaco-editor/min/vs");
+const VENDOR_TYPES = {
+  ".css": "text/css; charset=utf-8",
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".map": "application/json; charset=utf-8",
+  ".svg": "image/svg+xml",
+  ".ttf": "font/ttf",
+  ".woff": "font/woff",
+  ".woff2": "font/woff2",
 };
 
 function jsonResponse(response, statusCode, payload) {
@@ -50,12 +65,14 @@ function readRequestBody(request) {
   return new Promise((resolve, reject) => {
     const chunks = [];
     let size = 0;
+    let tooLarge = false;
 
     request.on("data", (chunk) => {
+      if (tooLarge) return; // Drain the remaining body without buffering it, so the 413 can reach the client.
       size += chunk.length;
       if (size > MAX_BODY_BYTES) {
+        tooLarge = true;
         reject(Object.assign(new Error("request body is too large"), { code: "BODY_TOO_LARGE" }));
-        request.destroy();
         return;
       }
       chunks.push(chunk);
@@ -129,6 +146,7 @@ function runInDocker(directory, stdin) {
     let stdout = Buffer.alloc(0);
     let stderr = Buffer.alloc(0);
     let outputLimitExceeded = false;
+    let outputBytes = 0;
     let timedOut = false;
     let settled = false;
     let timeout;
@@ -141,13 +159,14 @@ function runInDocker(directory, stdin) {
     };
 
     const append = (current, chunk) => {
-      const next = Buffer.concat([current, chunk]);
-      if (next.length > MAX_OUTPUT_BYTES) {
+      if (outputLimitExceeded) return current;
+      outputBytes += chunk.length;
+      if (outputBytes > MAX_OUTPUT_BYTES) {
         outputLimitExceeded = true;
         child.kill("SIGKILL");
         return current;
       }
-      return next;
+      return Buffer.concat([current, chunk]);
     };
 
     child.stdout.on("data", (chunk) => { stdout = append(stdout, chunk); });
@@ -268,14 +287,27 @@ async function handleExecute(request, response) {
 }
 
 async function serveFrontend(request, response) {
-  const pathname = new URL(request.url, `http://${request.headers.host || `${HOST}:${PORT}`}`).pathname;
-  const contentType = CONTENT_TYPES[pathname];
+  let pathname;
+  try {
+    pathname = decodeURIComponent(new URL(request.url, `http://${request.headers.host || `${HOST}:${PORT}`}`).pathname);
+  } catch {
+    errorResponse(response, 400, "invalid_request", "invalid URL");
+    return;
+  }
+  const isVendor = pathname.startsWith("/vendor/vs/");
+  const contentType = isVendor ? VENDOR_TYPES[path.extname(pathname).toLowerCase()] : CONTENT_TYPES[pathname];
   if (!contentType) {
     errorResponse(response, 404, "not_found", "file not found");
     return;
   }
 
-  const filePath = path.join(PUBLIC_ROOT, pathname === "/" ? "index.html" : pathname.slice(1));
+  const root = isVendor ? VENDOR_ROOT : PUBLIC_ROOT;
+  const relativePath = isVendor ? pathname.slice("/vendor/vs/".length) : (pathname === "/" ? "index.html" : pathname.slice(1));
+  const filePath = path.resolve(root, relativePath);
+  if (filePath !== root && !filePath.startsWith(`${root}${path.sep}`)) {
+    errorResponse(response, 404, "not_found", "file not found");
+    return;
+  }
   try {
     const content = await fs.readFile(filePath);
     response.writeHead(200, {
@@ -288,6 +320,9 @@ async function serveFrontend(request, response) {
     errorResponse(response, 404, "not_found", "file not found");
   }
 }
+
+const lspBridge = createBridge({ port: PORT });
+const webSocketServer = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
 
 const server = http.createServer(async (request, response) => {
   if (request.method === "GET" && request.url === "/health") {
@@ -308,3 +343,24 @@ const server = http.createServer(async (request, response) => {
 server.listen(PORT, HOST, () => {
   console.log(`DevQuiz Java executor listening on http://${HOST}:${PORT}`);
 });
+
+server.on("upgrade", (request, socket, head) => {
+  const url = new URL(request.url, `http://${HOST}:${PORT}`);
+  const origin = request.headers.origin;
+  if (url.pathname !== "/lsp" || !lspBridge.originAllowed(origin)) {
+    socket.write("HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n");
+    socket.destroy();
+    return;
+  }
+  webSocketServer.handleUpgrade(request, socket, head, (webSocket) => {
+    webSocketServer.emit("connection", webSocket, request);
+    lspBridge.attach(webSocket).catch(() => webSocket.close());
+  });
+});
+
+async function shutdown() {
+  await lspBridge.close();
+  server.close(() => process.exit(0));
+}
+process.once("SIGTERM", shutdown);
+process.once("SIGINT", shutdown);
