@@ -13,9 +13,9 @@ Status: verified locally; delivery not published
 
 ## Tasks
 
-- T1 (S1) — Present only the active exercise and preserve answer focus and mode navigation — route: inline — commit: pending (frontend work unit)
-- T2 (S2-S5) — Install local free editor/JDT LS, bridge live diagnostics and semantic completion securely — route: bounded worker + inline fixes — commits: `30e07e7` (backend), pending (frontend)
-- T3 (S1-S5) — Test editor, completion, diagnostics, execution and existing quiz without network at runtime — route: inline + independent security verification — commit: pending (frontend work unit)
+- T1 (S1) — Present only the active exercise and preserve answer focus and mode navigation — route: inline — commit: `41ae4c3`
+- T2 (S2-S5) — Install local free editor/JDT LS, bridge live diagnostics and semantic completion securely — route: bounded worker + inline fixes — commits: `30e07e7` (backend), `41ae4c3` (frontend)
+- T3 (S1-S5) — Test editor, completion, diagnostics, execution and existing quiz without network at runtime — route: inline + independent security verification — commits: `30e07e7` (backend tests), `41ae4c3` (frontend tests)
 
 ## Log
 
