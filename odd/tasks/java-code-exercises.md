@@ -16,8 +16,8 @@ Status: implementation planned
 - T1 (S1-S4) — Add a local HTTP execution service with isolated Java compilation/runtime — commit: `3912c30`
 - T2 (S1-S4) — Add code-writing exercises and connect the terminal UI to the service — commits: `8568bbe`, `eb0bc86`
 - T3 (S1-S4) — Verify successful output, compilation errors, timeout behavior, and existing quiz flow — commit: `faac686` (backend/security verification passed; browser interaction remains manual)
-- T4 (S5) — Add ten progressive Java exercises and visible skip control — commit: pending (work unit: progressive exercises and navigation)
-- T5 (S5) — Run with Enter, advance or skip with focused answer marker, verify via local service — commit: pending (work unit: progressive exercises and navigation)
+- T4 (S5) — Add ten progressive Java exercises and visible skip control — commit: `09e6fff`
+- T5 (S5) — Run with Enter, advance or skip with focused answer marker, verify via local service — commit: `09e6fff`
 
 ## Log
 
