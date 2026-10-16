@@ -27,3 +27,4 @@ L6: Independent post-fix verification passed S1-S4: successful execution, compil
 L7: para ver si todo funciona bien, tienes que agregar mas ejercicios, por ejemplos el clásico de imprimir "Hello World" en la consola. Declarar una variable e imprimirla en consola, concatenar. Implementa esto para poder verificar los resultados. Además quiero que el cursos este automaticamente donde va la respuesta
 L8: Added four runnable output exercises and selection of the YOUR_CODE_HERE marker so the browser caret starts at the answer location.
 L9: no veo que se hayan implementado mas ejercicios. comprueba eso
+L10: el cursor intemitente debe de estar donde dice "tu respuesta" listo para introducir la letra o el codigo. para esto no es necesario volver a hacer clic ahi, ya tiene que estar el cursor por defecto en ese lugar
