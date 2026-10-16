@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="DevQuiz: quiz de Java para principiantes." />
+    <title>DevQuiz | Quiz de Java</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="site-header">
+        <p class="eyebrow">Aprendé jugando</p>
+        <h1>DevQuiz</h1>
+        <p class="subtitle">Poné a prueba tus conocimientos de Java básico.</p>
+      </header>
+
+      <section class="quiz-card" aria-labelledby="quiz-title">
+        <div class="quiz-topbar">
+          <div>
+            <p class="question-counter" id="question-counter">Pregunta 1 de 10</p>
+            <h2 id="quiz-title">Java básico</h2>
+          </div>
+          <span class="score-badge" id="score-badge">0 puntos</span>
+        </div>
+
+        <div class="progress-track" aria-label="Progreso del quiz">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div id="quiz-view">
+          <p class="question" id="question-text"></p>
+          <div class="answers" id="answers" role="group" aria-label="Opciones de respuesta"></div>
+
+          <aside class="feedback" id="feedback" aria-live="polite" hidden>
+            <h3 id="feedback-title"></h3>
+            <p id="feedback-text"></p>
+          </aside>
+
+          <button class="primary-button next-button" id="next-button" type="button" hidden>
+            Siguiente pregunta
+          </button>
+        </div>
+
+        <section class="results-view" id="results-view" aria-labelledby="results-title" hidden>
+          <p class="results-icon" aria-hidden="true">🎉</p>
+          <h2 id="results-title">¡Quiz terminado!</h2>
+          <p class="final-score" id="final-score"></p>
+          <p id="results-message"></p>
+          <button class="primary-button" id="restart-button" type="button">Volver a empezar</button>
+        </section>
+      </section>
+
+      <footer class="site-footer">
+        <p>Hecho para aprender los fundamentos de Java.</p>
+      </footer>
+    </main>
+
+    <script src="quiz.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
