@@ -1,5 +1,6 @@
 "use strict";
 
+const crypto = require("node:crypto");
 const http = require("node:http");
 const os = require("node:os");
 const path = require("node:path");
@@ -83,10 +84,11 @@ function validateRequest(value) {
   return null;
 }
 
-function dockerArgs(directory) {
+function dockerArgs(directory, containerName) {
   return [
     "run",
     "--rm",
+    "--name", containerName,
     "--network", "none",
     "--read-only",
     "--tmpfs", "/tmp:rw,noexec,nosuid,nodev,size=16m",
@@ -106,9 +108,21 @@ function dockerArgs(directory) {
   ];
 }
 
+function removeDockerContainer(containerName) {
+  return new Promise((resolve) => {
+    const cleanup = spawn("docker", ["rm", "-f", containerName], {
+      stdio: ["ignore", "ignore", "ignore"],
+      env: { PATH: process.env.PATH },
+    });
+    cleanup.on("error", () => resolve());
+    cleanup.on("close", () => resolve());
+  });
+}
+
 function runInDocker(directory, stdin) {
   return new Promise((resolve) => {
-    const child = spawn("docker", dockerArgs(directory), {
+    const containerName = `devquiz-java-${process.pid}-${crypto.randomUUID()}`;
+    const child = spawn("docker", dockerArgs(directory, containerName), {
       stdio: ["pipe", "pipe", "pipe"],
       env: { PATH: process.env.PATH },
     });
@@ -139,7 +153,8 @@ function runInDocker(directory, stdin) {
     child.stdout.on("data", (chunk) => { stdout = append(stdout, chunk); });
     child.stderr.on("data", (chunk) => { stderr = append(stderr, chunk); });
     child.on("error", (error) => finish({ kind: "spawn_error", error }));
-    child.on("close", (code, signal) => {
+    child.on("close", async (code, signal) => {
+      await removeDockerContainer(containerName);
       if (timedOut) return finish({ kind: "timeout" });
       if (outputLimitExceeded) return finish({ kind: "output_limit" });
       finish({
