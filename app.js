@@ -5,6 +5,7 @@ const terminalForm = document.querySelector("#terminal-form");
 const terminalInput = document.querySelector("#terminal-input");
 const terminalEditor = document.querySelector("#terminal-editor");
 const skipExerciseButton = document.querySelector("#skip-exercise");
+const modeToggle = document.querySelector("#mode-toggle");
 const progressBar = document.querySelector("#progress-bar");
 const scoreBadge = document.querySelector("#score-badge");
 const terminalProgress = document.querySelector("#terminal-progress");
@@ -96,11 +97,10 @@ async function bootTerminal() {
   addLine("Java fundamentals challenge loaded.", "terminal-line muted-line");
   addLine("<span class=\"keyword\">code</span> → ejercicios Java reales disponibles:", "terminal-line hint-line");
   addLine(`${codeExercises.length} ejercicios progresivos: impresión, variables, operaciones, condiciones y bucles.`, "terminal-line muted-line");
-  addLine("Escribí <strong>code</strong> para empezar o una opción A-D para el quiz múltiple choice.", "terminal-line hint-line");
+  addLine("Los ejercicios se abren automáticamente. Usá el botón Quiz de opciones para cambiar de modo.", "terminal-line hint-line");
   await wait(240);
   addLine("────────────────────────────────────────────", "terminal-line divider-line");
-  terminalInput.disabled = false;
-  printQuestion();
+  switchToCode();
 }
 
 function printCommand(value) {
@@ -221,6 +221,7 @@ async function continueQuiz() {
 
 function switchToCode() {
   mode = "code";
+  modeToggle.textContent = "Quiz de opciones";
   waitingForNext = false;
   terminalInput.disabled = true;
   terminalInput.hidden = true;
@@ -231,6 +232,7 @@ function switchToCode() {
 
 function switchToQuiz() {
   mode = "quiz";
+  modeToggle.textContent = "Ejercicios de código";
   skipExerciseButton.hidden = true;
   terminalEditor.hidden = true;
   terminalEditor.disabled = true;
@@ -292,6 +294,10 @@ terminalEditor.addEventListener("keydown", (event) => {
   }
 });
 skipExerciseButton.addEventListener("click", () => advanceExercise(true));
+modeToggle.addEventListener("click", () => {
+  if (codeRunning) return;
+  if (mode === "code") switchToQuiz(); else switchToCode();
+});
 
 document.addEventListener("keydown", (event) => {
   if (event.ctrlKey && event.key.toLowerCase() === "r") { event.preventDefault(); restartQuiz(); }

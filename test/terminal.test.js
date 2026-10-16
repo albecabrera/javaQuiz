@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-function terminal(fetch) {
+function terminal(fetch, fastBoot = false) {
   const elements = new Map();
   const document = {
     activeElement: null,
@@ -25,11 +25,33 @@ function terminal(fetch) {
       focus() { document.activeElement = this; },
     };
   }
-  const context = vm.createContext({ document, fetch, window: { clearTimeout() {} }, setTimeout, console });
+  const context = vm.createContext({ document, fetch, window: { clearTimeout() {} }, setTimeout: fastBoot ? (callback) => setImmediate(callback) : setTimeout, console });
   vm.runInContext(fs.readFileSync(require.resolve('../quiz.js'), 'utf8'), context);
   vm.runInContext(fs.readFileSync(require.resolve('../app.js'), 'utf8'), context);
   return { context, document, get: (selector) => document.querySelector(selector) };
 }
+
+test('startup opens the first code exercise with its answer marker selected', async () => {
+  const ui = terminal(async () => { throw new Error('unexpected fetch'); }, true);
+  for (let i = 0; i < 150 && ui.get('#terminal-mode').textContent !== 'CODE MODE'; i++) {
+    await new Promise((resolve) => setImmediate(resolve));
+  }
+  const editor = ui.get('#terminal-editor');
+  assert.equal(ui.get('#terminal-mode').textContent, 'CODE MODE');
+  assert.equal(ui.document.activeElement, editor);
+  assert.equal(editor.value.slice(editor.selectionStart, editor.selectionEnd), '/* YOUR_CODE_HERE */');
+});
+
+test('mode button keeps multiple choice accessible and restores code focus', () => {
+  const ui = terminal(async () => { throw new Error('unexpected fetch'); });
+  vm.runInContext('switchToCode()', ui.context);
+  ui.get('#mode-toggle').listeners.click();
+  assert.equal(ui.get('#terminal-mode').textContent, 'QUIZ MODE');
+  assert.equal(ui.document.activeElement, ui.get('#terminal-input'));
+  ui.get('#mode-toggle').listeners.click();
+  assert.equal(ui.get('#terminal-mode').textContent, 'CODE MODE');
+  assert.equal(ui.document.activeElement, ui.get('#terminal-editor'));
+});
 
 test('skip advances to the next answer and focuses its selected marker', () => {
   const ui = terminal(async () => { throw new Error('unexpected fetch'); });
