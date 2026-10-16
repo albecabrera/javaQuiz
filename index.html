@@ -32,12 +32,14 @@
             <label class="prompt-label" for="terminal-input"><span class="prompt-user">student</span><span class="prompt-at">@</span><span class="prompt-host">devquiz</span><span class="prompt-path">:~$</span></label>
             <input id="terminal-input" class="terminal-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Escribí tu respuesta" autofocus />
             <textarea id="terminal-editor" class="terminal-editor" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Escribí tu código Java" hidden></textarea>
+            <div id="monaco-editor" class="monaco-editor" aria-label="Editor de código Java" hidden></div>
+            <p id="editor-status" class="editor-status" role="status">Editor local · JDT LS verificando disponibilidad…</p>
             <button id="skip-exercise" class="skip-button" type="button" hidden>Saltar ejercicio →</button>
           </form>
         </div>
 
         <div class="terminal-statusbar">
-          <span><span class="status-pulse"></span> JAVA 17</span>
+          <span><span class="status-pulse"></span> JAVA 21</span>
           <span id="terminal-mode">QUIZ MODE</span>
           <span id="terminal-progress">01 / 10</span>
         </div>
@@ -50,7 +52,9 @@
 
       <footer class="site-footer"><button id="mode-toggle" class="mode-toggle" type="button">Quiz de opciones</button><span class="footer-separator">//</span><span>Ctrl + R para reiniciar</span></footer>
     </main>
+    <script src="/vendor/vs/loader.js"></script>
     <script src="quiz.js"></script>
+    <script src="editor-adapter.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

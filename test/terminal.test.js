@@ -17,7 +17,9 @@ function terminal(fetch, fastBoot = false) {
   function element() {
     const listeners = {};
     return {
-      value: '', textContent: '', innerHTML: '', hidden: false, disabled: false,
+      value: '', textContent: '', hidden: false, disabled: false,
+      set innerHTML(value) { this._html = value; if (!value) this.children = []; },
+      get innerHTML() { return this._html || ''; },
       style: {}, scrollHeight: 0, selectionStart: 0, selectionEnd: 0,
       children: [], listeners,
       appendChild(child) { this.children.push(child); },
@@ -51,6 +53,16 @@ test('mode button keeps multiple choice accessible and restores code focus', () 
   ui.get('#mode-toggle').listeners.click();
   assert.equal(ui.get('#terminal-mode').textContent, 'CODE MODE');
   assert.equal(ui.document.activeElement, ui.get('#terminal-editor'));
+});
+
+test('only the active exercise remains visible after skipping', () => {
+  const ui = terminal(async () => { throw new Error('unexpected fetch'); });
+  vm.runInContext('switchToCode()', ui.context);
+  assert.ok(ui.get('#terminal-output').children.some((child) => child.innerHTML.includes('Hello World')));
+  ui.get('#skip-exercise').listeners.click();
+  const html = ui.get('#terminal-output').children.map((child) => child.innerHTML).join(' ');
+  assert.match(html, /Declarar una variable/);
+  assert.doesNotMatch(html, /Hello World/);
 });
 
 test('skip advances to the next answer and focuses its selected marker', () => {

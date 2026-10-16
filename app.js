@@ -4,6 +4,8 @@ const terminalOutput = document.querySelector("#terminal-output");
 const terminalForm = document.querySelector("#terminal-form");
 const terminalInput = document.querySelector("#terminal-input");
 const terminalEditor = document.querySelector("#terminal-editor");
+const monacoContainer = document.querySelector("#monaco-editor");
+const editorStatus = document.querySelector("#editor-status");
 const skipExerciseButton = document.querySelector("#skip-exercise");
 const modeToggle = document.querySelector("#mode-toggle");
 const progressBar = document.querySelector("#progress-bar");
@@ -18,6 +20,14 @@ let waitingForNext = false;
 let codeRunning = false;
 let mode = "quiz";
 let typingTimer;
+
+if (typeof window.addEventListener === "function") {
+  window.addEventListener("devquiz-editor-status", (event) => {
+    if (editorStatus && event.detail) editorStatus.textContent = event.detail.text;
+    if (editorStatus && event.detail && event.detail.state === "ready") editorStatus.className = "editor-status ready";
+    if (editorStatus && event.detail && event.detail.state === "unavailable") editorStatus.className = "editor-status unavailable";
+  });
+}
 
 const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[character]));
@@ -49,6 +59,7 @@ function updateStatus() {
 }
 
 function printQuestion() {
+  terminalOutput.innerHTML = "";
   const currentQuestion = questions[currentQuestionIndex];
   const questionNumber = currentQuestionIndex + 1;
   const options = currentQuestion.options
@@ -64,16 +75,27 @@ function printQuestion() {
 }
 
 function printExercise() {
+  terminalOutput.innerHTML = "";
   const exercise = codeExercises[currentExerciseIndex];
   terminalMode.textContent = "CODE MODE";
   updateStatus();
   addLine(`<span class="comment">// ejercicio ${currentExerciseIndex + 1} de ${codeExercises.length}: ${escapeHtml(exercise.title)}</span>`, "terminal-line question-comment");
   addLine(`<span class="hint">${escapeHtml(exercise.prompt)}</span>`, "terminal-line hint-line");
   addLine(`<span class="muted-line">Salida esperada: ${escapeHtml(exercise.expectedOutput)}</span>`, "terminal-line expected-output-line");
-  addLine("Enter ejecuta · Shift + Enter agrega una línea · Saltar ejercicio si necesitás avanzar.", "terminal-line muted-line");
+  addLine("Enter ejecuta · Ctrl + Espacio sugiere · Shift + Enter agrega una línea · Saltar avanza.", "terminal-line muted-line");
   terminalEditor.value = exercise.starter;
   const answerMarker = "/* YOUR_CODE_HERE */";
   const answerPosition = exercise.starter.indexOf(answerMarker);
+  if (typeof window.devquizEditor?.mount === "function") {
+    const exerciseIndex = currentExerciseIndex;
+    window.devquizEditor.mount(monacoContainer, exercise.starter, (value) => { terminalEditor.value = value; }, submitCode).then((editor) => {
+      if (!editor || mode !== "code" || currentExerciseIndex !== exerciseIndex) return;
+      terminalEditor.hidden = true;
+      monacoContainer.hidden = false;
+      if (answerPosition >= 0) window.devquizEditor.selectRange(answerPosition, answerPosition + answerMarker.length);
+      else window.devquizEditor.focus();
+    });
+  }
   if (answerPosition >= 0) {
     terminalEditor.selectionStart = answerPosition;
     terminalEditor.selectionEnd = answerPosition + answerMarker.length;
@@ -82,11 +104,13 @@ function printExercise() {
     terminalEditor.selectionEnd = terminalEditor.value.length;
   }
   terminalInput.hidden = true;
-  terminalEditor.hidden = false;
+  terminalEditor.hidden = Boolean(window.devquizEditor?.isMounted?.());
+  monacoContainer.hidden = !window.devquizEditor?.isMounted?.();
   terminalEditor.disabled = false;
   skipExerciseButton.hidden = false;
   skipExerciseButton.disabled = false;
-  terminalEditor.focus();
+  if (window.devquizEditor?.isMounted?.()) window.devquizEditor.focus();
+  else terminalEditor.focus();
 }
 
 async function bootTerminal() {
@@ -145,12 +169,13 @@ async function submitAnswer(value) {
 
 async function submitCode() {
   if (codeRunning || terminalEditor.disabled || !terminalEditor.value.trim()) return;
-  const source = terminalEditor.value;
+  const source = window.devquizEditor?.getValue?.() || terminalEditor.value;
   const exercise = codeExercises[currentExerciseIndex];
   codeRunning = true;
   printCommand("[código Java enviado]");
   addLine(`<pre class="source-line">${escapeHtml(source)}</pre>`, "terminal-line");
   terminalEditor.disabled = true;
+  window.devquizEditor?.setReadOnly?.(true);
   skipExerciseButton.disabled = true;
   addLine("<span class=\"muted-line\">Compilando y ejecutando en el backend local...</span>", "terminal-line");
 
@@ -181,13 +206,15 @@ async function submitCode() {
   } finally {
     codeRunning = false;
     terminalEditor.disabled = false;
+    window.devquizEditor?.setReadOnly?.(false);
     skipExerciseButton.disabled = false;
   }
 
   if (passed) {
     advanceExercise();
   } else {
-    terminalEditor.focus();
+    if (window.devquizEditor?.isMounted?.()) window.devquizEditor.focus();
+    else terminalEditor.focus();
   }
 }
 
@@ -236,6 +263,7 @@ function switchToQuiz() {
   skipExerciseButton.hidden = true;
   terminalEditor.hidden = true;
   terminalEditor.disabled = true;
+  monacoContainer.hidden = true;
   terminalInput.hidden = false;
   terminalInput.disabled = false;
   terminalMode.textContent = "QUIZ MODE";
@@ -270,6 +298,7 @@ function restartQuiz() {
   terminalOutput.innerHTML = "";
   terminalEditor.hidden = true;
   terminalEditor.disabled = true;
+  monacoContainer.hidden = true;
   skipExerciseButton.hidden = true;
   terminalInput.hidden = false;
   terminalMode.textContent = "QUIZ MODE";

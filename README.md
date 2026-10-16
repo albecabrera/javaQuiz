@@ -1,19 +1,39 @@
-# DevQuiz Java executor
+# DevQuiz — Java en una terminal local
 
-Servicio HTTP local, sin dependencias externas, para compilar y ejecutar ejercicios Java dentro de `eclipse-temurin:21-jdk` mediante Docker.
+Escribí Java, recibí diagnósticos y autocompletado semántico mientras editás, y ejecutá cada ejercicio en un contenedor aislado. No usa APIs, CDN ni servicios pagos durante el uso.
 
-## Uso
+## Inicio rápido
 
-Requiere Docker y la imagen local:
+Requiere Docker y la imagen local `eclipse-temurin:21-jdk`. En este directorio:
 
 ```sh
 docker image inspect eclipse-temurin:21-jdk
+npm ci --ignore-scripts --no-audit --no-fund
+bash scripts/install-jdtls.sh
 npm start
 ```
 
-Abrí `http://127.0.0.1:3000` en el navegador: los 14 ejercicios de código se abren automáticamente. El cursor selecciona el hueco de respuesta; **Enter** compila y ejecuta el programa, **Shift + Enter** inserta una línea, y **Saltar ejercicio →** pasa al siguiente sin ejecutar. Si la salida coincide con la esperada, aparece en la consola y el siguiente ejercicio queda enfocado; si no, podés corregir y reintentar. El botón **Quiz de opciones** permite cambiar al quiz original y volver a los ejercicios. Todo corre dentro de tu entorno local.
+Abrí **http://127.0.0.1:3000**. Verás solo el ejercicio actual; el cursor queda en el hueco de respuesta. Si la imagen no está instalada, obtenela una vez con `docker pull eclipse-temurin:21-jdk`.
 
-Enviar código a `POST http://127.0.0.1:3000/api/execute`:
+La instalación descarga herramientas libres una sola vez: Monaco 0.52 (MIT), `ws` (MIT) y Eclipse JDT LS 1.50 (EPL-2.0). El script verifica el SHA-256 oficial de JDT LS y lo extrae en `.local/jdtls-compatible/`, ignorado por Git. Al usar el quiz, las herramientas funcionan íntegramente en tu equipo.
+
+## Controles
+
+| Acción | Tecla o botón |
+| --- | --- |
+| Ver sugerencias semánticas | Ctrl + Espacio (también al escribir `.`) |
+| Aceptar una sugerencia | Enter con la lista abierta |
+| Ejecutar la respuesta | Enter sin sugerencias, o Ctrl/Cmd + Enter |
+| Insertar una línea | Shift + Enter |
+| Indentar | Tab |
+| Pasar sin resolver | Saltar ejercicio → |
+| Cambiar de modo | Quiz de opciones / Ejercicios de código |
+
+Los errores de Java aparecen subrayados mientras editás. Si la salida coincide con la esperada, avanzás al siguiente ejercicio con el cursor listo; si no, podés corregir y reintentar. Si JDT LS no está disponible, el estado lo indica: la edición y la ejecución local siguen funcionando, pero no se inventan sugerencias semánticas.
+
+## Ejecución local
+
+`POST http://127.0.0.1:3000/api/execute` recibe:
 
 ```json
 {
@@ -22,4 +42,4 @@ Enviar código a `POST http://127.0.0.1:3000/api/execute`:
 }
 ```
 
-El servicio devuelve JSON para ejecuciones exitosas, errores de compilación, errores de runtime, timeouts y solicitudes inválidas. Cada solicitud usa un directorio temporal propio; el contenedor no tiene red, filesystem raíz de solo lectura, capacidades Linux y recursos limitados.
+Cada envío compila y ejecuta Java 21 en Docker sin red, con filesystem raíz de solo lectura y límites de CPU, memoria, tiempo y salida. El editor usa un segundo contenedor local para JDT LS, con un proyecto Java generado y sin archivos de build controlados por el usuario. Ningún archivo del repositorio se envía al analizador.
