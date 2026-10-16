@@ -1,0 +1,10 @@
+{
+  "name": "devquiz-java-executor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local-only Java execution service for DevQuiz",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js"
+  }
+}
