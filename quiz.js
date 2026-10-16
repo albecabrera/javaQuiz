@@ -61,3 +61,26 @@ const questions = [
     explanation: "extends indica que una clase hereda atributos y métodos de otra clase."
   }
 ];
+
+// Ejercicios locales: el backend los compila y ejecuta como Main.java.
+const codeExercises = [
+  {
+    title: "Hola, Java",
+    prompt: "Escribí un programa que imprima exactamente Hola, Java.",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    // Escribí tu solución acá.
+  }
+}`
+  },
+  {
+    title: "Suma simple",
+    prompt: "Completá el programa para imprimir la suma de 7 + 5.",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    int resultado = 7 + 5;
+    System.out.println(resultado);
+  }
+}`
+  }
+];

@@ -12,8 +12,8 @@ Status: implementation planned
 
 ## Tasks
 
-- T1 (S1-S4) — Add a local HTTP execution service with isolated Java compilation/runtime — commit: pending
-- T2 (S1-S4) — Add code-writing exercises and connect the terminal UI to the service — commit: pending
+- T1 (S1-S4) — Add a local HTTP execution service with isolated Java compilation/runtime — commit: `3912c30`
+- T2 (S1-S4) — Add code-writing exercises and connect the terminal UI to the service — commit: `056c357`
 - T3 (S1-S4) — Verify successful output, compilation errors, timeout behavior, and existing quiz flow — commit: pending
 
 ## Log
@@ -21,3 +21,4 @@ Status: implementation planned
 L1: puedes implementar este quiz agregando ejercicios donde tenga que escribir código y que este se devuelva en la consola, en la terminal.
 L2: User selected “Java real con backend (El código se compila y ejecuta realmente en un servidor aislado. Más auténtico, pero requiere infraestructura y sandbox.)”.
 L3: no se agreguen APIs, cosas que sean de pago. Todo tiene que estar dentro de mi entorno sin tener costos extras ni nada de eso.
+L4: The local server now serves the UI at http://127.0.0.1:3000 so the browser can call the local execution API without file:// limitations.
