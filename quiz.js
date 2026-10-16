@@ -77,8 +77,8 @@ const codeExercises = [
   },
   {
     title: "Declarar una variable",
-    prompt: "Declará una variable llamada nombre con tu nombre e imprimila en la consola.",
-    expectedOutput: "Tu nombre",
+    prompt: "Declará una variable String llamada nombre con valor Ada e imprimila en la consola.",
+    expectedOutput: "Ada",
     starter: `public class Main {
   public static void main(String[] args) {
     /* YOUR_CODE_HERE */
@@ -87,7 +87,7 @@ const codeExercises = [
   },
   {
     title: "Concatenar texto",
-    prompt: "Declará nombre y edad, y concatenalos para imprimir: Soy Ada y tengo 20 años.",
+    prompt: "Usá las variables nombre y edad para imprimir: Soy Ada y tengo 20 años.",
     expectedOutput: "Soy Ada y tengo 20 años.",
     starter: `public class Main {
   public static void main(String[] args) {
@@ -104,6 +104,108 @@ const codeExercises = [
     starter: `public class Main {
   public static void main(String[] args) {
     int resultado = 7 + 5;
+    /* YOUR_CODE_HERE */
+  }
+}`
+  },
+  {
+    title: "Imprimir otra línea",
+    prompt: "Imprimí exactamente Aprendo Java usando System.out.println.",
+    expectedOutput: "Aprendo Java",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    /* YOUR_CODE_HERE */
+  }
+}`
+  },
+  {
+    title: "Variable entera",
+    prompt: "Declará un int llamado edad con valor 18 e imprimilo.",
+    expectedOutput: "18",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    /* YOUR_CODE_HERE */
+  }
+}`
+  },
+  {
+    title: "Número decimal",
+    prompt: "Declará un double llamado precio con valor 2.5 e imprimilo.",
+    expectedOutput: "2.5",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    /* YOUR_CODE_HERE */
+  }
+}`
+  },
+  {
+    title: "Valor booleano",
+    prompt: "Declará un boolean llamado activo con valor true e imprimilo.",
+    expectedOutput: "true",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    /* YOUR_CODE_HERE */
+  }
+}`
+  },
+  {
+    title: "Un carácter",
+    prompt: "Declará un char llamado inicial con valor 'J' e imprimilo.",
+    expectedOutput: "J",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    /* YOUR_CODE_HERE */
+  }
+}`
+  },
+  {
+    title: "Multiplicación",
+    prompt: "Multiplicá 6 por 4 e imprimí el resultado.",
+    expectedOutput: "24",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    /* YOUR_CODE_HERE */
+  }
+}`
+  },
+  {
+    title: "Actualizar una variable",
+    prompt: "Comenzá con puntos = 3, sumale 2 e imprimí el nuevo valor.",
+    expectedOutput: "5",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    int puntos = 3;
+    /* YOUR_CODE_HERE */
+  }
+}`
+  },
+  {
+    title: "Comparar números",
+    prompt: "Compará si 8 es mayor que 5 e imprimí el resultado booleano.",
+    expectedOutput: "true",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    /* YOUR_CODE_HERE */
+  }
+}`
+  },
+  {
+    title: "Condición if",
+    prompt: "Si nota es mayor o igual a 6, imprimí Aprobado; si no, imprimí Reprobado.",
+    expectedOutput: "Aprobado",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    int nota = 8;
+    /* YOUR_CODE_HERE */
+  }
+}`
+  },
+  {
+    title: "Bucle for",
+    prompt: "Usá un for para imprimir los números del 1 al 3, uno por línea.",
+    expectedOutput: "1\n2\n3",
+    starter: `public class Main {
+  public static void main(String[] args) {
     /* YOUR_CODE_HERE */
   }
 }`

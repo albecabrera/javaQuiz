@@ -4,6 +4,7 @@ const terminalOutput = document.querySelector("#terminal-output");
 const terminalForm = document.querySelector("#terminal-form");
 const terminalInput = document.querySelector("#terminal-input");
 const terminalEditor = document.querySelector("#terminal-editor");
+const skipExerciseButton = document.querySelector("#skip-exercise");
 const progressBar = document.querySelector("#progress-bar");
 const scoreBadge = document.querySelector("#score-badge");
 const terminalProgress = document.querySelector("#terminal-progress");
@@ -13,7 +14,7 @@ let currentQuestionIndex = 0;
 let currentExerciseIndex = 0;
 let score = 0;
 let waitingForNext = false;
-let waitingForCodeNext = false;
+let codeRunning = false;
 let mode = "quiz";
 let typingTimer;
 
@@ -68,7 +69,7 @@ function printExercise() {
   addLine(`<span class="comment">// ejercicio ${currentExerciseIndex + 1} de ${codeExercises.length}: ${escapeHtml(exercise.title)}</span>`, "terminal-line question-comment");
   addLine(`<span class="hint">${escapeHtml(exercise.prompt)}</span>`, "terminal-line hint-line");
   addLine(`<span class="muted-line">Salida esperada: ${escapeHtml(exercise.expectedOutput)}</span>`, "terminal-line expected-output-line");
-  addLine("El cursor ya está ubicado en la respuesta. Escribí ahí y presioná Ctrl + Enter.", "terminal-line muted-line");
+  addLine("Enter ejecuta · Shift + Enter agrega una línea · Saltar ejercicio si necesitás avanzar.", "terminal-line muted-line");
   terminalEditor.value = exercise.starter;
   const answerMarker = "/* YOUR_CODE_HERE */";
   const answerPosition = exercise.starter.indexOf(answerMarker);
@@ -82,6 +83,8 @@ function printExercise() {
   terminalInput.hidden = true;
   terminalEditor.hidden = false;
   terminalEditor.disabled = false;
+  skipExerciseButton.hidden = false;
+  skipExerciseButton.disabled = false;
   terminalEditor.focus();
 }
 
@@ -92,7 +95,7 @@ async function bootTerminal() {
   await typeLine("DevQuiz Terminal v1.0.0", "terminal-line brand-line", 28);
   addLine("Java fundamentals challenge loaded.", "terminal-line muted-line");
   addLine("<span class=\"keyword\">code</span> → ejercicios Java reales disponibles:", "terminal-line hint-line");
-  addLine("<span class=\"option-key\">1.</span> Hello World   <span class=\"option-key\">2.</span> Variable   <span class=\"option-key\">3.</span> Concatenación   <span class=\"option-key\">4.</span> Suma", "terminal-line muted-line");
+  addLine(`${codeExercises.length} ejercicios progresivos: impresión, variables, operaciones, condiciones y bucles.`, "terminal-line muted-line");
   addLine("Escribí <strong>code</strong> para empezar o una opción A-D para el quiz múltiple choice.", "terminal-line hint-line");
   await wait(240);
   addLine("────────────────────────────────────────────", "terminal-line divider-line");
@@ -110,7 +113,7 @@ async function submitAnswer(value) {
   terminalInput.value = "";
   printCommand(value.trim());
   if (answer === "code") { switchToCode(); return; }
-  if (answer === "help") { addLine("Comandos: code, quiz, help. En code mode: Ctrl + Enter ejecuta.", "terminal-line hint-line"); return; }
+  if (answer === "help") { addLine("Comandos: code, help. En code mode: Enter ejecuta, Shift + Enter agrega una línea; también podés saltar.", "terminal-line hint-line"); return; }
   if (!["A", "B", "C", "D"].includes(answer)) {
     addLine('<span class="error">error:</span> respuesta inválida. Usá A, B, C o D.', "terminal-line error-line");
     return;
@@ -141,13 +144,17 @@ async function submitAnswer(value) {
 }
 
 async function submitCode() {
-  if (waitingForCodeNext || terminalEditor.disabled || !terminalEditor.value.trim()) return;
+  if (codeRunning || terminalEditor.disabled || !terminalEditor.value.trim()) return;
   const source = terminalEditor.value;
+  const exercise = codeExercises[currentExerciseIndex];
+  codeRunning = true;
   printCommand("[código Java enviado]");
   addLine(`<pre class="source-line">${escapeHtml(source)}</pre>`, "terminal-line");
   terminalEditor.disabled = true;
+  skipExerciseButton.disabled = true;
   addLine("<span class=\"muted-line\">Compilando y ejecutando en el backend local...</span>", "terminal-line");
 
+  let passed = false;
   try {
     const response = await fetch("/api/execute", {
       method: "POST",
@@ -156,9 +163,11 @@ async function submitCode() {
     });
     const payload = await response.json();
     if (payload.ok) {
-      addLine("<span class=\"success\">✓ EXECUTION SUCCESSFUL</span>", "terminal-line result-line");
-      addLine(`<span class="muted-line">stdout:</span>\n<pre class="output-line">${escapeHtml(payload.stdout || payload.output || "(sin salida)")}</pre>`, "terminal-line");
+      const output = (payload.stdout ?? payload.output ?? "").replace(/\r\n/g, "\n").trimEnd();
+      addLine(`<span class="muted-line">stdout:</span>\n<pre class="output-line">${escapeHtml(output || "(sin salida)")}</pre>`, "terminal-line");
       if (payload.stderr) addLine(`<span class="muted-line">stderr:</span>\n<pre class="error-output">${escapeHtml(payload.stderr)}</pre>`, "terminal-line");
+      passed = output === exercise.expectedOutput;
+      addLine(passed ? '<span class="success">✓ Resultado correcto</span>' : '<span class="error">✕ La salida no coincide; revisá tu código e intentá de nuevo.</span>', "terminal-line result-line");
     } else {
       const error = payload.error || {};
       addLine(`<span class="error">✕ ${escapeHtml(error.type || "execution_error")}</span>`, "terminal-line result-line");
@@ -166,24 +175,32 @@ async function submitCode() {
       if (error.stdout) addLine(`<span class="muted-line">stdout:</span>\n<pre class="output-line">${escapeHtml(error.stdout)}</pre>`, "terminal-line");
       if (error.stderr) addLine(`<span class="muted-line">stderr:</span>\n<pre class="error-output">${escapeHtml(error.stderr)}</pre>`, "terminal-line");
     }
-  } catch (error) {
+  } catch {
     addLine("<span class=\"error\">✕ backend_unavailable</span>", "terminal-line result-line");
     addLine("No se pudo conectar con el backend local. Verificá que npm start esté ejecutándose.", "terminal-line error-line");
+  } finally {
+    codeRunning = false;
+    terminalEditor.disabled = false;
+    skipExerciseButton.disabled = false;
   }
 
-  waitingForCodeNext = true;
-  terminalMode.textContent = currentExerciseIndex === codeExercises.length - 1 ? "CODE COMPLETE" : "PRESS ENTER";
-  addLine(`<span class="hint">${currentExerciseIndex === codeExercises.length - 1 ? "Presioná Enter para volver al quiz." : "Presioná Enter para continuar al siguiente ejercicio."}</span>`, "terminal-line hint-line");
-  terminalEditor.disabled = false;
-  terminalEditor.focus();
+  if (passed) {
+    advanceExercise();
+  } else {
+    terminalEditor.focus();
+  }
 }
 
-function continueCode() {
-  if (!waitingForCodeNext) return;
-  waitingForCodeNext = false;
-  if (currentExerciseIndex === codeExercises.length - 1) { switchToQuiz(); return; }
+function advanceExercise(skipped = false) {
+  if (codeRunning || mode !== "code") return;
+  if (skipped) addLine(`<span class="hint">Ejercicio ${currentExerciseIndex + 1} saltado.</span>`, "terminal-line");
+  if (currentExerciseIndex === codeExercises.length - 1) {
+    addLine('<span class="success">Ejercicios terminados. Volviendo al quiz.</span>', "terminal-line");
+    switchToQuiz();
+    return;
+  }
   currentExerciseIndex += 1;
-  terminalOutput.appendChild(document.createElement("br"));
+  addLine("", "terminal-line");
   printExercise();
 }
 
@@ -214,7 +231,7 @@ function switchToCode() {
 
 function switchToQuiz() {
   mode = "quiz";
-  waitingForCodeNext = false;
+  skipExerciseButton.hidden = true;
   terminalEditor.hidden = true;
   terminalEditor.disabled = true;
   terminalInput.hidden = false;
@@ -246,11 +263,12 @@ function restartQuiz() {
   currentExerciseIndex = 0;
   score = 0;
   waitingForNext = false;
-  waitingForCodeNext = false;
+  codeRunning = false;
   mode = "quiz";
   terminalOutput.innerHTML = "";
   terminalEditor.hidden = true;
   terminalEditor.disabled = true;
+  skipExerciseButton.hidden = true;
   terminalInput.hidden = false;
   terminalMode.textContent = "QUIZ MODE";
   terminalInput.value = "";
@@ -260,11 +278,7 @@ function restartQuiz() {
 
 terminalForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  if (mode === "code") {
-    if (waitingForCodeNext) { continueCode(); return; }
-    submitCode();
-    return;
-  }
+  if (mode === "code") { submitCode(); return; }
   const value = terminalInput.value.trim();
   if (terminalMode.textContent === "COMPLETE" && value.toLowerCase() === "restart") { restartQuiz(); return; }
   if (waitingForNext && !value) { continueQuiz(); return; }
@@ -272,11 +286,12 @@ terminalForm.addEventListener("submit", (event) => {
 });
 
 terminalEditor.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" && event.ctrlKey) {
+  if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
     event.preventDefault();
-    if (waitingForCodeNext) continueCode(); else submitCode();
+    submitCode();
   }
 });
+skipExerciseButton.addEventListener("click", () => advanceExercise(true));
 
 document.addEventListener("keydown", (event) => {
   if (event.ctrlKey && event.key.toLowerCase() === "r") { event.preventDefault(); restartQuiz(); }
