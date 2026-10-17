@@ -91,7 +91,8 @@
             insertTextRules: monaco.languages.CompletionItemInsertTextRule?.InsertAsSnippet || 4,
             range: { startLineNumber: position.lineNumber, startColumn: position.column - prefix.length, endLineNumber: position.lineNumber, endColumn: position.column },
           }] : [];
-          return requestCompletion(position).then((items) => ({ suggestions: [...localSuggestions, ...items.map((item) => {
+          if (localSuggestions.length) return Promise.resolve({ suggestions: localSuggestions });
+          return requestCompletion(position).then((items) => ({ suggestions: items.map((item) => {
           const edit = item.textEdit;
           const range = edit?.range || edit?.insert;
           return {
@@ -110,9 +111,15 @@
               endColumn: model.getWordUntilPosition(position).endColumn,
             },
           };
-        })] }));
+        }) }));
         } });
-        model.onDidChangeContent(() => { if (onChange) onChange(model.getValue()); send({ type: "change", source: model.getValue() }); });
+        model.onDidChangeContent(() => {
+          if (onChange) onChange(model.getValue());
+          send({ type: "change", source: model.getValue() });
+          const position = editor?.getPosition?.();
+          const linePrefix = position && model.getValue().split("\n")[position.lineNumber - 1]?.slice(0, position.column - 1);
+          if (linePrefix && /\bsout$/.test(linePrefix)) editor?.trigger?.("keyboard", "editor.action.triggerSuggest", {});
+        });
       } else model.setValue(value);
       editor = editor || monaco.editor.create(container, { model, theme: "vs-dark", minimap: { enabled: false }, automaticLayout: true, language: "java", tabSize: 4, insertSpaces: true, suggestOnTriggerCharacters: true, quickSuggestions: { other: true, comments: false, strings: false }, wordWrap: "off" });
       if (onExecute && !editor.__devquizExecuteAction) {

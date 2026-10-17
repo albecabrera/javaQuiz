@@ -18,6 +18,11 @@ test('editor adapter reports unavailable JDT LS without fabricating completions'
   assert.match(source, /Promise\.resolve\(\[\]\)/);
 });
 
+test('typing sout triggers the local completion popup immediately', () => {
+  assert.match(source, /return Promise\.resolve\(\{ suggestions: localSuggestions \}\)/);
+  assert.match(source, /editor\?\.trigger\?\.\("keyboard", "editor\.action\.triggerSuggest"/);
+});
+
 test('ready sends current source and completion edits map LSP positions to Monaco positions', async () => {
   let provider;
   let socket;
@@ -60,10 +65,9 @@ test('ready sends current source and completion edits map LSP positions to Monac
   assert.deepEqual(JSON.parse(JSON.stringify(result.suggestions[0].range)), { startLineNumber: 1, startColumn: 8, endLineNumber: 1, endColumn: 12 });
 
   value = 'sout';
-  const soutResultPromise = provider.provideCompletionItems(null, { lineNumber: 1, column: 5 });
-  const soutRequest = socket.sent.filter((message) => message.type === 'complete').at(-1);
-  socket.handlers.message({ data: JSON.stringify({ type: 'completion', id: soutRequest.id, items: [] }) });
-  const soutResult = await soutResultPromise;
+  const completeRequestsBeforeSout = socket.sent.filter((message) => message.type === 'complete').length;
+  const soutResult = await provider.provideCompletionItems(null, { lineNumber: 1, column: 5 });
+  assert.equal(socket.sent.filter((message) => message.type === 'complete').length, completeRequestsBeforeSout);
   assert.equal(soutResult.suggestions[0].label, 'System.out.println');
   assert.equal(soutResult.suggestions[0].insertText, 'System.out.println($0);');
   assert.deepEqual(JSON.parse(JSON.stringify(soutResult.suggestions[0].range)), { startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 5 });
