@@ -19,10 +19,10 @@ Status: verified locally; delivery not published
 - T1 (S1) — Present only the active exercise and preserve answer focus and mode navigation — route: inline — commit: `41ae4c3`
 - T2 (S2-S5) — Install local free editor/JDT LS, bridge live diagnostics and semantic completion securely — route: bounded worker + inline fixes — commits: `30e07e7` (backend), `41ae4c3` (frontend)
 - T3 (S1-S5) — Test editor, completion, diagnostics, execution and existing quiz without network at runtime — route: inline + independent security verification — commits: `30e07e7` (backend tests), `41ae4c3` (frontend tests)
-- T4 (S6) — Keep execution output/error visible and require the “Weiter” button before advancing a solved code exercise — route: inline — commit: pending
-- T5 (S7) — Translate quiz UI, questions, exercises, controls and documentation to German while preserving Java-native syntax and terms — route: inline — commit: pending
-- T6 (S6-S7) — Verify result gating, German copy, multiple choice, code execution and local editor regression — route: inline — commit: pending
-- T7 (S8) — Add a local `sout` Java output template to Monaco completion while retaining JDT LS semantic suggestions — route: inline — commit: pending
+- T4 (S6) — Keep execution output/error visible and require the “Weiter” button before advancing a solved code exercise — route: inline — commit: `4a9c522`
+- T5 (S7) — Translate quiz UI, questions, exercises, controls and documentation to German while preserving Java-native syntax and terms — route: inline — commit: `4a9c522`
+- T6 (S6-S7) — Verify result gating, German copy, multiple choice, code execution and local editor regression — route: inline — commit: `4a9c522`
+- T7 (S8) — Add a local `sout` Java output template to Monaco completion while retaining JDT LS semantic suggestions — route: inline — commit: `4a9c522`
 
 ## Log
 
