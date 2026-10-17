@@ -6,6 +6,8 @@
   let editor;
   let model;
   let socket;
+  let reconnectTimer;
+  let reconnectAttempt = 0;
   let nextRequestId = 1;
   const completions = new Map();
   const notify = (message) => global.dispatchEvent && global.dispatchEvent(new CustomEvent("devquiz-editor-status", { detail: message }));
@@ -19,11 +21,26 @@
     return loaderPromise;
   }
 
+  function scheduleReconnect() {
+    if (reconnectTimer || !model || !global.WebSocket) return;
+    if (socket) {
+      try { socket.close(); } catch {}
+      return;
+    }
+    const delay = Math.min(1000 * (2 ** reconnectAttempt), 10000);
+    reconnectAttempt = Math.min(reconnectAttempt + 1, 4);
+    notify({ state: "connecting", text: "JDT LS wird neu verbunden…" });
+    reconnectTimer = setTimeout(() => { reconnectTimer = null; connect(); }, delay);
+  }
+
   function connect() {
     if (socket || !global.WebSocket) return;
     const protocol = global.location && global.location.protocol === "https:" ? "wss:" : "ws:";
     socket = new global.WebSocket(`${protocol}//${global.location.host}/lsp`);
-    socket.addEventListener("open", () => notify({ state: "connecting", text: "JDT LS verbindet…" }));
+    socket.addEventListener("open", () => {
+      reconnectAttempt = 0;
+      notify({ state: "connecting", text: "JDT LS verbindet…" });
+    });
     socket.addEventListener("message", (event) => {
       let message;
       try { message = JSON.parse(event.data); } catch { return; }
@@ -36,13 +53,13 @@
         const pending = completions.get(message.id);
         if (pending) { completions.delete(message.id); pending.resolve(message.items || []); }
       } else if (message.type === "error") {
-        notify({ state: "unavailable", text: `JDT LS nicht verfügbar: ${message.message || "lokaler Fehler"}` });
         for (const pending of completions.values()) pending.reject(new Error(message.message || "completion unavailable"));
         completions.clear();
+        scheduleReconnect();
       }
     });
-    socket.addEventListener("error", () => notify({ state: "unavailable", text: "JDT LS nicht verfügbar · Ausführung mit Docker möglich" }));
-    socket.addEventListener("close", () => { socket = null; notify({ state: "unavailable", text: "JDT LS nicht verfügbar · Ausführung mit Docker möglich" }); });
+    socket.addEventListener("error", () => scheduleReconnect());
+    socket.addEventListener("close", () => { socket = null; scheduleReconnect(); });
   }
 
   function send(message) { if (socket && socket.readyState === 1) socket.send(JSON.stringify(message)); }

@@ -13,14 +13,19 @@ test('editor adapter uses only the local Monaco loader and bridge protocol', () 
   assert.match(source, /setModelMarkers/);
 });
 
-test('editor adapter reports unavailable JDT LS without fabricating completions', () => {
-  assert.match(source, /JDT LS nicht verfügbar/);
+test('editor adapter reconnects JDT LS without fabricating completions', () => {
+  assert.match(source, /JDT LS wird neu verbunden/);
   assert.match(source, /Promise\.resolve\(\[\]\)/);
 });
 
 test('typing sout triggers the local completion popup immediately', () => {
   assert.match(source, /return Promise\.resolve\(\{ suggestions: localSuggestions \}\)/);
   assert.match(source, /editor\?\.trigger\?\.\("keyboard", "editor\.action\.triggerSuggest"/);
+});
+
+test('JDT LS disconnects are retried without treating Docker execution as unavailable', () => {
+  assert.match(source, /JDT LS wird neu verbunden/);
+  assert.match(source, /scheduleReconnect/);
 });
 
 test('ready sends current source and completion edits map LSP positions to Monaco positions', async () => {
