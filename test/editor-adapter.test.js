@@ -32,17 +32,21 @@ test('ready sends current source and completion edits map LSP positions to Monac
   let provider;
   let socket;
   let value = 'System.out.';
+  let onModelChange;
   const model = {
     getValue: () => value,
     setValue: (next) => { value = next; },
     getPositionAt: (offset) => ({ lineNumber: 1, column: offset + 1 }),
-    onDidChangeContent() {},
+    onDidChangeContent(handler) { onModelChange = handler; },
   };
   let executeCount = 0;
   const actions = [];
-  const editor = { addAction(action) { actions.push(action); }, onKeyDown(handler) { this.keydown = handler; }, focus() {}, updateOptions() {}, setSelection() {}, trigger() {} };
+  const triggeredCommands = [];
+  let editorOptions;
+  let suggestionVisible = false;
+  const editor = { addAction(action) { actions.push(action); }, onKeyDown(handler) { this.keydown = handler; }, focus() {}, updateOptions() {}, setSelection() {}, trigger(_source, command) { triggeredCommands.push(command); if (command === 'hideSuggestWidget') suggestionVisible = false; } };
   const monaco = {
-    editor: { createModel: () => model, create: () => editor, setModelMarkers() {} },
+    editor: { createModel: () => model, create: (_, options) => { editorOptions = options; return editor; }, setModelMarkers() {} },
     languages: { setLanguageConfiguration() {}, registerCompletionItemProvider: (_, impl) => { provider = impl; }, CompletionItemKind: { Method: 1 } },
     KeyCode: { Enter: 3, F10: 4, Space: 5, Slash: 6, KeyD: 7, KeyY: 8, Backspace: 9, KeyL: 10 }, KeyMod: { Ctrl: 16384, CtrlCmd: 2048, Shift: 4096, Alt: 8192 },
   };
@@ -53,8 +57,9 @@ test('ready sends current source and completion edits map LSP positions to Monac
   }
   const window = { monaco, WebSocket: Socket, navigator: { platform: 'MacIntel' }, location: { protocol: 'http:', host: '127.0.0.1:3000' }, dispatchEvent() {} };
   vm.runInNewContext(source, { window, CustomEvent: class { constructor(name, options) { this.detail = options.detail; } }, setTimeout });
-  const container = { hidden: true, querySelector: () => null };
+  const container = { hidden: true, querySelector: (selector) => selector === '.suggest-widget.visible' && suggestionVisible ? {} : null };
   assert.ok(await window.devquizEditor.mount(container, value, null, () => { executeCount++; }));
+  assert.equal(editorOptions.acceptSuggestionOnCommitCharacter, false);
   assert.deepEqual(JSON.parse(JSON.stringify(actions.map(({ id, keybindings }) => ({ id, keybindings })))), [
     { id: 'devquiz.execute', keybindings: [2051, 4100] },
     { id: 'devquiz.complete', keybindings: [16389] },
@@ -67,9 +72,18 @@ test('ready sends current source and completion edits map LSP positions to Monac
   ]);
   editor.keydown({ keyCode: 3, shiftKey: false, preventDefault() {}, stopPropagation() {} });
   assert.equal(executeCount, 1);
-  container.querySelector = () => ({}); // Monaco suggestion widget is open.
+  suggestionVisible = true; // Monaco suggestion widget is open.
   editor.keydown({ keyCode: 3, shiftKey: false, preventDefault() {}, stopPropagation() {} });
   assert.equal(executeCount, 1);
+  let preventedSpace = false;
+  editor.keydown({ keyCode: 5, shiftKey: false, preventDefault() { preventedSpace = true; }, stopPropagation() {} });
+  assert.equal(preventedSpace, false);
+  assert.equal(suggestionVisible, true);
+  value = 'System.out.println("Hallo Welt")'; // Monaco has inserted the space.
+  onModelChange({ changes: [{ text: ' ' }] });
+  assert.equal(value, 'System.out.println("Hallo Welt")');
+  assert.equal(suggestionVisible, false);
+  assert.ok(triggeredCommands.includes('hideSuggestWidget'));
   socket.readyState = 1;
   socket.handlers.message({ data: JSON.stringify({ type: 'ready' }) });
   assert.ok(socket.sent.some((message) => message.type === 'change' && message.source === value));

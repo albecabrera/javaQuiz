@@ -130,15 +130,18 @@
           };
         }) }));
         } });
-        model.onDidChangeContent(() => {
+        model.onDidChangeContent((event) => {
           if (onChange) onChange(model.getValue());
           send({ type: "change", source: model.getValue() });
+          if (event.changes?.some((change) => change.text.includes(" ")) && container.querySelector?.(".suggest-widget.visible")) {
+            editor?.trigger?.("keyboard", "hideSuggestWidget", {});
+          }
           const position = editor?.getPosition?.();
           const linePrefix = position && model.getValue().split("\n")[position.lineNumber - 1]?.slice(0, position.column - 1);
           if (linePrefix && /\bsout$/.test(linePrefix)) editor?.trigger?.("keyboard", "editor.action.triggerSuggest", {});
         });
       } else model.setValue(value);
-      editor = editor || monaco.editor.create(container, { model, theme: "vs-dark", minimap: { enabled: false }, automaticLayout: true, language: "java", tabSize: 4, insertSpaces: true, suggestOnTriggerCharacters: true, quickSuggestions: { other: true, comments: false, strings: false }, wordWrap: "off" });
+      editor = editor || monaco.editor.create(container, { model, theme: "vs-dark", minimap: { enabled: false }, automaticLayout: true, language: "java", tabSize: 4, insertSpaces: true, suggestOnTriggerCharacters: true, acceptSuggestionOnCommitCharacter: false, quickSuggestions: { other: true, comments: false, strings: false }, wordWrap: "off" });
       if (onExecute && !editor.__devquizExecuteAction) {
         editor.__devquizExecuteAction = true;
         editor.onKeyDown((event) => {
