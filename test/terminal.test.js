@@ -35,34 +35,34 @@ function terminal(fetch, fastBoot = false) {
 
 test('startup opens the first code exercise with its answer marker selected', async () => {
   const ui = terminal(async () => { throw new Error('unexpected fetch'); }, true);
-  for (let i = 0; i < 150 && ui.get('#terminal-mode').textContent !== 'CODE MODE'; i++) {
+  for (let i = 0; i < 150 && ui.get('#terminal-mode').textContent !== 'CODE-MODUS'; i++) {
     await new Promise((resolve) => setImmediate(resolve));
   }
   const editor = ui.get('#terminal-editor');
-  assert.equal(ui.get('#terminal-mode').textContent, 'CODE MODE');
+  assert.equal(ui.get('#terminal-mode').textContent, 'CODE-MODUS');
   assert.equal(ui.document.activeElement, editor);
-  assert.equal(editor.value.slice(editor.selectionStart, editor.selectionEnd), '/* YOUR_CODE_HERE */');
+  assert.equal(editor.value.slice(editor.selectionStart, editor.selectionEnd), '/* DEIN_CODE_HIER */');
 });
 
 test('mode button keeps multiple choice accessible and restores code focus', () => {
   const ui = terminal(async () => { throw new Error('unexpected fetch'); });
   vm.runInContext('switchToCode()', ui.context);
   ui.get('#mode-toggle').listeners.click();
-  assert.equal(ui.get('#terminal-mode').textContent, 'QUIZ MODE');
+  assert.equal(ui.get('#terminal-mode').textContent, 'QUIZ-MODUS');
   assert.equal(ui.document.activeElement, ui.get('#terminal-input'));
   ui.get('#mode-toggle').listeners.click();
-  assert.equal(ui.get('#terminal-mode').textContent, 'CODE MODE');
+  assert.equal(ui.get('#terminal-mode').textContent, 'CODE-MODUS');
   assert.equal(ui.document.activeElement, ui.get('#terminal-editor'));
 });
 
 test('only the active exercise remains visible after skipping', () => {
   const ui = terminal(async () => { throw new Error('unexpected fetch'); });
   vm.runInContext('switchToCode()', ui.context);
-  assert.ok(ui.get('#terminal-output').children.some((child) => child.innerHTML.includes('Hello World')));
+  assert.ok(ui.get('#terminal-output').children.some((child) => child.innerHTML.includes('Hallo Welt')));
   ui.get('#skip-exercise').listeners.click();
   const html = ui.get('#terminal-output').children.map((child) => child.innerHTML).join(' ');
-  assert.match(html, /Declarar una variable/);
-  assert.doesNotMatch(html, /Hello World/);
+  assert.match(html, /Eine Variable deklarieren/);
+  assert.doesNotMatch(html, /Hallo Welt/);
 });
 
 test('skip advances to the next answer and focuses its selected marker', () => {
@@ -73,39 +73,40 @@ test('skip advances to the next answer and focuses its selected marker', () => {
   assert.equal(ui.get('#terminal-progress').textContent, '02 / 14');
   const editor = ui.get('#terminal-editor');
   assert.equal(ui.document.activeElement, editor);
-  assert.equal(editor.value.slice(editor.selectionStart, editor.selectionEnd), '/* YOUR_CODE_HERE */');
+  assert.equal(editor.value.slice(editor.selectionStart, editor.selectionEnd), '/* DEIN_CODE_HIER */');
 });
 
-test('Enter runs code and advances with cursor ready; Shift+Enter keeps multiline editing', async () => {
-  const ui = terminal(async () => ({ json: async () => ({ ok: true, stdout: 'Hello World\n' }) }));
+test('successful execution keeps the result visible until Weiter is clicked', async () => {
+  const ui = terminal(async () => ({ json: async () => ({ ok: true, stdout: 'Hallo Welt\n' }) }));
   vm.runInContext('switchToCode()', ui.context);
-  const editor = ui.get('#terminal-editor');
-  let prevented = false;
-  editor.listeners.keydown({ key: 'Enter', shiftKey: true, preventDefault() { prevented = true; } });
-  assert.equal(prevented, false);
-  editor.listeners.keydown({ key: 'Enter', shiftKey: false, preventDefault() { prevented = true; } });
-  assert.equal(prevented, true);
+  const nextButton = ui.get('#next-exercise');
+  assert.equal(nextButton.hidden, true);
+  ui.get('#terminal-editor').listeners.keydown({ key: 'Enter', shiftKey: false, preventDefault() {} });
   await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(ui.get('#terminal-progress').textContent, '01 / 14');
+  assert.equal(nextButton.hidden, false);
+  assert.match(ui.get('#terminal-output').children.map((child) => child.innerHTML).join(' '), /Hallo Welt/);
+  nextButton.listeners.click();
   assert.equal(ui.get('#terminal-progress').textContent, '02 / 14');
-  assert.equal(ui.document.activeElement, editor);
-  assert.equal(editor.value.slice(editor.selectionStart, editor.selectionEnd), '/* YOUR_CODE_HERE */');
+  assert.equal(nextButton.hidden, true);
 });
 
 test('wrong output allows retry without advancing or losing focus', async () => {
-  const ui = terminal(async () => ({ json: async () => ({ ok: true, stdout: 'Wrong\n' }) }));
+  const ui = terminal(async () => ({ json: async () => ({ ok: true, stdout: 'Falsch\n' }) }));
   vm.runInContext('switchToCode()', ui.context);
   ui.get('#terminal-editor').listeners.keydown({ key: 'Enter', shiftKey: false, preventDefault() {} });
   await new Promise((resolve) => setImmediate(resolve));
   assert.equal(ui.get('#terminal-progress').textContent, '01 / 14');
   assert.equal(ui.document.activeElement, ui.get('#terminal-editor'));
   assert.equal(ui.get('#terminal-editor').disabled, false);
+  assert.equal(ui.get('#next-exercise').hidden, true);
 });
 
 test('skip on the final exercise returns to quiz with input focused', () => {
   const ui = terminal(async () => { throw new Error('unexpected fetch'); });
   vm.runInContext('switchToCode(); currentExerciseIndex = codeExercises.length - 1; printExercise()', ui.context);
   ui.get('#skip-exercise').listeners.click();
-  assert.equal(ui.get('#terminal-mode').textContent, 'QUIZ MODE');
+  assert.equal(ui.get('#terminal-mode').textContent, 'QUIZ-MODUS');
   assert.equal(ui.get('#terminal-editor').hidden, true);
   assert.equal(ui.document.activeElement, ui.get('#terminal-input'));
 });

@@ -8,8 +8,8 @@ const codeExercises = vm.runInNewContext(`${fs.readFileSync(require.resolve('../
 test('ten additional exercises progress from output to variables, conditions and loops', () => {
   assert.equal(codeExercises.length, 14);
   assert.deepEqual(Array.from(codeExercises.slice(0, 4), (exercise) => exercise.title), [
-    'Hello World', 'Declarar una variable', 'Concatenar texto', 'Suma simple'
+    'Hallo Welt', 'Eine Variable deklarieren', 'Text verketten', 'Einfache Addition'
   ]);
-  assert.ok(codeExercises.every((exercise) => exercise.starter.includes('/* YOUR_CODE_HERE */')));
+  assert.ok(codeExercises.every((exercise) => exercise.starter.includes('/* DEIN_CODE_HIER */')));
   assert.ok(codeExercises.every((exercise) => typeof exercise.expectedOutput === 'string'));
 });

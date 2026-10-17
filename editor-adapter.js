@@ -23,33 +23,33 @@
     if (socket || !global.WebSocket) return;
     const protocol = global.location && global.location.protocol === "https:" ? "wss:" : "ws:";
     socket = new global.WebSocket(`${protocol}//${global.location.host}/lsp`);
-    socket.addEventListener("open", () => notify({ state: "connecting", text: "JDT LS conectando…" }));
+    socket.addEventListener("open", () => notify({ state: "connecting", text: "JDT LS verbindet…" }));
     socket.addEventListener("message", (event) => {
       let message;
       try { message = JSON.parse(event.data); } catch { return; }
       if (message.type === "ready") {
         send({ type: "change", source: model.getValue() });
-        notify({ state: "ready", text: "JDT LS listo · completado semántico activo" });
+        notify({ state: "ready", text: "JDT LS bereit · semantische Vervollständigung aktiv" });
       }
       else if (message.type === "diagnostics") applyDiagnostics(message.diagnostics || []);
       else if (message.type === "completion") {
         const pending = completions.get(message.id);
         if (pending) { completions.delete(message.id); pending.resolve(message.items || []); }
       } else if (message.type === "error") {
-        notify({ state: "unavailable", text: `JDT LS no disponible: ${message.message || "error local"}` });
+        notify({ state: "unavailable", text: `JDT LS nicht verfügbar: ${message.message || "lokaler Fehler"}` });
         for (const pending of completions.values()) pending.reject(new Error(message.message || "completion unavailable"));
         completions.clear();
       }
     });
-    socket.addEventListener("error", () => notify({ state: "unavailable", text: "JDT LS no disponible · se puede ejecutar con Docker" }));
-    socket.addEventListener("close", () => { socket = null; notify({ state: "unavailable", text: "JDT LS no disponible · se puede ejecutar con Docker" }); });
+    socket.addEventListener("error", () => notify({ state: "unavailable", text: "JDT LS nicht verfügbar · Ausführung mit Docker möglich" }));
+    socket.addEventListener("close", () => { socket = null; notify({ state: "unavailable", text: "JDT LS nicht verfügbar · Ausführung mit Docker möglich" }); });
   }
 
   function send(message) { if (socket && socket.readyState === 1) socket.send(JSON.stringify(message)); }
   function applyDiagnostics(diagnostics) {
     if (!global.monaco || !model) return;
     global.monaco.editor.setModelMarkers(model, "jdtls", diagnostics.map((diagnostic) => ({
-      message: diagnostic.message || "Java error",
+      message: diagnostic.message || "Java-Fehler",
       severity: diagnostic.severity === 2 ? global.monaco.MarkerSeverity.Warning : global.monaco.MarkerSeverity.Error,
       startLineNumber: (diagnostic.range && diagnostic.range.start.line || 0) + 1,
       startColumn: (diagnostic.range && diagnostic.range.start.character || 0) + 1,
@@ -78,7 +78,20 @@
       if (!model) {
         model = monaco.editor.createModel(value, "java");
         monaco.languages.setLanguageConfiguration("java", { indentationRules: { increaseIndentPattern: /\{[^}"']*$/, decreaseIndentPattern: /^\s*\}/ }, brackets: [["{", "}"], ["[", "]"], ["(", ")"]] });
-        monaco.languages.registerCompletionItemProvider("java", { triggerCharacters: ["."], provideCompletionItems: (_, position) => requestCompletion(position).then((items) => ({ suggestions: items.map((item) => {
+        monaco.languages.registerCompletionItemProvider("java", { triggerCharacters: ["."], provideCompletionItems: (_, position) => {
+          const prefix = model.getValue().slice(0, position.column - 1).match(/[A-Za-z_]\w*$/)?.[0] || "";
+          const localSuggestions = prefix === "sout" ? [{
+            label: "System.out.println",
+            detail: "Java-Ausgabevorlage",
+            documentation: "Erzeugt eine System.out.println-Ausgabe.",
+            kind: monaco.languages.CompletionItemKind.Method,
+            filterText: "sout",
+            sortText: "000",
+            insertText: "System.out.println($0);",
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule?.InsertAsSnippet || 4,
+            range: { startLineNumber: position.lineNumber, startColumn: position.column - prefix.length, endLineNumber: position.lineNumber, endColumn: position.column },
+          }] : [];
+          return requestCompletion(position).then((items) => ({ suggestions: [...localSuggestions, ...items.map((item) => {
           const edit = item.textEdit;
           const range = edit?.range || edit?.insert;
           return {
@@ -97,10 +110,11 @@
               endColumn: model.getWordUntilPosition(position).endColumn,
             },
           };
-        }) })) });
+        })] }));
+        } });
         model.onDidChangeContent(() => { if (onChange) onChange(model.getValue()); send({ type: "change", source: model.getValue() }); });
       } else model.setValue(value);
-      editor = editor || monaco.editor.create(container, { model, theme: "vs-dark", minimap: { enabled: false }, automaticLayout: true, language: "java", tabSize: 4, insertSpaces: true, suggestOnTriggerCharacters: true, wordWrap: "off" });
+      editor = editor || monaco.editor.create(container, { model, theme: "vs-dark", minimap: { enabled: false }, automaticLayout: true, language: "java", tabSize: 4, insertSpaces: true, suggestOnTriggerCharacters: true, quickSuggestions: { other: true, comments: false, strings: false }, wordWrap: "off" });
       if (onExecute && !editor.__devquizExecuteAction) {
         editor.__devquizExecuteAction = true;
         editor.onKeyDown((event) => {
@@ -111,13 +125,13 @@
           event.stopPropagation();
           onExecute();
         });
-        editor.addAction({ id: "devquiz.execute", label: "Ejecutar Java", keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter], run: onExecute });
+        editor.addAction({ id: "devquiz.execute", label: "Java ausführen", keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter], run: onExecute });
       }
       container.hidden = false;
       connect();
       send({ type: "change", source: model.getValue() });
       return editor;
-    }).catch((error) => { notify({ state: "unavailable", text: `Editor local no disponible: ${error.message}` }); return null; });
+    }).catch((error) => { notify({ state: "unavailable", text: `Editor local nicht verfügbar: ${error.message}` }); return null; });
   }
 
   global.devquizEditor = { mount, getValue: () => model ? model.getValue() : null, focus: () => editor && editor.focus(), setReadOnly: (value) => editor && editor.updateOptions({ readOnly: value }), selectRange, isMounted: () => Boolean(editor) };

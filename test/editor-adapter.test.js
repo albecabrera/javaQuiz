@@ -14,7 +14,7 @@ test('editor adapter uses only the local Monaco loader and bridge protocol', () 
 });
 
 test('editor adapter reports unavailable JDT LS without fabricating completions', () => {
-  assert.match(source, /JDT LS no disponible/);
+  assert.match(source, /JDT LS nicht verfügbar/);
   assert.match(source, /Promise\.resolve\(\[\]\)/);
 });
 
@@ -58,4 +58,13 @@ test('ready sends current source and completion edits map LSP positions to Monac
   const result = await resultPromise;
   assert.equal(result.suggestions[0].insertText, 'println()');
   assert.deepEqual(JSON.parse(JSON.stringify(result.suggestions[0].range)), { startLineNumber: 1, startColumn: 8, endLineNumber: 1, endColumn: 12 });
+
+  value = 'sout';
+  const soutResultPromise = provider.provideCompletionItems(null, { lineNumber: 1, column: 5 });
+  const soutRequest = socket.sent.filter((message) => message.type === 'complete').at(-1);
+  socket.handlers.message({ data: JSON.stringify({ type: 'completion', id: soutRequest.id, items: [] }) });
+  const soutResult = await soutResultPromise;
+  assert.equal(soutResult.suggestions[0].label, 'System.out.println');
+  assert.equal(soutResult.suggestions[0].insertText, 'System.out.println($0);');
+  assert.deepEqual(JSON.parse(JSON.stringify(soutResult.suggestions[0].range)), { startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 5 });
 });

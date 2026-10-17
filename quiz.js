@@ -1,212 +1,212 @@
-// Banco de preguntas de Java básico para DevQuiz.
+// Java-Grundlagen-Fragen und Übungen für DevQuiz.
 const questions = [
   {
-    question: "¿Cuál es el punto de entrada de una aplicación Java?",
+    question: "Was ist der Einstiegspunkt einer Java-Anwendung?",
     options: ["start()", "main()", "run()", "init()"],
     correctAnswer: 1,
-    explanation: "El método public static void main(String[] args) es el punto de entrada de una aplicación Java."
+    explanation: "Die Methode public static void main(String[] args) ist der Einstiegspunkt einer Java-Anwendung."
   },
   {
-    question: "¿Qué tipo de dato se usa para almacenar números enteros?",
+    question: "Welcher Datentyp speichert ganze Zahlen?",
     options: ["String", "boolean", "int", "double"],
     correctAnswer: 2,
-    explanation: "int representa números enteros, como 10, 0 o -25."
+    explanation: "int steht für ganze Zahlen wie 10, 0 oder -25."
   },
   {
-    question: "¿Cómo se declara una constante en Java?",
+    question: "Wie wird eine Konstante in Java deklariert?",
     options: ["const", "static", "final", "constant"],
     correctAnswer: 2,
-    explanation: "La palabra clave final impide que una variable cambie su valor después de ser inicializada."
+    explanation: "Das Schlüsselwort final verhindert, dass eine Variable nach der Initialisierung ihren Wert ändert."
   },
   {
-    question: "¿Qué símbolo se utiliza para terminar una instrucción en Java?",
+    question: "Welches Symbol beendet eine Anweisung in Java?",
     options: [".", ":", ";", "!"],
     correctAnswer: 2,
-    explanation: "La mayoría de las instrucciones Java terminan con un punto y coma (;)."
+    explanation: "Die meisten Java-Anweisungen enden mit einem Semikolon (;)."
   },
   {
-    question: "¿Qué palabra clave se usa para crear un objeto?",
+    question: "Welches Schlüsselwort wird verwendet, um ein Objekt zu erzeugen?",
     options: ["object", "new", "create", "this"],
     correctAnswer: 1,
-    explanation: "new reserva memoria y crea una nueva instancia de una clase."
+    explanation: "new reserviert Speicher und erzeugt eine neue Instanz einer Klasse."
   },
   {
-    question: "¿Cuál de estos tipos almacena texto?",
-    options: ["char", "String", "text", "word"],
+    question: "Welcher dieser Typen speichert Text?",
+    options: ["char", "String", "text", "Wort"],
     correctAnswer: 1,
-    explanation: "String es la clase de Java utilizada para representar una secuencia de caracteres."
+    explanation: "String ist die Java-Klasse für eine Folge von Zeichen."
   },
   {
-    question: "¿Qué operador se usa para comparar si dos valores son iguales?",
+    question: "Welcher Operator vergleicht, ob zwei Werte gleich sind?",
     options: ["=", "==", "===", "equals"],
     correctAnswer: 1,
-    explanation: "El operador == compara valores primitivos. Para comparar el contenido de objetos suele usarse equals()."
+    explanation: "Der Operator == vergleicht primitive Werte. Für den Inhalt von Objekten wird meist equals() verwendet."
   },
   {
-    question: "¿Qué estructura se utiliza para repetir código mientras una condición sea verdadera?",
+    question: "Welche Struktur wiederholt Code, solange eine Bedingung wahr ist?",
     options: ["if", "switch", "while", "try"],
     correctAnswer: 2,
-    explanation: "while repite un bloque de código mientras su condición sea true."
+    explanation: "while wiederholt einen Codeblock, solange seine Bedingung true ist."
   },
   {
-    question: "¿Qué significa que Java es un lenguaje orientado a objetos?",
-    options: ["Solo usa funciones", "Organiza el código con clases y objetos", "No usa variables", "Solo funciona en internet"],
+    question: "Was bedeutet es, dass Java objektorientiert ist?",
+    options: ["Verwendet nur Funktionen", "Organisiert Code mit Klassen und Objekten", "Verwendet keine Variablen", "Funktioniert nur im Internet"],
     correctAnswer: 1,
-    explanation: "La programación orientada a objetos organiza el código alrededor de clases, objetos, atributos y métodos."
+    explanation: "Objektorientierte Programmierung organisiert Code mit Klassen, Objekten, Attributen und Methoden."
   },
   {
-    question: "¿Qué palabra clave permite que una clase herede de otra?",
+    question: "Welches Schlüsselwort lässt eine Klasse von einer anderen erben?",
     options: ["inherits", "extends", "implements", "super"],
     correctAnswer: 1,
-    explanation: "extends indica que una clase hereda atributos y métodos de otra clase."
+    explanation: "extends bedeutet, dass eine Klasse Attribute und Methoden von einer anderen Klasse erbt."
   }
 ];
 
-// Ejercicios locales: el backend los compila y ejecuta como Main.java.
-// El marcador se selecciona automáticamente al cargar el ejercicio.
+// Lokale Übungen: Das Backend kompiliert und startet sie als Main.java.
+// Der Marker wird beim Laden der Übung automatisch ausgewählt.
 const codeExercises = [
   {
-    title: "Hello World",
-    prompt: "Imprimí exactamente Hello World en la consola.",
-    expectedOutput: "Hello World",
+    title: "Hallo Welt",
+    prompt: "Gib exakt Hallo Welt in der Konsole aus.",
+    expectedOutput: "Hallo Welt",
     starter: `public class Main {
   public static void main(String[] args) {
-    /* YOUR_CODE_HERE */
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Declarar una variable",
-    prompt: "Declará una variable String llamada nombre con valor Ada e imprimila en la consola.",
+    title: "Eine Variable deklarieren",
+    prompt: "Deklariere eine String-Variable namens name mit dem Wert Ada und gib sie in der Konsole aus.",
     expectedOutput: "Ada",
     starter: `public class Main {
   public static void main(String[] args) {
-    /* YOUR_CODE_HERE */
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Concatenar texto",
-    prompt: "Usá las variables nombre y edad para imprimir: Soy Ada y tengo 20 años.",
-    expectedOutput: "Soy Ada y tengo 20 años.",
+    title: "Text verketten",
+    prompt: "Verwende die Variablen name und alter und gib aus: Ich bin Ada und 20 Jahre alt.",
+    expectedOutput: "Ich bin Ada und 20 Jahre alt.",
     starter: `public class Main {
   public static void main(String[] args) {
-    String nombre = "Ada";
-    int edad = 20;
-    /* YOUR_CODE_HERE */
+    String name = "Ada";
+    int alter = 20;
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Suma simple",
-    prompt: "Calculá e imprimí el resultado de sumar 7 + 5.",
+    title: "Einfache Addition",
+    prompt: "Berechne und gib das Ergebnis von 7 + 5 aus.",
     expectedOutput: "12",
     starter: `public class Main {
   public static void main(String[] args) {
-    int resultado = 7 + 5;
-    /* YOUR_CODE_HERE */
+    int ergebnis = 7 + 5;
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Imprimir otra línea",
-    prompt: "Imprimí exactamente Aprendo Java usando System.out.println.",
-    expectedOutput: "Aprendo Java",
+    title: "Eine weitere Zeile ausgeben",
+    prompt: "Gib exakt Ich lerne Java mit System.out.println aus.",
+    expectedOutput: "Ich lerne Java",
     starter: `public class Main {
   public static void main(String[] args) {
-    /* YOUR_CODE_HERE */
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Variable entera",
-    prompt: "Declará un int llamado edad con valor 18 e imprimilo.",
+    title: "Ganzzahlige Variable",
+    prompt: "Deklariere einen int namens alter mit dem Wert 18 und gib ihn aus.",
     expectedOutput: "18",
     starter: `public class Main {
   public static void main(String[] args) {
-    /* YOUR_CODE_HERE */
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Número decimal",
-    prompt: "Declará un double llamado precio con valor 2.5 e imprimilo.",
+    title: "Dezimalzahl",
+    prompt: "Deklariere einen double namens preis mit dem Wert 2.5 und gib ihn aus.",
     expectedOutput: "2.5",
     starter: `public class Main {
   public static void main(String[] args) {
-    /* YOUR_CODE_HERE */
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Valor booleano",
-    prompt: "Declará un boolean llamado activo con valor true e imprimilo.",
+    title: "Boolescher Wert",
+    prompt: "Deklariere einen boolean namens aktiv mit dem Wert true und gib ihn aus.",
     expectedOutput: "true",
     starter: `public class Main {
   public static void main(String[] args) {
-    /* YOUR_CODE_HERE */
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Un carácter",
-    prompt: "Declará un char llamado inicial con valor 'J' e imprimilo.",
+    title: "Ein Zeichen",
+    prompt: "Deklariere ein char namens anfangsbuchstabe mit dem Wert 'J' und gib es aus.",
     expectedOutput: "J",
     starter: `public class Main {
   public static void main(String[] args) {
-    /* YOUR_CODE_HERE */
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Multiplicación",
-    prompt: "Multiplicá 6 por 4 e imprimí el resultado.",
+    title: "Multiplikation",
+    prompt: "Multipliziere 6 mit 4 und gib das Ergebnis aus.",
     expectedOutput: "24",
     starter: `public class Main {
   public static void main(String[] args) {
-    /* YOUR_CODE_HERE */
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Actualizar una variable",
-    prompt: "Comenzá con puntos = 3, sumale 2 e imprimí el nuevo valor.",
+    title: "Eine Variable aktualisieren",
+    prompt: "Starte mit punkte = 3, addiere 2 und gib den neuen Wert aus.",
     expectedOutput: "5",
     starter: `public class Main {
   public static void main(String[] args) {
-    int puntos = 3;
-    /* YOUR_CODE_HERE */
+    int punkte = 3;
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Comparar números",
-    prompt: "Compará si 8 es mayor que 5 e imprimí el resultado booleano.",
+    title: "Zahlen vergleichen",
+    prompt: "Vergleiche, ob 8 größer als 5 ist, und gib den booleschen Wert aus.",
     expectedOutput: "true",
     starter: `public class Main {
   public static void main(String[] args) {
-    /* YOUR_CODE_HERE */
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Condición if",
-    prompt: "Si nota es mayor o igual a 6, imprimí Aprobado; si no, imprimí Reprobado.",
-    expectedOutput: "Aprobado",
+    title: "If-Bedingung",
+    prompt: "Gib Bestanden aus, wenn note größer oder gleich 6 ist, sonst Nicht bestanden.",
+    expectedOutput: "Bestanden",
     starter: `public class Main {
   public static void main(String[] args) {
-    int nota = 8;
-    /* YOUR_CODE_HERE */
+    int note = 8;
+    /* DEIN_CODE_HIER */
   }
 }`
   },
   {
-    title: "Bucle for",
-    prompt: "Usá un for para imprimir los números del 1 al 3, uno por línea.",
+    title: "For-Schleife",
+    prompt: "Verwende eine for-Schleife, um die Zahlen von 1 bis 3 jeweils in einer Zeile auszugeben.",
     expectedOutput: "1\n2\n3",
     starter: `public class Main {
   public static void main(String[] args) {
-    /* YOUR_CODE_HERE */
+    /* DEIN_CODE_HIER */
   }
 }`
   }

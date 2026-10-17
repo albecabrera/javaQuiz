@@ -1,18 +1,18 @@
 <!doctype html>
-<html lang="es">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="DevQuiz: quiz de Java para principiantes." />
-    <title>DevQuiz | Terminal de Java</title>
+    <meta name="description" content="DevQuiz: Java-Quiz für Anfängerinnen und Anfänger." />
+    <title>DevQuiz | Java-Terminal</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="app-shell">
       <header class="site-header">
         <p class="eyebrow"><span class="eyebrow-dot"></span> devquiz.exe</p>
-        <h1>Aprendé Java desde la terminal.</h1>
-        <p class="subtitle">Respondé como si estuvieras ejecutando código en una consola real.</p>
+        <h1>Java im Terminal lernen.</h1>
+        <p class="subtitle">Antworte, als würdest du Code in einer echten Konsole ausführen.</p>
       </header>
 
       <section class="terminal-window" aria-labelledby="terminal-title">
@@ -22,35 +22,38 @@
             <span class="window-control minimize"></span>
             <span class="window-control maximize"></span>
           </div>
-          <p id="terminal-title">student@devquiz: ~/java-basics</p>
+          <p id="terminal-title">lernende@devquiz: ~/java-grundlagen</p>
           <span class="terminal-menu" aria-hidden="true">•••</span>
         </div>
 
         <div class="terminal-body" id="terminal-body" tabindex="-1">
           <div class="terminal-output" id="terminal-output" aria-live="polite"></div>
           <form class="terminal-prompt" id="terminal-form">
-            <label class="prompt-label" for="terminal-input"><span class="prompt-user">student</span><span class="prompt-at">@</span><span class="prompt-host">devquiz</span><span class="prompt-path">:~$</span></label>
-            <input id="terminal-input" class="terminal-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Escribí tu respuesta" autofocus />
-            <textarea id="terminal-editor" class="terminal-editor" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Escribí tu código Java" hidden></textarea>
-            <div id="monaco-editor" class="monaco-editor" aria-label="Editor de código Java" hidden></div>
-            <p id="editor-status" class="editor-status" role="status">Editor local · JDT LS verificando disponibilidad…</p>
-            <button id="skip-exercise" class="skip-button" type="button" hidden>Saltar ejercicio →</button>
+            <label class="prompt-label" for="terminal-input"><span class="prompt-user">lernende</span><span class="prompt-at">@</span><span class="prompt-host">devquiz</span><span class="prompt-path">:~$</span></label>
+            <input id="terminal-input" class="terminal-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Gib deine Antwort ein" autofocus />
+            <textarea id="terminal-editor" class="terminal-editor" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Gib deinen Java-Code ein" hidden></textarea>
+            <div id="monaco-editor" class="monaco-editor" aria-label="Java-Code-Editor" hidden></div>
+            <p id="editor-status" class="editor-status" role="status">Lokaler Editor · JDT LS wird geprüft…</p>
+            <div class="exercise-actions">
+              <button id="next-exercise" class="next-button" type="button" hidden>Weiter →</button>
+              <button id="skip-exercise" class="skip-button" type="button" hidden>Übung überspringen →</button>
+            </div>
           </form>
         </div>
 
         <div class="terminal-statusbar">
           <span><span class="status-pulse"></span> JAVA 21</span>
-          <span id="terminal-mode">QUIZ MODE</span>
+          <span id="terminal-mode">QUIZ-MODUS</span>
           <span id="terminal-progress">01 / 10</span>
         </div>
       </section>
 
-      <section class="quiz-meta" aria-label="Estado del quiz">
-        <div class="meta-item"><span class="meta-label">PROGRESO</span><div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div></div>
-        <div class="meta-item meta-score"><span class="meta-label">SCORE</span><strong id="score-badge">0</strong><span>pts</span></div>
+      <section class="quiz-meta" aria-label="Quiz-Status">
+        <div class="meta-item"><span class="meta-label">FORTSCHRITT</span><div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div></div>
+        <div class="meta-item meta-score"><span class="meta-label">PUNKTE</span><strong id="score-badge">0</strong><span>Pkt.</span></div>
       </section>
 
-      <footer class="site-footer"><button id="mode-toggle" class="mode-toggle" type="button">Quiz de opciones</button><span class="footer-separator">//</span><span>Ctrl + R para reiniciar</span></footer>
+      <footer class="site-footer"><button id="mode-toggle" class="mode-toggle" type="button">Multiple-Choice-Quiz</button><span class="footer-separator">//</span><span>Strg + R zum Neustart</span></footer>
     </main>
     <script src="/vendor/vs/loader.js"></script>
     <script src="quiz.js"></script>

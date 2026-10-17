@@ -1,10 +1,10 @@
-# DevQuiz — Java en una terminal local
+# DevQuiz — Java im lokalen Terminal
 
-Escribí Java, recibí diagnósticos y autocompletado semántico mientras editás, y ejecutá cada ejercicio en un contenedor aislado. No usa APIs, CDN ni servicios pagos durante el uso.
+Schreibe Java-Code, erhalte Live-Diagnosen und semantische Vervollständigung und führe jede Übung in einem isolierten Container aus. Während der Nutzung werden keine APIs, CDNs oder kostenpflichtigen Dienste verwendet.
 
-## Inicio rápido
+## Schnellstart
 
-Requiere Docker y la imagen local `eclipse-temurin:21-jdk`. En este directorio:
+Voraussetzungen sind Docker und das lokale Image `eclipse-temurin:21-jdk`. In diesem Verzeichnis:
 
 ```sh
 docker image inspect eclipse-temurin:21-jdk
@@ -13,33 +13,35 @@ bash scripts/install-jdtls.sh
 npm start
 ```
 
-Abrí **http://127.0.0.1:3000**. Verás solo el ejercicio actual; el cursor queda en el hueco de respuesta. Si la imagen no está instalada, obtenela una vez con `docker pull eclipse-temurin:21-jdk`.
+Öffne **http://127.0.0.1:3000**. Es wird nur die aktuelle Übung angezeigt; der Cursor steht direkt an der Antwortstelle. Falls das Image fehlt, lade es einmal mit `docker pull eclipse-temurin:21-jdk`.
 
-La instalación descarga herramientas libres una sola vez: Monaco 0.52 (MIT), `ws` (MIT) y Eclipse JDT LS 1.50 (EPL-2.0). El script verifica el SHA-256 oficial de JDT LS y lo extrae en `.local/jdtls-compatible/`, ignorado por Git. Al usar el quiz, las herramientas funcionan íntegramente en tu equipo.
+Die freien Werkzeuge werden nur einmal lokal installiert: Monaco 0.52 (MIT), `ws` (MIT) und Eclipse JDT LS 1.50 (EPL-2.0). Das Installationsskript prüft die offizielle SHA-256-Prüfsumme von JDT LS und entpackt es nach `.local/jdtls-compatible/`, das von Git ignoriert wird. Während des Quiz läuft alles auf deinem Rechner.
 
-## Controles
+## Steuerung
 
-| Acción | Tecla o botón |
+| Aktion | Taste oder Schaltfläche |
 | --- | --- |
-| Ver sugerencias semánticas | Ctrl + Espacio (también al escribir `.`) |
-| Aceptar una sugerencia | Enter con la lista abierta |
-| Ejecutar la respuesta | Enter sin sugerencias, o Ctrl/Cmd + Enter |
-| Insertar una línea | Shift + Enter |
-| Indentar | Tab |
-| Pasar sin resolver | Saltar ejercicio → |
-| Cambiar de modo | Quiz de opciones / Ejercicios de código |
+| Semantische Vorschläge anzeigen | Strg + Leertaste (auch beim Schreiben von `.`) |
+| `sout` vervollständigen | `sout` schreiben und den Vorschlag `System.out.println` auswählen |
+| Vorschlag übernehmen | Enter bei geöffneter Liste |
+| Antwort ausführen | Enter ohne Vorschlagsliste oder Strg/Cmd + Enter |
+| Zeile einfügen | Umschalt + Enter |
+| Einrückung | Tab |
+| Zur nächsten gelösten Übung | Weiter → |
+| Überspringen | Übung überspringen → |
+| Modus wechseln | Multiple-Choice-Quiz / Code-Übungen |
 
-Los errores de Java aparecen subrayados mientras editás. Si la salida coincide con la esperada, avanzás al siguiente ejercicio con el cursor listo; si no, podés corregir y reintentar. Si JDT LS no está disponible, el estado lo indica: la edición y la ejecución local siguen funcionando, pero no se inventan sugerencias semánticas.
+Java-Fehler werden während der Eingabe unterstrichen. Die Ausgabe oder Fehlermeldung bleibt im Terminal sichtbar. Wenn das Ergebnis richtig ist, musst du **Weiter** drücken, um zur nächsten Übung zu gelangen; bei einer falschen Ausgabe kannst du den Code korrigieren und erneut ausführen. Wenn JDT LS nicht verfügbar ist, zeigt der Status dies an: Bearbeitung und lokale Ausführung funktionieren weiterhin, aber es werden keine semantischen Vorschläge erfunden.
 
-## Ejecución local
+## Lokale Ausführung
 
-`POST http://127.0.0.1:3000/api/execute` recibe:
+`POST http://127.0.0.1:3000/api/execute` empfängt:
 
 ```json
 {
-  "source": "public class Main { public static void main(String[] args) { System.out.println(\"Hola\"); } }",
+  "source": "public class Main { public static void main(String[] args) { System.out.println(\"Hallo\"); } }",
   "stdin": ""
 }
 ```
 
-Cada envío compila y ejecuta Java 21 en Docker sin red, con filesystem raíz de solo lectura y límites de CPU, memoria, tiempo y salida. El editor usa un segundo contenedor local para JDT LS, con un proyecto Java generado y sin archivos de build controlados por el usuario. Ningún archivo del repositorio se envía al analizador.
+Jede Einsendung kompiliert und startet Java 21 in Docker ohne Netzwerk, mit schreibgeschütztem Root-Dateisystem sowie CPU-, Speicher-, Zeit- und Ausgabelimits. Der Editor verwendet für JDT LS einen zweiten lokalen Container mit einem erzeugten Java-Projekt. Es werden keine vom Nutzer kontrollierten Build-Dateien verwendet und keine Repository-Dateien an den Analysator gesendet.
