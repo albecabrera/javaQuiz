@@ -39,21 +39,32 @@ test('ready sends current source and completion edits map LSP positions to Monac
     onDidChangeContent() {},
   };
   let executeCount = 0;
-  const editor = { addAction() {}, onKeyDown(handler) { this.keydown = handler; }, focus() {}, updateOptions() {}, setSelection() {} };
+  const actions = [];
+  const editor = { addAction(action) { actions.push(action); }, onKeyDown(handler) { this.keydown = handler; }, focus() {}, updateOptions() {}, setSelection() {}, trigger() {} };
   const monaco = {
     editor: { createModel: () => model, create: () => editor, setModelMarkers() {} },
     languages: { setLanguageConfiguration() {}, registerCompletionItemProvider: (_, impl) => { provider = impl; }, CompletionItemKind: { Method: 1 } },
-    KeyCode: { Enter: 3 }, KeyMod: { CtrlCmd: 2048 }, MarkerSeverity: { Warning: 4, Error: 8 },
+    KeyCode: { Enter: 3, F10: 4, Space: 5, Slash: 6, KeyD: 7, KeyY: 8, Backspace: 9, KeyL: 10 }, KeyMod: { Ctrl: 16384, CtrlCmd: 2048, Shift: 4096, Alt: 8192 },
   };
   class Socket {
     constructor() { socket = this; this.readyState = 0; this.handlers = {}; this.sent = []; }
     addEventListener(name, callback) { this.handlers[name] = callback; }
     send(raw) { this.sent.push(JSON.parse(raw)); }
   }
-  const window = { monaco, WebSocket: Socket, location: { protocol: 'http:', host: '127.0.0.1:3000' }, dispatchEvent() {} };
+  const window = { monaco, WebSocket: Socket, navigator: { platform: 'MacIntel' }, location: { protocol: 'http:', host: '127.0.0.1:3000' }, dispatchEvent() {} };
   vm.runInNewContext(source, { window, CustomEvent: class { constructor(name, options) { this.detail = options.detail; } }, setTimeout });
   const container = { hidden: true, querySelector: () => null };
   assert.ok(await window.devquizEditor.mount(container, value, null, () => { executeCount++; }));
+  assert.deepEqual(JSON.parse(JSON.stringify(actions.map(({ id, keybindings }) => ({ id, keybindings })))), [
+    { id: 'devquiz.execute', keybindings: [2051, 4100] },
+    { id: 'devquiz.complete', keybindings: [16389] },
+    { id: 'devquiz.completeStatement', keybindings: [6147] },
+    { id: 'devquiz.toggleComment', keybindings: [2054] },
+    { id: 'devquiz.duplicateLine', keybindings: [2055] },
+    { id: 'devquiz.deleteLine', keybindings: [2057] },
+    { id: 'devquiz.quickFix', keybindings: [8195] },
+    { id: 'devquiz.format', keybindings: [10250] },
+  ]);
   editor.keydown({ keyCode: 3, shiftKey: false, preventDefault() {}, stopPropagation() {} });
   assert.equal(executeCount, 1);
   container.querySelector = () => ({}); // Monaco suggestion widget is open.
@@ -73,7 +84,12 @@ test('ready sends current source and completion edits map LSP positions to Monac
   const completeRequestsBeforeSout = socket.sent.filter((message) => message.type === 'complete').length;
   const soutResult = await provider.provideCompletionItems(null, { lineNumber: 1, column: 5 });
   assert.equal(socket.sent.filter((message) => message.type === 'complete').length, completeRequestsBeforeSout);
-  assert.equal(soutResult.suggestions[0].label, 'System.out.println');
-  assert.equal(soutResult.suggestions[0].insertText, 'System.out.println($0);');
+  assert.deepEqual(JSON.parse(JSON.stringify(soutResult.suggestions.map(({ label, insertText }) => ({ label, insertText })))), [
+    { label: 'sout', insertText: 'System.out.println($0);' },
+    { label: 'soutf', insertText: 'System.out.printf("$0");' },
+    { label: 'soutm', insertText: 'System.out.println("$0");' },
+    { label: 'soutp', insertText: 'System.out.println("$1 = " + $1);' },
+    { label: 'soutv', insertText: 'System.out.println("$1 = " + $1);' },
+  ]);
   assert.deepEqual(JSON.parse(JSON.stringify(soutResult.suggestions[0].range)), { startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 5 });
 });

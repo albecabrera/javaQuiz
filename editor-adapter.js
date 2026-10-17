@@ -97,17 +97,22 @@
         monaco.languages.setLanguageConfiguration("java", { indentationRules: { increaseIndentPattern: /\{[^}"']*$/, decreaseIndentPattern: /^\s*\}/ }, brackets: [["{", "}"], ["[", "]"], ["(", ")"]] });
         monaco.languages.registerCompletionItemProvider("java", { triggerCharacters: ["."], provideCompletionItems: (_, position) => {
           const prefix = model.getValue().slice(0, position.column - 1).match(/[A-Za-z_]\w*$/)?.[0] || "";
-          const localSuggestions = prefix === "sout" ? [{
-            label: "System.out.println",
-            detail: "Java-Ausgabevorlage",
-            documentation: "Erzeugt eine System.out.println-Ausgabe.",
+          const soutTemplates = [
+            { label: "sout", detail: "Prints a string to System.out", insertText: "System.out.println($0);" },
+            { label: "soutf", detail: "Prints a formatted string to System.out", insertText: "System.out.printf(\"$0\");" },
+            { label: "soutm", detail: "Prints the current method name", insertText: "System.out.println(\"$0\");" },
+            { label: "soutp", detail: "Prints a method parameter", insertText: "System.out.println(\"$1 = \" + $1);" },
+            { label: "soutv", detail: "Prints a value to System.out", insertText: "System.out.println(\"$1 = \" + $1);" },
+          ];
+          const localSuggestions = prefix.startsWith("sout") ? soutTemplates.map((template, index) => ({
+            ...template,
+            documentation: template.detail,
             kind: monaco.languages.CompletionItemKind.Method,
-            filterText: "sout",
-            sortText: "000",
-            insertText: "System.out.println($0);",
+            filterText: template.label,
+            sortText: String(index).padStart(3, "0"),
             insertTextRules: monaco.languages.CompletionItemInsertTextRule?.InsertAsSnippet || 4,
             range: { startLineNumber: position.lineNumber, startColumn: position.column - prefix.length, endLineNumber: position.lineNumber, endColumn: position.column },
-          }] : [];
+          })) : [];
           if (localSuggestions.length) return Promise.resolve({ suggestions: localSuggestions });
           return requestCompletion(position).then((items) => ({ suggestions: items.map((item) => {
           const edit = item.textEdit;
@@ -149,7 +154,23 @@
           event.stopPropagation();
           onExecute();
         });
-        editor.addAction({ id: "devquiz.execute", label: "Java ausführen", keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter], run: onExecute });
+        editor.addAction({ id: "devquiz.execute", label: "Java ausführen", keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, monaco.KeyMod.Shift | monaco.KeyCode.F10], run: onExecute });
+      }
+      if (!editor.__devquizShortcuts) {
+        editor.__devquizShortcuts = true;
+        const isMac = /Mac|iPhone|iPad/.test(global.navigator?.platform || global.navigator?.userAgent || "");
+        const ctrl = monaco.KeyMod.Ctrl;
+        const ctrlCmd = monaco.KeyMod.CtrlCmd;
+        const alt = monaco.KeyMod.Alt;
+        const shift = monaco.KeyMod.Shift;
+        const addAction = (id, label, keybindings, command) => editor.addAction({ id: `devquiz.${id}`, label, keybindings, run: () => editor.trigger("keyboard", command, {}) });
+        addAction("complete", "Vervollständigung anzeigen", [ctrl | monaco.KeyCode.Space], "editor.action.triggerSuggest");
+        addAction("completeStatement", "Anweisung vervollständigen", [ctrlCmd | shift | monaco.KeyCode.Enter], "editor.action.completeStatement");
+        addAction("toggleComment", "Zeilenkommentar umschalten", [ctrlCmd | monaco.KeyCode.Slash], "editor.action.commentLine");
+        addAction("duplicateLine", "Zeile duplizieren", [ctrlCmd | monaco.KeyCode.KeyD], "editor.action.duplicateSelection");
+        addAction("deleteLine", "Zeile löschen", [isMac ? ctrlCmd | monaco.KeyCode.Backspace : ctrlCmd | monaco.KeyCode.KeyY], "editor.action.deleteLines");
+        addAction("quickFix", "Intentionen und Schnellkorrekturen", [alt | monaco.KeyCode.Enter], "editor.action.quickFix");
+        addAction("format", "Code neu formatieren", [ctrlCmd | alt | monaco.KeyCode.KeyL], "editor.action.formatDocument");
       }
       container.hidden = false;
       connect();

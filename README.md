@@ -21,10 +21,16 @@ Die freien Werkzeuge werden nur einmal lokal installiert: Monaco 0.52 (MIT), `ws
 
 | Aktion | Taste oder Schaltfläche |
 | --- | --- |
-| Semantische Vorschläge anzeigen | Strg + Leertaste (auch beim Schreiben von `.`) |
-| `sout` vervollständigen | `sout` schreiben und den Vorschlag `System.out.println` auswählen |
+| Semantische Vorschläge anzeigen | Strg + Leertaste (Windows/Linux/macOS; auch beim Schreiben von `.`) |
+| IntelliJ-Ausgabevorlagen | `sout`, `soutf`, `soutm`, `soutp` und `soutv` schreiben und den passenden Vorschlag auswählen |
 | Vorschlag übernehmen | Enter bei geöffneter Liste |
-| Antwort ausführen | Enter ohne Vorschlagsliste oder Strg/Cmd + Enter |
+| Antwort ausführen | Enter ohne Vorschlagsliste, Strg/Cmd + Enter oder Umschalt + F10 |
+| Anweisung vervollständigen | Strg/Cmd + Umschalt + Enter |
+| Zeilenkommentar umschalten | Strg/Cmd + `/` |
+| Zeile duplizieren | Strg/Cmd + D |
+| Zeile löschen | Strg + Y (Windows/Linux), Cmd + Rücktaste (macOS) |
+| Intentionen/Schnellkorrekturen | Alt + Enter (Windows/Linux), Option + Enter (macOS) |
+| Code formatieren | Strg/Cmd + Alt/Option + L |
 | Zeile einfügen | Umschalt + Enter |
 | Einrückung | Tab |
 | Zur nächsten gelösten Übung | Weiter → |
