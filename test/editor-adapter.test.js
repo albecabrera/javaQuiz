@@ -5,22 +5,23 @@ const vm = require('node:vm');
 
 const source = fs.readFileSync(require.resolve('../editor-adapter.js'), 'utf8');
 
-test('editor adapter uses only the local Monaco loader and bridge protocol', () => {
+test('editor adapter does not register code completion suggestions', () => {
+  assert.doesNotMatch(source, /registerCompletionItemProvider/);
+  assert.doesNotMatch(source, /requestCompletion|triggerSuggest|type: "complete"/);
+});
+
+test('editor adapter uses only the local Monaco loader and diagnostic bridge protocol', () => {
   assert.match(source, /\/vendor\/vs/);
   assert.doesNotMatch(source, /https?:\/\//);
   assert.match(source, /type: "change"/);
-  assert.match(source, /type: "complete"/);
+  assert.match(source, /message\.type === "diagnostics"/);
   assert.match(source, /setModelMarkers/);
 });
 
-test('editor adapter reconnects JDT LS without fabricating completions', () => {
+test('JDT LS reconnects without enabling code completion', () => {
   assert.match(source, /JDT LS wird neu verbunden/);
-  assert.match(source, /Promise\.resolve\(\[\]\)/);
-});
-
-test('typing sout triggers the local completion popup immediately', () => {
-  assert.match(source, /return Promise\.resolve\(\{ suggestions: localSuggestions \}\)/);
-  assert.match(source, /editor\?\.trigger\?\.\("keyboard", "editor\.action\.triggerSuggest"/);
+  assert.match(source, /scheduleReconnect/);
+  assert.doesNotMatch(source, /registerCompletionItemProvider|requestCompletion/);
 });
 
 test('JDT LS disconnects are retried without treating Docker execution as unavailable', () => {
@@ -28,78 +29,90 @@ test('JDT LS disconnects are retried without treating Docker execution as unavai
   assert.match(source, /scheduleReconnect/);
 });
 
-test('ready sends current source and completion edits map LSP positions to Monaco positions', async () => {
-  let provider;
+test('editor remains writable across exercises, accepts spaces, runs code, and keeps diagnostics', async () => {
   let socket;
-  let value = 'System.out.';
+  let value = 'System.out.println("Hallo");';
   let onModelChange;
+  let editorOptions;
+  let readOnly;
+  let completionProviderRegistrations = 0;
+  let executeCount = 0;
+  let markers;
+  const actions = [];
+  const statusEvents = [];
   const model = {
     getValue: () => value,
-    setValue: (next) => { value = next; },
-    getPositionAt: (offset) => ({ lineNumber: 1, column: offset + 1 }),
+    setValue(next) { value = next; },
+    getPositionAt(offset) { return { lineNumber: 1, column: offset + 1 }; },
     onDidChangeContent(handler) { onModelChange = handler; },
   };
-  let executeCount = 0;
-  const actions = [];
-  const triggeredCommands = [];
-  let editorOptions;
-  let suggestionVisible = false;
-  const editor = { addAction(action) { actions.push(action); }, onKeyDown(handler) { this.keydown = handler; }, focus() {}, updateOptions() {}, setSelection() {}, trigger(_source, command) { triggeredCommands.push(command); if (command === 'hideSuggestWidget') suggestionVisible = false; } };
+  const editor = {
+    addAction(action) { actions.push(action); },
+    onKeyDown(handler) { this.keydown = handler; },
+    focus() {},
+    updateOptions(options) { if (Object.hasOwn(options, 'readOnly')) readOnly = options.readOnly; },
+    setSelection() {},
+  };
   const monaco = {
-    editor: { createModel: () => model, create: (_, options) => { editorOptions = options; return editor; }, setModelMarkers() {} },
-    languages: { setLanguageConfiguration() {}, registerCompletionItemProvider: (_, impl) => { provider = impl; }, CompletionItemKind: { Method: 1 } },
-    KeyCode: { Enter: 3, F10: 4, Space: 5, Slash: 6, KeyD: 7, KeyY: 8, Backspace: 9, KeyL: 10 }, KeyMod: { Ctrl: 16384, CtrlCmd: 2048, Shift: 4096, Alt: 8192 },
+    editor: {
+      createModel: () => model,
+      create: (_, options) => { editorOptions = options; return editor; },
+      setModelMarkers(_, owner, nextMarkers) { markers = { owner, values: nextMarkers }; },
+    },
+    languages: { setLanguageConfiguration() {}, registerCompletionItemProvider() { completionProviderRegistrations++; } },
+    KeyCode: { Enter: 3, F10: 4, Space: 5, Slash: 6, KeyD: 7, KeyY: 8, Backspace: 9, KeyL: 10 },
+    KeyMod: { Ctrl: 16384, CtrlCmd: 2048, Shift: 4096, Alt: 8192 },
+    MarkerSeverity: { Warning: 4, Error: 8 },
   };
   class Socket {
     constructor() { socket = this; this.readyState = 0; this.handlers = {}; this.sent = []; }
     addEventListener(name, callback) { this.handlers[name] = callback; }
     send(raw) { this.sent.push(JSON.parse(raw)); }
   }
-  const window = { monaco, WebSocket: Socket, navigator: { platform: 'MacIntel' }, location: { protocol: 'http:', host: '127.0.0.1:3000' }, dispatchEvent() {} };
-  vm.runInNewContext(source, { window, CustomEvent: class { constructor(name, options) { this.detail = options.detail; } }, setTimeout });
-  const container = { hidden: true, querySelector: (selector) => selector === '.suggest-widget.visible' && suggestionVisible ? {} : null };
-  assert.ok(await window.devquizEditor.mount(container, value, null, () => { executeCount++; }));
-  assert.equal(editorOptions.acceptSuggestionOnCommitCharacter, false);
-  assert.deepEqual(JSON.parse(JSON.stringify(actions.map(({ id, keybindings }) => ({ id, keybindings })))), [
-    { id: 'devquiz.execute', keybindings: [2051, 4100] },
-    { id: 'devquiz.complete', keybindings: [16389] },
-    { id: 'devquiz.completeStatement', keybindings: [6147] },
-    { id: 'devquiz.toggleComment', keybindings: [2054] },
-    { id: 'devquiz.duplicateLine', keybindings: [2055] },
-    { id: 'devquiz.deleteLine', keybindings: [2057] },
-    { id: 'devquiz.quickFix', keybindings: [8195] },
-    { id: 'devquiz.format', keybindings: [10250] },
-  ]);
-  editor.keydown({ keyCode: 3, shiftKey: false, preventDefault() {}, stopPropagation() {} });
-  assert.equal(executeCount, 1);
-  suggestionVisible = true; // Monaco suggestion widget is open.
-  editor.keydown({ keyCode: 3, shiftKey: false, preventDefault() {}, stopPropagation() {} });
-  assert.equal(executeCount, 1);
+  const window = {
+    monaco,
+    WebSocket: Socket,
+    navigator: { platform: 'MacIntel' },
+    location: { protocol: 'http:', host: '127.0.0.1:3000' },
+    dispatchEvent(event) { statusEvents.push(event.detail); },
+  };
+  vm.runInNewContext(source, {
+    window,
+    CustomEvent: class { constructor(name, options) { this.name = name; this.detail = options.detail; } },
+    setTimeout,
+  });
+  const container = { hidden: true };
+  const onExecute = () => { executeCount++; };
+  assert.ok(await window.devquizEditor.mount(container, value, null, onExecute));
+  assert.equal(completionProviderRegistrations, 0);
+  assert.equal(editorOptions.suggestOnTriggerCharacters, false);
+  assert.equal(editorOptions.quickSuggestions, false);
+  assert.equal(editorOptions.wordBasedSuggestions, 'off');
+  assert.equal(actions.some(({ id }) => id === 'devquiz.complete' || id === 'devquiz.completeStatement'), false);
+
+  socket.readyState = 1;
+  socket.handlers.message({ data: JSON.stringify({ type: 'ready' }) });
+  assert.ok(statusEvents.some(({ text }) => text === 'JDT LS bereit · Live-Diagnosen aktiv'));
+  assert.ok(socket.sent.some(({ type }) => type === 'change' && value));
+  socket.handlers.message({ data: JSON.stringify({ type: 'diagnostics', diagnostics: [{ message: 'Error', severity: 1, range: { start: { line: 0, character: 0 }, end: { line: 0, character: 1 } } }] }) });
+  assert.equal(markers.owner, 'jdtls');
+  assert.equal(markers.values[0].message, 'Error');
+
   let preventedSpace = false;
   editor.keydown({ keyCode: 5, shiftKey: false, preventDefault() { preventedSpace = true; }, stopPropagation() {} });
   assert.equal(preventedSpace, false);
-  assert.equal(suggestionVisible, true);
-  value = 'System.out.println("Hallo Welt")'; // Monaco has inserted the space.
+  value = 'System.out.println("Hallo Welt");';
   onModelChange({ changes: [{ text: ' ' }] });
-  assert.equal(value, 'System.out.println("Hallo Welt")');
-  assert.equal(suggestionVisible, false);
-  assert.ok(triggeredCommands.includes('hideSuggestWidget'));
-  socket.readyState = 1;
-  socket.handlers.message({ data: JSON.stringify({ type: 'ready' }) });
-  assert.ok(socket.sent.some((message) => message.type === 'change' && message.source === value));
-  const resultPromise = provider.provideCompletionItems(null, { lineNumber: 1, column: 12 });
-  const request = socket.sent.find((message) => message.type === 'complete');
-  socket.handlers.message({ data: JSON.stringify({ type: 'completion', id: request.id, items: [{ label: 'println', textEdit: { newText: 'println()', range: { start: { line: 0, character: 7 }, end: { line: 0, character: 11 } } } }] }) });
-  const result = await resultPromise;
-  assert.equal(result.suggestions[0].insertText, 'println()');
-  assert.deepEqual(JSON.parse(JSON.stringify(result.suggestions[0].range)), { startLineNumber: 1, startColumn: 8, endLineNumber: 1, endColumn: 12 });
+  assert.ok(socket.sent.some(({ type, source }) => type === 'change' && source === value));
+  assert.equal(socket.sent.some(({ type }) => type === 'complete'), false);
+  let preventedEnter = false;
+  editor.keydown({ keyCode: 3, shiftKey: false, isComposing: false, preventDefault() { preventedEnter = true; }, stopPropagation() {} });
+  assert.equal(preventedEnter, true);
+  assert.equal(executeCount, 1);
 
-  value = 'sout';
-  const completeRequestsBeforeSout = socket.sent.filter((message) => message.type === 'complete').length;
-  const soutResult = await provider.provideCompletionItems(null, { lineNumber: 1, column: 5 });
-  assert.equal(socket.sent.filter((message) => message.type === 'complete').length, completeRequestsBeforeSout);
-  assert.deepEqual(JSON.parse(JSON.stringify(soutResult.suggestions.map(({ label, insertText }) => ({ label, insertText })))), [
-    { label: 'sout', insertText: 'System.out.println($0);' },
-  ]);
-  assert.deepEqual(JSON.parse(JSON.stringify(soutResult.suggestions[0].range)), { startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 5 });
+  window.devquizEditor.setReadOnly(true);
+  assert.equal(readOnly, true);
+  await window.devquizEditor.mount(container, 'public class Main { }', null, onExecute);
+  assert.equal(readOnly, false);
+  assert.equal(value, 'public class Main { }');
 });

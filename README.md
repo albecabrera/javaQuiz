@@ -1,6 +1,6 @@
 # DevQuiz — Java im lokalen Terminal
 
-Schreibe Java-Code, erhalte Live-Diagnosen und semantische Vervollständigung und führe jede Übung in einem isolierten Container aus. Während der Nutzung werden keine APIs, CDNs oder kostenpflichtigen Dienste verwendet.
+Schreibe Java-Code, erhalte Live-Diagnosen und führe jede Übung in einem isolierten Container aus. Der Editor macht keine automatischen Codevorschläge. Während der Nutzung werden keine APIs, CDNs oder kostenpflichtigen Dienste verwendet.
 
 ## Schnellstart
 
@@ -21,11 +21,7 @@ Die freien Werkzeuge werden nur einmal lokal installiert: Monaco 0.52 (MIT), `ws
 
 | Aktion | Taste oder Schaltfläche |
 | --- | --- |
-| Semantische Vorschläge anzeigen | Strg + Leertaste (Windows/Linux/macOS; auch beim Schreiben von `.`) |
-| Ausgabevorlage | `sout` schreiben und den Vorschlag für `System.out.println(...)` auswählen |
-| Vorschlag übernehmen | Enter bei geöffneter Liste |
-| Antwort ausführen | Enter ohne Vorschlagsliste, Strg/Cmd + Enter oder Umschalt + F10 |
-| Anweisung vervollständigen | Strg/Cmd + Umschalt + Enter |
+| Antwort ausführen | Enter, Strg/Cmd + Enter oder Umschalt + F10 |
 | Zeilenkommentar umschalten | Strg/Cmd + `/` |
 | Zeile duplizieren | Strg/Cmd + D |
 | Zeile löschen | Strg + Y (Windows/Linux), Cmd + Rücktaste (macOS) |
@@ -37,7 +33,7 @@ Die freien Werkzeuge werden nur einmal lokal installiert: Monaco 0.52 (MIT), `ws
 | Überspringen | Übung überspringen → |
 | Modus wechseln | Multiple-Choice-Quiz / Code-Übungen |
 
-Java-Fehler werden während der Eingabe unterstrichen. Die Ausgabe oder Fehlermeldung bleibt im Terminal sichtbar. Wenn das Ergebnis richtig ist, musst du **Weiter** drücken, um zur nächsten Übung zu gelangen; bei einer falschen Ausgabe kannst du den Code korrigieren und erneut ausführen. Wenn JDT LS nicht verfügbar ist, zeigt der Status dies an: Bearbeitung und lokale Ausführung funktionieren weiterhin, aber es werden keine semantischen Vorschläge erfunden.
+Java-Fehler werden während der Eingabe unterstrichen. Der Editor zeigt keine automatischen Codevorschläge; JDT LS liefert nur Live-Diagnosen. Die Ausgabe oder Fehlermeldung bleibt im Terminal sichtbar. Wenn das Ergebnis richtig ist, musst du **Weiter** drücken, um zur nächsten Übung zu gelangen; bei einer falschen Ausgabe kannst du den Code korrigieren und erneut ausführen. Wenn JDT LS nicht verfügbar ist, zeigt der Status dies an: Bearbeitung und lokale Ausführung funktionieren weiterhin.
 
 ## Lokale Ausführung
 

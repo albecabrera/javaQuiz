@@ -83,7 +83,7 @@ function printExercise() {
   addLine(`<span class="comment">// Übung ${currentExerciseIndex + 1} von ${codeExercises.length}: ${escapeHtml(exercise.title)}</span>`, "terminal-line question-comment");
   addLine(`<span class="hint">${escapeHtml(exercise.prompt)}</span>`, "terminal-line hint-line");
   addLine(`<span class="muted-line">Erwartete Ausgabe: ${escapeHtml(exercise.expectedOutput)}</span>`, "terminal-line expected-output-line");
-  addLine("Enter führt aus · Strg + Leertaste schlägt vor · Umschalt + Enter fügt eine Zeile ein · Überspringen geht weiter.", "terminal-line muted-line");
+  addLine("Enter führt aus · Umschalt + Enter fügt eine Zeile ein · Überspringen geht weiter.", "terminal-line muted-line");
   terminalEditor.value = exercise.starter;
   const answerMarker = "/* DEIN_CODE_HIER */";
   const answerPosition = exercise.starter.indexOf(answerMarker);

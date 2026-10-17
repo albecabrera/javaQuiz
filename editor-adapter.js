@@ -8,8 +8,6 @@
   let socket;
   let reconnectTimer;
   let reconnectAttempt = 0;
-  let nextRequestId = 1;
-  const completions = new Map();
   const notify = (message) => global.dispatchEvent && global.dispatchEvent(new CustomEvent("devquiz-editor-status", { detail: message }));
 
   function loadMonaco() {
@@ -46,17 +44,10 @@
       try { message = JSON.parse(event.data); } catch { return; }
       if (message.type === "ready") {
         send({ type: "change", source: model.getValue() });
-        notify({ state: "ready", text: "JDT LS bereit · semantische Vervollständigung aktiv" });
+        notify({ state: "ready", text: "JDT LS bereit · Live-Diagnosen aktiv" });
       }
       else if (message.type === "diagnostics") applyDiagnostics(message.diagnostics || []);
-      else if (message.type === "completion") {
-        const pending = completions.get(message.id);
-        if (pending) { completions.delete(message.id); pending.resolve(message.items || []); }
-      } else if (message.type === "error") {
-        for (const pending of completions.values()) pending.reject(new Error(message.message || "completion unavailable"));
-        completions.clear();
-        scheduleReconnect();
-      }
+      else if (message.type === "error") scheduleReconnect();
     });
     socket.addEventListener("error", () => scheduleReconnect());
     socket.addEventListener("close", () => { socket = null; scheduleReconnect(); });
@@ -74,16 +65,6 @@
       endColumn: (diagnostic.range && diagnostic.range.end.character || 0) + 1,
     })));
   }
-  function requestCompletion(position) {
-    if (!socket || socket.readyState !== 1) return Promise.resolve([]);
-    const id = nextRequestId++;
-    return new Promise((resolve, reject) => {
-      completions.set(id, { resolve, reject });
-      send({ type: "complete", id, line: position.lineNumber - 1, character: position.column - 1 });
-      setTimeout(() => { const pending = completions.get(id); if (pending) { completions.delete(id); pending.resolve([]); } }, 15000);
-    });
-  }
-
   function selectRange(start, end) {
     if (!editor || !model) return;
     editor.setSelection({ startLineNumber: model.getPositionAt(start).lineNumber, startColumn: model.getPositionAt(start).column, endLineNumber: model.getPositionAt(end).lineNumber, endColumn: model.getPositionAt(end).column });
@@ -95,59 +76,17 @@
       if (!model) {
         model = monaco.editor.createModel(value, "java");
         monaco.languages.setLanguageConfiguration("java", { indentationRules: { increaseIndentPattern: /\{[^}"']*$/, decreaseIndentPattern: /^\s*\}/ }, brackets: [["{", "}"], ["[", "]"], ["(", ")"]] });
-        monaco.languages.registerCompletionItemProvider("java", { triggerCharacters: ["."], provideCompletionItems: (_, position) => {
-          const prefix = model.getValue().slice(0, position.column - 1).match(/[A-Za-z_]\w*$/)?.[0] || "";
-          const localSuggestions = prefix === "sout" ? [{
-            label: "sout",
-            detail: "Prints a string to System.out",
-            insertText: "System.out.println($0);",
-            documentation: "Prints a string to System.out",
-            kind: monaco.languages.CompletionItemKind.Method,
-            filterText: "sout",
-            sortText: "000",
-            insertTextRules: monaco.languages.CompletionItemInsertTextRule?.InsertAsSnippet || 4,
-            range: { startLineNumber: position.lineNumber, startColumn: position.column - prefix.length, endLineNumber: position.lineNumber, endColumn: position.column },
-          }] : [];
-          if (localSuggestions.length) return Promise.resolve({ suggestions: localSuggestions });
-          return requestCompletion(position).then((items) => ({ suggestions: items.map((item) => {
-          const edit = item.textEdit;
-          const range = edit?.range || edit?.insert;
-          return {
-            label: item.label || item.insertText || "",
-            detail: item.detail,
-            documentation: typeof item.documentation === "string" ? item.documentation : item.documentation?.value,
-            kind: monaco.languages.CompletionItemKind.Method,
-            insertText: edit?.newText || item.insertText || item.label || "",
-            range: range ? {
-              startLineNumber: range.start.line + 1, startColumn: range.start.character + 1,
-              endLineNumber: range.end.line + 1, endColumn: range.end.character + 1,
-            } : model.getWordUntilPosition(position) && {
-              startLineNumber: position.lineNumber,
-              endLineNumber: position.lineNumber,
-              startColumn: model.getWordUntilPosition(position).startColumn,
-              endColumn: model.getWordUntilPosition(position).endColumn,
-            },
-          };
-        }) }));
-        } });
-        model.onDidChangeContent((event) => {
+        model.onDidChangeContent(() => {
           if (onChange) onChange(model.getValue());
           send({ type: "change", source: model.getValue() });
-          if (event.changes?.some((change) => change.text.includes(" ")) && container.querySelector?.(".suggest-widget.visible")) {
-            editor?.trigger?.("keyboard", "hideSuggestWidget", {});
-          }
-          const position = editor?.getPosition?.();
-          const linePrefix = position && model.getValue().split("\n")[position.lineNumber - 1]?.slice(0, position.column - 1);
-          if (linePrefix && /\bsout$/.test(linePrefix)) editor?.trigger?.("keyboard", "editor.action.triggerSuggest", {});
         });
       } else model.setValue(value);
-      editor = editor || monaco.editor.create(container, { model, theme: "vs-dark", minimap: { enabled: false }, automaticLayout: true, language: "java", tabSize: 4, insertSpaces: true, suggestOnTriggerCharacters: true, acceptSuggestionOnCommitCharacter: false, quickSuggestions: { other: true, comments: false, strings: false }, wordWrap: "off" });
+      editor = editor || monaco.editor.create(container, { model, theme: "vs-dark", minimap: { enabled: false }, automaticLayout: true, language: "java", tabSize: 4, insertSpaces: true, suggestOnTriggerCharacters: false, quickSuggestions: false, wordBasedSuggestions: "off", wordWrap: "off" });
+      editor.updateOptions({ readOnly: false });
       if (onExecute && !editor.__devquizExecuteAction) {
         editor.__devquizExecuteAction = true;
         editor.onKeyDown((event) => {
           if (event.keyCode !== monaco.KeyCode.Enter || event.shiftKey || event.isComposing) return;
-          // Enter accepts an open completion; otherwise it runs the current exercise.
-          if (container.querySelector?.(".suggest-widget.visible")) return;
           event.preventDefault();
           event.stopPropagation();
           onExecute();
@@ -157,13 +96,9 @@
       if (!editor.__devquizShortcuts) {
         editor.__devquizShortcuts = true;
         const isMac = /Mac|iPhone|iPad/.test(global.navigator?.platform || global.navigator?.userAgent || "");
-        const ctrl = monaco.KeyMod.Ctrl;
         const ctrlCmd = monaco.KeyMod.CtrlCmd;
         const alt = monaco.KeyMod.Alt;
-        const shift = monaco.KeyMod.Shift;
         const addAction = (id, label, keybindings, command) => editor.addAction({ id: `devquiz.${id}`, label, keybindings, run: () => editor.trigger("keyboard", command, {}) });
-        addAction("complete", "Vervollständigung anzeigen", [ctrl | monaco.KeyCode.Space], "editor.action.triggerSuggest");
-        addAction("completeStatement", "Anweisung vervollständigen", [ctrlCmd | shift | monaco.KeyCode.Enter], "editor.action.completeStatement");
         addAction("toggleComment", "Zeilenkommentar umschalten", [ctrlCmd | monaco.KeyCode.Slash], "editor.action.commentLine");
         addAction("duplicateLine", "Zeile duplizieren", [ctrlCmd | monaco.KeyCode.KeyD], "editor.action.duplicateSelection");
         addAction("deleteLine", "Zeile löschen", [isMac ? ctrlCmd | monaco.KeyCode.Backspace : ctrlCmd | monaco.KeyCode.KeyY], "editor.action.deleteLines");
