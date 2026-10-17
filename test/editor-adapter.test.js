@@ -86,10 +86,6 @@ test('ready sends current source and completion edits map LSP positions to Monac
   assert.equal(socket.sent.filter((message) => message.type === 'complete').length, completeRequestsBeforeSout);
   assert.deepEqual(JSON.parse(JSON.stringify(soutResult.suggestions.map(({ label, insertText }) => ({ label, insertText })))), [
     { label: 'sout', insertText: 'System.out.println($0);' },
-    { label: 'soutf', insertText: 'System.out.printf("$0");' },
-    { label: 'soutm', insertText: 'System.out.println("$0");' },
-    { label: 'soutp', insertText: 'System.out.println("$1 = " + $1);' },
-    { label: 'soutv', insertText: 'System.out.println("$1 = " + $1);' },
   ]);
   assert.deepEqual(JSON.parse(JSON.stringify(soutResult.suggestions[0].range)), { startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 5 });
 });

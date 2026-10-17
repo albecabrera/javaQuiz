@@ -22,7 +22,7 @@ Die freien Werkzeuge werden nur einmal lokal installiert: Monaco 0.52 (MIT), `ws
 | Aktion | Taste oder Schaltfläche |
 | --- | --- |
 | Semantische Vorschläge anzeigen | Strg + Leertaste (Windows/Linux/macOS; auch beim Schreiben von `.`) |
-| IntelliJ-Ausgabevorlagen | `sout`, `soutf`, `soutm`, `soutp` und `soutv` schreiben und den passenden Vorschlag auswählen |
+| Ausgabevorlage | `sout` schreiben und den Vorschlag für `System.out.println(...)` auswählen |
 | Vorschlag übernehmen | Enter bei geöffneter Liste |
 | Antwort ausführen | Enter ohne Vorschlagsliste, Strg/Cmd + Enter oder Umschalt + F10 |
 | Anweisung vervollständigen | Strg/Cmd + Umschalt + Enter |
