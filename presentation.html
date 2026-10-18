@@ -12,7 +12,7 @@
       <header class="presentation-header">
         <a class="back-link" href="index.html">← Zum Hauptpanel</a>
         <p class="eyebrow"><span class="eyebrow-dot"></span> java.grundlagen</p>
-        <div class="presentation-brand"><p class="presentation-counter" id="presentation-counter">01 / 09</p><button id="theme-toggle" class="theme-toggle" type="button" title="Cmd/Ctrl + Shift + L" aria-label="Helles Design aktivieren" aria-pressed="false"><span id="theme-icon" aria-hidden="true">☼</span></button></div>
+        <div class="presentation-brand"><p class="presentation-counter" id="presentation-counter">01 / 09</p><button id="teacher-toggle" class="teacher-toggle" type="button" aria-pressed="false">Lehrmodus</button><button id="theme-toggle" class="theme-toggle" type="button" title="Cmd/Ctrl + Shift + L" aria-label="Helles Design aktivieren" aria-pressed="false"><span id="theme-icon" aria-hidden="true">☼</span></button></div>
       </header>
       <nav class="module-nav" aria-label="Module auswählen">
         <button class="module-button is-active" type="button" data-module="module1" aria-pressed="true">Modul 1 · Java-Grundlagen</button>
@@ -50,12 +50,18 @@
         <section class="slide-card" aria-live="polite" aria-labelledby="slide-title">
           <img class="school-logo" src="assets/presentation/java-transparent.png" alt="Java-Logo" />
           <p class="slide-kicker" id="slide-kicker">START</p>
-          <h1 id="slide-title">Java beginnt mit einer Idee.</h1>
+          <div class="slide-learning" aria-live="polite">
+            <span class="slide-learning-label">DU LERNST</span>
+            <strong id="slide-objective">Java beginnt mit einer Idee.</strong>
+            <span id="slide-learning-progress">Konzept 1 von 1</span>
+          </div>
+          <div class="slide-lesson-map" aria-label="Lernschritte"><span class="is-active">01 · KONZEPT</span><span>02 · CODE</span></div>
           <p class="slide-text" id="slide-text">Du beschreibst Schritt für Schritt, was dein Programm tun soll. Java übersetzt diese Anweisungen in ausführbaren Code.</p>
           <div class="slide-main">
             <pre class="slide-code" id="slide-code"><code>class HelloPaco {\n}</code></pre>
             <div class="character-stage" id="character-stage"><img id="slide-character" src="assets/presentation/robot.jpeg" alt="Java-Roboter" /><span id="character-caption">Bereit zum Programmieren?</span></div>
           </div>
+          <aside class="teacher-notes" id="teacher-notes" hidden><p class="teacher-notes-kicker">LEHRMODUS</p><p id="teacher-note"></p><p><strong>Lösung:</strong> <span id="teacher-answer"></span></p></aside>
           <div class="slide-progress"><span id="slide-progress-bar"></span></div>
         </section>
         <aside class="slide-overview" aria-label="Folienübersicht">

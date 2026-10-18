@@ -285,9 +285,15 @@ let currentChapterId = "chapter1";
 let currentSlide = 0;
 const $ = (selector) => document.querySelector(selector);
 const presentationShell = $(".presentation-shell");
+const slideCard = $(".slide-card");
 const counter = $("#presentation-counter");
 const kicker = $("#slide-kicker");
-const title = $("#slide-title");
+const slideObjective = $("#slide-objective");
+const slideLearningProgress = $("#slide-learning-progress");
+const teacherNotes = $("#teacher-notes");
+const teacherNote = $("#teacher-note");
+const teacherAnswer = $("#teacher-answer");
+const teacherToggle = $("#teacher-toggle");
 const text = $("#slide-text");
 const code = $("#slide-code");
 const progress = $("#slide-progress-bar");
@@ -357,11 +363,17 @@ function renderSlide() {
   const slide = slides[currentSlide];
   counter.textContent = `${String(currentSlide + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
   kicker.textContent = slide.kicker;
-  title.textContent = slide.title;
+  slideObjective.textContent = slide.title;
+  slideCard.classList.toggle("is-title-long", slide.title.length > 38);
+  slideCard.classList.toggle("is-code-dense", slide.code.replace(/<[^>]+>/g, "").length > 190 || slide.code.split("\n").length > 8);
+  slideLearningProgress.textContent = `Konzept ${currentSlide + 1} von ${slides.length} · ${chapters[currentChapterId].label}`;
+  teacherNote.textContent = slide.text;
+  teacherAnswer.textContent = slide.title;
   text.textContent = slide.text;
-  code.innerHTML = `<code>${slide.code}</code>`;
+  const codeLines = slide.code.split("\n").map((line, index) => `<span class="code-line-reveal" style="--line-index: ${index}">${line || "&nbsp;"}</span>`).join("");
+  code.innerHTML = `<code>${codeLines}</code>`;
   const isDetective = slide.character === "detective";
-  character.src = `assets/presentation/${isDetective ? "detective.webp" : "robot.jpeg"}`;
+  character.src = `assets/presentation/${isDetective ? "detective-transparent.png" : "robot.jpeg"}`;
   character.alt = isDetective ? "Java-Detektiv" : "Java-Roboter";
   characterStage.classList.toggle("detective-stage", isDetective);
   characterCaption.textContent = slide.caption;
@@ -399,6 +411,11 @@ function setTheme(theme) {
   try { window.localStorage.setItem("devquiz-presentation-theme", isLight ? "light" : "dark"); } catch {}
 }
 
+function loadRequestedChapter() {
+  const requestedChapter = new URLSearchParams(window.location.search).get("chapter");
+  if (requestedChapter && chapters[requestedChapter]) currentChapterId = requestedChapter;
+}
+
 function loadTheme() {
   let savedTheme = "dark";
   try { savedTheme = window.localStorage.getItem("devquiz-presentation-theme") || "dark"; } catch {}
@@ -434,6 +451,11 @@ next.addEventListener("click", () => {
 themeToggle.addEventListener("click", () => {
   setTheme(document.body.classList.contains("presentation-light") ? "dark" : "light");
 });
+teacherToggle.addEventListener("click", () => {
+  const enabled = presentationShell.classList.toggle("teacher-mode");
+  teacherNotes.hidden = !enabled;
+  teacherToggle.setAttribute("aria-pressed", String(enabled));
+});
 fullscreen.addEventListener("click", () => {
   if (presentationShell.classList.contains("is-fullscreen")) {
     document.exitFullscreen?.();
@@ -457,6 +479,7 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "ArrowLeft") previous.click();
   if (event.key === "ArrowRight") next.click();
 });
+loadRequestedChapter();
 loadTheme();
 renderOverview();
 renderSlide();

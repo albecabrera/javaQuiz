@@ -27,6 +27,8 @@ const CONTENT_TYPES = {
   "/presentation.js": "text/javascript; charset=utf-8",
   "/assets/presentation/robot.jpeg": "image/jpeg",
   "/assets/presentation/detective.webp": "image/webp",
+  "/assets/presentation/detective.png": "image/png",
+  "/assets/presentation/detective-transparent.png": "image/png",
   "/assets/presentation/school-logo.svg": "image/svg+xml",
   "/assets/presentation/java.png": "image/png",
   "/assets/presentation/java-transparent.png": "image/png",

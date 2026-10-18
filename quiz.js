@@ -4,61 +4,81 @@ const questions = [
     question: "Was ist der Einstiegspunkt einer Java-Anwendung?",
     options: ["start()", "main()", "run()", "init()"],
     correctAnswer: 1,
-    explanation: "Die Methode public static void main(String[] args) ist der Einstiegspunkt einer Java-Anwendung."
+    explanation: "Die Methode public static void main(String[] args) ist der Einstiegspunkt einer Java-Anwendung.",
+    concept: "main() als Startpunkt",
+    presentationChapter: "chapter1"
   },
   {
     question: "Welcher Datentyp speichert ganze Zahlen?",
     options: ["String", "boolean", "int", "double"],
     correctAnswer: 2,
-    explanation: "int steht für ganze Zahlen wie 10, 0 oder -25."
+    explanation: "int steht für ganze Zahlen wie 10, 0 oder -25.",
+    concept: "Datentypen und Variablen",
+    presentationChapter: "chapter3"
   },
   {
     question: "Wie wird eine Konstante in Java deklariert?",
     options: ["const", "static", "final", "constant"],
     correctAnswer: 2,
-    explanation: "Das Schlüsselwort final verhindert, dass eine Variable nach der Initialisierung ihren Wert ändert."
+    explanation: "Das Schlüsselwort final verhindert, dass eine Variable nach der Initialisierung ihren Wert ändert.",
+    concept: "Variablen und Zuweisung",
+    presentationChapter: "chapter3"
   },
   {
     question: "Welches Symbol beendet eine Anweisung in Java?",
     options: [".", ":", ";", "!"],
     correctAnswer: 2,
-    explanation: "Die meisten Java-Anweisungen enden mit einem Semikolon (;)."
+    explanation: "Die meisten Java-Anweisungen enden mit einem Semikolon (;).",
+    concept: "Java-Syntax",
+    presentationChapter: "chapter1"
   },
   {
     question: "Welches Schlüsselwort wird verwendet, um ein Objekt zu erzeugen?",
     options: ["object", "new", "create", "this"],
     correctAnswer: 1,
-    explanation: "new reserviert Speicher und erzeugt eine neue Instanz einer Klasse."
+    explanation: "new reserviert Speicher und erzeugt eine neue Instanz einer Klasse.",
+    concept: "Klassen und Objekte",
+    presentationChapter: "chapter2"
   },
   {
     question: "Welcher dieser Typen speichert Text?",
     options: ["char", "String", "text", "Wort"],
     correctAnswer: 1,
-    explanation: "String ist die Java-Klasse für eine Folge von Zeichen."
+    explanation: "String ist die Java-Klasse für eine Folge von Zeichen.",
+    concept: "String und Text",
+    presentationChapter: "chapter3"
   },
   {
     question: "Welcher Operator vergleicht, ob zwei Werte gleich sind?",
     options: ["=", "==", "===", "equals"],
     correctAnswer: 1,
-    explanation: "Der Operator == vergleicht primitive Werte. Für den Inhalt von Objekten wird meist equals() verwendet."
+    explanation: "Der Operator == vergleicht primitive Werte. Für den Inhalt von Objekten wird meist equals() verwendet.",
+    concept: "Vergleiche und Operatoren",
+    presentationChapter: "chapter22"
   },
   {
     question: "Welche Struktur wiederholt Code, solange eine Bedingung wahr ist?",
     options: ["if", "switch", "while", "try"],
     correctAnswer: 2,
-    explanation: "while wiederholt einen Codeblock, solange seine Bedingung true ist."
+    explanation: "while wiederholt einen Codeblock, solange seine Bedingung true ist.",
+    concept: "Schleifen und Bedingungen",
+    presentationChapter: "chapter24"
   },
   {
     question: "Was bedeutet es, dass Java objektorientiert ist?",
     options: ["Verwendet nur Funktionen", "Organisiert Code mit Klassen und Objekten", "Verwendet keine Variablen", "Funktioniert nur im Internet"],
     correctAnswer: 1,
-    explanation: "Objektorientierte Programmierung organisiert Code mit Klassen, Objekten, Attributen und Methoden."
+    explanation: "Objektorientierte Programmierung organisiert Code mit Klassen, Objekten, Attributen und Methoden.",
+    concept: "Objektorientierung",
+    presentationChapter: "chapter2"
   },
   {
     question: "Welches Schlüsselwort lässt eine Klasse von einer anderen erben?",
     options: ["inherits", "extends", "implements", "super"],
     correctAnswer: 1,
-    explanation: "extends bedeutet, dass eine Klasse Attribute und Methoden von einer anderen Klasse erbt."
+    explanation: "extends bedeutet, dass eine Klasse Attribute und Methoden von einer anderen Klasse erbt.",
+    concept: "Vererbung mit extends",
+    presentationChapter: "chapter31"
   }
 ];
 

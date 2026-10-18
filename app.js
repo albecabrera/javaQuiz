@@ -88,6 +88,7 @@ function printQuestion() {
 
   addLine(`<span class="comment">// Frage ${questionNumber} von ${questions.length}</span>`, "terminal-line question-comment");
   addLine(`<span class="keyword">Frage</span> q${questionNumber} = <span class="string">"${escapeHtml(currentQuestion.question)}"</span>;`, "terminal-line code-line");
+  addLine(`<span class="concept-line">Konzept: <strong>${escapeHtml(currentQuestion.concept)}</strong> · <a href="presentation.html?chapter=${encodeURIComponent(currentQuestion.presentationChapter)}">In der Präsentation wiederholen →</a></span>`, "terminal-line");
   addLine(options, "terminal-line option-list");
   addLine(`<span class="hint">Gib A, B, C oder D ein. Du kannst auch <strong>code</strong> für Java-Übungen eingeben.</span>`, "terminal-line hint-line");
   terminalInput.placeholder = "deine Antwort...";
@@ -174,10 +175,12 @@ async function submitAnswer(value) {
     score += 1;
     addLine('<span class="success">✓ RICHTIG</span>', "terminal-line result-line");
     addLine(`<span class="success">Richtig.</span> ${escapeHtml(currentQuestion.explanation)}`, "terminal-line explanation-line");
+    addLine(`<span class="concept-line">Merke: ${escapeHtml(currentQuestion.concept)}</span>`, "terminal-line");
   } else {
     addLine('<span class="error">✕ FALSCH</span>', "terminal-line result-line");
     addLine(`<span class="error">Falsche Antwort.</span> Richtig wäre <strong>${String.fromCharCode(65 + currentQuestion.correctAnswer)}</strong>.`, "terminal-line explanation-line");
     addLine(escapeHtml(currentQuestion.explanation), "terminal-line explanation-line");
+    addLine(`<span class="concept-line">Merke: ${escapeHtml(currentQuestion.concept)}</span>`, "terminal-line");
   }
   updateStatus();
   waitingForNext = true;
