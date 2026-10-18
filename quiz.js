@@ -91,6 +91,11 @@ const codeExercises = [
     title: "Mehrzeiliger Kommentar und Ausgabe",
     prompt: "Ändere die einzeiligen Kommentare in den Zeilen 3–5 zu einem mehrzeiligen Kommentar. Gib anschließend in zwei Zeilen „Hallo, ich bin Duke.“ und „Wie heißt Du?“ aus.",
     expectedOutput: "Hallo, ich bin Duke.\nWie heißt Du?",
+    hints: [
+      "Ein Blockkommentar beginnt mit /* und endet mit */.",
+      "Ersetze die drei //-Zeilen durch einen gemeinsamen Kommentarblock; die Ausgabe kommt danach.",
+      "Verwende zwei getrennte System.out.println()-Aufrufe und achte auf Großschreibung und Satzzeichen."
+    ],
     starter: `public class Main {
   public static void main(String[] args) {
     // Kommentar 1
@@ -106,6 +111,11 @@ const codeExercises = [
     title: "Eine Ausgabe mit println",
     prompt: "Schreibe ein Java-Programm, das in einer Zeile „Willkommen Detektiv Duke!“ ausgibt und anschließend in eine neue Zeile springt.",
     expectedOutput: "Willkommen Detektiv Duke!",
+    hints: [
+      "Die Ausgabe erfolgt mit System.out.println(...).",
+      "Der gesamte Satz gehört in doppelte Anführungszeichen innerhalb der Klammern.",
+      "Prüfe das Ausrufezeichen, das Semikolon und die Schreibweise von Detektiv Duke."
+    ],
     starter: `public class Main {
   public static void main(String[] args) {
     /* DEIN_CODE_HIER */
@@ -118,6 +128,11 @@ const codeExercises = [
     title: "Output Aufgabe 1",
     prompt: "Benutze System.out.println(), um genau „Der Anfang einer Reise!“ auszugeben.",
     expectedOutput: "Der Anfang einer Reise!",
+    hints: [
+      "Gib einen String mit System.out.println(...) aus.",
+      "Setze den vorgegebenen Satz genau zwischen doppelte Anführungszeichen.",
+      "Achte auf Leerzeichen, Großschreibung, das Ausrufezeichen und das Semikolon."
+    ],
     starter: `public class Main {
   public static void main(String[] args) {
     /* DEIN_CODE_HIER */
@@ -130,9 +145,14 @@ const codeExercises = [
     title: "Syntaxfehler finden",
     prompt: "Finde und behebe die zwei Syntaxfehler im Programm. Gib danach „Hallo Welt.“ aus.",
     expectedOutput: "Hallo Welt.",
+    hints: [
+      "Prüfe zuerst die Klammern des println-Aufrufs.",
+      "Auf den String folgt eine schließende runde Klammer.",
+      "Jede Java-Anweisung braucht am Ende ein Semikolon; überprüfe beide Zeichen."
+    ],
     starter: `public class Main {
   public static void main(String[] args) {
-    System.out.println("Hallo Welt.")
+    System.out.println("Hallo Welt."
     /* DEIN_CODE_HIER */
   }
 }`

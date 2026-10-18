@@ -33,6 +33,7 @@ const CONTENT_TYPES = {
   "/assets/presentation/school-logo.svg": "image/svg+xml",
   "/assets/presentation/java.png": "image/png",
   "/assets/presentation/java-transparent.png": "image/png",
+  "/assets/fonts/FiraCode-Regular.woff2": "font/woff2",
   "/quiz.js": "text/javascript; charset=utf-8",
   "/editor-adapter.js": "text/javascript; charset=utf-8",
   "/styles.css": "text/css; charset=utf-8",

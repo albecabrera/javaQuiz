@@ -34,7 +34,10 @@ test('editor remains writable across exercises, accepts spaces, runs code, and k
   let value = 'System.out.println("Hallo");';
   let onModelChange;
   let editorOptions;
+  let themeData;
   let readOnly;
+  let adaptiveFontSize;
+  let layoutCount = 0;
   let completionProviderRegistrations = 0;
   let executeCount = 0;
   let markers;
@@ -50,12 +53,14 @@ test('editor remains writable across exercises, accepts spaces, runs code, and k
     addAction(action) { actions.push(action); },
     onKeyDown(handler) { this.keydown = handler; },
     focus() {},
-    updateOptions(options) { if (Object.hasOwn(options, 'readOnly')) readOnly = options.readOnly; },
+    updateOptions(options) { if (Object.hasOwn(options, 'readOnly')) readOnly = options.readOnly; if (options.fontSize) adaptiveFontSize = options.fontSize; },
+    layout() { layoutCount++; },
     setSelection() {},
   };
   const monaco = {
     editor: {
       createModel: () => model,
+      defineTheme(name, data) { if (name === 'devquiz-atom-one-dark') themeData = data; },
       create: (_, options) => { editorOptions = options; return editor; },
       setModelMarkers(_, owner, nextMarkers) { markers = { owner, values: nextMarkers }; },
     },
@@ -81,10 +86,16 @@ test('editor remains writable across exercises, accepts spaces, runs code, and k
     CustomEvent: class { constructor(name, options) { this.name = name; this.detail = options.detail; } },
     setTimeout,
   });
-  const container = { hidden: true };
+  const container = { hidden: true, clientWidth: 900, style: {} };
   const onExecute = () => { executeCount++; };
   assert.ok(await window.devquizEditor.mount(container, value, null, onExecute));
+  assert.ok(adaptiveFontSize >= 18);
+  assert.ok(layoutCount > 0);
   assert.equal(completionProviderRegistrations, 0);
+  assert.equal(editorOptions.theme, 'devquiz-atom-one-dark');
+  assert.equal(themeData.base, 'vs-dark');
+  assert.equal(editorOptions.fontFamily.includes('Fira Code'), true);
+  assert.equal(editorOptions.bracketPairColorization.enabled, true);
   assert.equal(editorOptions.suggestOnTriggerCharacters, false);
   assert.equal(editorOptions.quickSuggestions, false);
   assert.equal(editorOptions.wordBasedSuggestions, 'off');
@@ -105,6 +116,9 @@ test('editor remains writable across exercises, accepts spaces, runs code, and k
   onModelChange({ changes: [{ text: ' ' }] });
   assert.ok(socket.sent.some(({ type, source }) => type === 'change' && source === value));
   assert.equal(socket.sent.some(({ type }) => type === 'complete'), false);
+  value = Array.from({ length: 12 }, () => 'int n = 1;').join('\n');
+  onModelChange({ changes: [{ text: '\n' }] });
+  assert.equal(container.style.height, '680px');
   let preventedEnter = false;
   editor.keydown({ keyCode: 3, shiftKey: false, isComposing: false, preventDefault() { preventedEnter = true; }, stopPropagation() {} });
   assert.equal(preventedEnter, true);

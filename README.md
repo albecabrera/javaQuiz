@@ -32,8 +32,10 @@ Die freien Werkzeuge werden nur einmal lokal installiert: Monaco 0.52 (MIT), `ws
 | Zur nächsten gelösten Übung | Weiter → |
 | Überspringen | Übung überspringen → |
 | Modus wechseln | Multiple-Choice-Quiz / Code-Übungen |
+| Code-Editor bildschirmfüllend vorführen | Cmd + P im Code-Modus oder „Editor vorführen ⛶“; mit Esc oder „Ansicht schließen“ beenden |
+| Gestuften Hinweis anzeigen | Nach einem fehlerhaften Versuch „Hinweis anzeigen“; ein weiterer Versuch schaltet den nächsten Hinweis frei |
 
-Java-Fehler werden während der Eingabe unterstrichen. Der Editor zeigt keine automatischen Codevorschläge; JDT LS liefert nur Live-Diagnosen. Die Ausgabe oder Fehlermeldung bleibt im Terminal sichtbar. Wenn das Ergebnis richtig ist, musst du **Weiter** drücken, um zur nächsten Übung zu gelangen; bei einer falschen Ausgabe kannst du den Code korrigieren und erneut ausführen. Wenn JDT LS nicht verfügbar ist, zeigt der Status dies an: Bearbeitung und lokale Ausführung funktionieren weiterhin.
+Der Code-Editor verwendet das Atom-One-Dark-Farbschema, Fira Code und farbige Klammerpaare. Fira Code 6.2 liegt lokal unter `assets/fonts/` und steht unter der SIL Open Font License 1.1 (siehe `assets/fonts/OFL.txt`). Java-Fehler werden während der Eingabe unterstrichen. Der Editor zeigt keine automatischen Codevorschläge; JDT LS liefert nur Live-Diagnosen. Die Ausgabe oder Fehlermeldung bleibt im Terminal sichtbar. Wenn das Ergebnis richtig ist, musst du **Weiter** drücken, um zur nächsten Übung zu gelangen; bei einer falschen Ausgabe kannst du den Code korrigieren und erneut ausführen. Wenn JDT LS nicht verfügbar ist, zeigt der Status dies an: Bearbeitung und lokale Ausführung funktionieren weiterhin.
 
 ## Lokale Ausführung
 

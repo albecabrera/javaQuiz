@@ -7,12 +7,13 @@ function terminal(fetch, fastBoot = false) {
   const elements = new Map();
   const document = {
     activeElement: null,
+    listeners: {},
     querySelector(selector) {
       if (!elements.has(selector)) elements.set(selector, element());
       return elements.get(selector);
     },
     createElement: () => element(),
-    addEventListener() {},
+    addEventListener(name, handler) { this.listeners[name] = handler; },
   };
   function element() {
     const listeners = {};
@@ -53,6 +54,51 @@ test('mode button keeps multiple choice accessible and restores code focus', () 
   ui.get('#mode-toggle').listeners.click();
   assert.equal(ui.get('#terminal-mode').textContent, 'CODE-MODUS');
   assert.equal(ui.document.activeElement, ui.get('#terminal-editor'));
+});
+
+test('Cmd+P presents the code editor and Escape restores it without affecting quiz mode', () => {
+  const ui = terminal(async () => { throw new Error('unexpected fetch'); });
+  const shell = ui.get('.app-shell');
+  const classes = new Set();
+  shell.classList = {
+    add(name) { classes.add(name); },
+    remove(name) { classes.delete(name); },
+    contains(name) { return classes.has(name); },
+    toggle(name, enabled) { if (enabled) classes.add(name); else classes.delete(name); }
+  };
+  const terminalWindow = ui.get('#devquiz-terminal');
+  let nativeFullscreen = 0;
+  terminalWindow.requestFullscreen = () => { nativeFullscreen++; ui.document.fullscreenElement = terminalWindow; return Promise.resolve(); };
+  ui.document.exitFullscreen = () => { nativeFullscreen--; ui.document.fullscreenElement = null; };
+  vm.runInContext('switchToCode()', ui.context);
+  let prevented = 0;
+  const keydown = ui.document.listeners.keydown;
+  keydown({ key: 'p', metaKey: true, preventDefault() { prevented++; } });
+  assert.equal(classes.has('is-editor-presenting'), true);
+  assert.equal(nativeFullscreen, 1);
+  assert.equal(ui.get('#editor-presentation-toggle').textContent, 'Ansicht schließen');
+  keydown({ key: 'Escape', preventDefault() { prevented++; } });
+  assert.equal(classes.has('is-editor-presenting'), false);
+  assert.equal(nativeFullscreen, 0);
+  ui.get('#editor-presentation-toggle').listeners.click();
+  assert.equal(classes.has('is-editor-presenting'), true);
+  ui.document.fullscreenElement = null;
+  ui.document.listeners.fullscreenchange();
+  assert.equal(classes.has('is-editor-presenting'), false);
+  ui.get('#mode-toggle').listeners.click();
+  keydown({ key: 'p', metaKey: true, preventDefault() { prevented++; } });
+  assert.equal(classes.has('is-editor-presenting'), false);
+  assert.equal(prevented, 2);
+});
+
+test('clicking Monaco content does not steal focus for the hidden textarea', () => {
+  const ui = terminal(async () => { throw new Error('unexpected fetch'); });
+  vm.runInContext('switchToCode()', ui.context);
+  const body = ui.get('#terminal-body');
+  const monaco = ui.get('#monaco-editor');
+  monaco.focus();
+  body.listeners.click({ target: monaco });
+  assert.equal(ui.document.activeElement, monaco);
 });
 
 test('only the active exercise remains visible after skipping', () => {
@@ -113,6 +159,30 @@ test('incomplete presentation exercise can return without passing', async () => 
   assert.equal(ui.get('#terminal-editor').disabled, false);
   ui.get('#next-exercise').listeners.click();
   assert.equal(ui.context.window.location.href, 'presentation.html?chapter=chapter1&slide=3');
+});
+
+test('failed code reveals one exercise-specific hint per attempt, then resets on next exercise', async () => {
+  const ui = terminal(async () => ({ json: async () => ({ ok: true, stdout: 'Falsch\n' }) }));
+  vm.runInContext('switchToCode()', ui.context);
+  const hint = ui.get('#exercise-hint');
+  assert.equal(hint.hidden, true);
+  const attempt = async () => {
+    ui.get('#terminal-editor').listeners.keydown({ key: 'Enter', shiftKey: false, preventDefault() {} });
+    await new Promise((resolve) => setImmediate(resolve));
+  };
+  await attempt();
+  assert.equal(hint.hidden, false);
+  hint.listeners.click();
+  assert.equal(hint.hidden, true);
+  assert.match(ui.get('#terminal-output').children.at(-1).innerHTML, /Hinweis 1 von 3/);
+  await attempt();
+  hint.listeners.click();
+  assert.match(ui.get('#terminal-output').children.at(-1).innerHTML, /Hinweis 2 von 3/);
+  ui.get('#skip-exercise').listeners.click();
+  assert.equal(hint.hidden, true);
+  await attempt();
+  hint.listeners.click();
+  assert.match(ui.get('#terminal-output').children.at(-1).innerHTML, /Hinweis 1 von 3/);
 });
 
 test('wrong output allows retry without advancing or losing focus', async () => {

@@ -1,5 +1,6 @@
 // Interaktives Terminal: Multiple-Choice-Quiz und echte Java-Übungen.
 const terminalBody = document.querySelector("#terminal-body");
+const terminalWindow = document.querySelector("#devquiz-terminal");
 const terminalOutput = document.querySelector("#terminal-output");
 const terminalForm = document.querySelector("#terminal-form");
 const terminalInput = document.querySelector("#terminal-input");
@@ -9,6 +10,8 @@ const editorStatus = document.querySelector("#editor-status");
 const skipExerciseButton = document.querySelector("#skip-exercise");
 const nextExerciseButton = document.querySelector("#next-exercise");
 const modeToggle = document.querySelector("#mode-toggle");
+const editorPresentationToggle = document.querySelector("#editor-presentation-toggle");
+const exerciseHintButton = document.querySelector("#exercise-hint");
 const progressBar = document.querySelector("#progress-bar");
 const scoreBadge = document.querySelector("#score-badge");
 const terminalProgress = document.querySelector("#terminal-progress");
@@ -39,6 +42,7 @@ let currentExerciseIndex = 0;
 let score = 0;
 let waitingForNext = false;
 let codeRunning = false;
+let hintIndex = 0;
 let mode = "quiz";
 let typingTimer;
 
@@ -101,7 +105,7 @@ function adaptFallbackEditor(value) {
   const longestLine = Math.max(1, ...source.split("\n").map((line) => line.length));
   const lineCount = Math.max(1, source.split("\n").length);
   const availableWidth = Math.max(320, terminalEditor.clientWidth || 900);
-  const fontSize = Math.round(Math.max(12, Math.min(28, availableWidth / Math.max(1, longestLine * 0.62))));
+  const fontSize = Math.round(Math.max(18, Math.min(42, availableWidth / Math.max(1, longestLine * 0.62))));
   terminalEditor.style.fontSize = `${fontSize}px`;
   terminalEditor.style.lineHeight = "1.55";
   terminalEditor.style.minHeight = `${Math.min(680, Math.max(230, lineCount * fontSize * 1.55 + 36))}px`;
@@ -109,13 +113,16 @@ function adaptFallbackEditor(value) {
 
 function printExercise() {
   terminalOutput.innerHTML = "";
+  hintIndex = 0;
+  exerciseHintButton.hidden = true;
   const exercise = codeExercises[currentExerciseIndex];
   terminalMode.textContent = "CODE-MODUS";
+  editorPresentationToggle.hidden = false;
   updateStatus();
   addLine(`<span class="comment">// Übung ${currentExerciseIndex + 1} von ${codeExercises.length}: ${escapeHtml(exercise.title)}</span>`, "terminal-line question-comment");
   addLine(`<span class="hint">${escapeHtml(exercise.prompt)}</span>`, "terminal-line hint-line");
   addLine(`<span class="muted-line">Erwartete Ausgabe: ${escapeHtml(exercise.expectedOutput)}</span>`, "terminal-line expected-output-line");
-  addLine("Enter führt aus · Umschalt + Enter fügt eine Zeile ein · Überspringen geht weiter.", "terminal-line muted-line");
+  addLine("Enter führt aus · Umschalt + Enter fügt eine Zeile ein · nach Fehlern gibt es schrittweise Hinweise · Cmd + P führt den Editor vor.", "terminal-line muted-line");
   terminalEditor.value = exercise.starter;
   adaptFallbackEditor(terminalEditor.value);
   const answerMarker = "/* DEIN_CODE_HIER */";
@@ -126,6 +133,7 @@ function printExercise() {
       if (!editor || mode !== "code" || currentExerciseIndex !== exerciseIndex) return;
       terminalEditor.hidden = true;
       monacoContainer.hidden = false;
+      window.devquizEditor.adaptTypography?.(editor.getValue?.() || exercise.starter);
       if (answerPosition >= 0) window.devquizEditor.selectRange(answerPosition, answerPosition + answerMarker.length);
       else window.devquizEditor.focus();
     });
@@ -156,7 +164,7 @@ async function bootTerminal() {
   await typeLine("DevQuiz Terminal v1.0.0", "terminal-line brand-line", 28);
   addLine("Java-Grundlagen-Challenge geladen.", "terminal-line muted-line");
   addLine("<span class=\"keyword\">code</span> → echte Java-Übungen verfügbar:", "terminal-line hint-line");
-  addLine(`${codeExercises.length} aufeinander aufbauende Übungen: Ausgabe, Variablen, Operationen, Bedingungen und Schleifen.`, "terminal-line muted-line");
+  addLine(`${codeExercises.length} Übungen zu Kommentaren, Ausgabe und Syntax aus Kapitel 1.1.`, "terminal-line muted-line");
   addLine("Die Übungen öffnen sich automatisch. Mit dem Quiz-Button kannst du den Modus wechseln.", "terminal-line hint-line");
   await wait(240);
   addLine("────────────────────────────────────────────", "terminal-line divider-line");
@@ -173,7 +181,7 @@ async function submitAnswer(value) {
   terminalInput.value = "";
   printCommand(value.trim());
   if (answer === "code") { switchToCode(); return; }
-  if (answer === "help") { addLine("Befehle: code, help. Im Code-Modus führt Enter aus, Umschalt + Enter fügt eine Zeile ein; du kannst auch überspringen.", "terminal-line hint-line"); return; }
+  if (answer === "help") { addLine("Befehle: code, help. Im Code-Modus führt Enter aus, Umschalt + Enter fügt eine Zeile ein, Cmd + P zeigt den Editor bildschirmfüllend, Esc schließt die Ansicht. Nach einem Fehler ist ein Hinweis verfügbar; Überspringen bleibt möglich.", "terminal-line hint-line"); return; }
   if (!["A", "B", "C", "D"].includes(answer)) {
     addLine('<span class="error">Fehler:</span> ungültige Antwort. Verwende A, B, C oder D.', "terminal-line error-line");
     return;
@@ -210,6 +218,7 @@ async function submitCode() {
   const source = window.devquizEditor?.getValue?.() || terminalEditor.value;
   const exercise = codeExercises[currentExerciseIndex];
   codeRunning = true;
+  exerciseHintButton.hidden = true;
   printCommand("[Java-Code gesendet]");
   addLine(`<pre class="source-line">${escapeHtml(source)}</pre>`, "terminal-line");
   terminalEditor.disabled = true;
@@ -218,6 +227,7 @@ async function submitCode() {
   addLine("<span class=\"muted-line\">Kompilierung und Ausführung im lokalen Backend…</span>", "terminal-line");
 
   let passed = false;
+  let attempted = false;
   try {
     const response = await fetch("/api/execute", {
       method: "POST",
@@ -225,6 +235,7 @@ async function submitCode() {
       body: JSON.stringify({ source })
     });
     const payload = await response.json();
+    attempted = true;
     if (payload.ok) {
       const output = (payload.stdout ?? payload.output ?? "").replace(/\r\n/g, "\n").trimEnd();
       addLine(`<span class="muted-line">Ausgabe:</span>\n<pre class="output-line">${escapeHtml(output || "(keine Ausgabe)")}</pre>`, "terminal-line");
@@ -251,6 +262,7 @@ async function submitCode() {
   }
 
   if (passed) {
+    exerciseHintButton.hidden = true;
     waitingForNext = true;
     nextExerciseButton.hidden = false;
     nextExerciseButton.disabled = false;
@@ -259,6 +271,7 @@ async function submitCode() {
     nextExerciseButton.textContent = presentationReturnUrl ? "Zur Präsentation →" : "Weiter →";
     nextExerciseButton.focus();
   } else {
+    exerciseHintButton.hidden = !attempted || hintIndex >= (exercise.hints?.length || 0);
     const presentationReturnUrl = getPresentationReturnUrl();
     if (presentationReturnUrl) {
       nextExerciseButton.hidden = false;
@@ -339,7 +352,23 @@ function switchToCode() {
   printExercise();
 }
 
+function setEditorPresentation(enabled) {
+  if (mode !== "code" && enabled) return;
+  appShell?.classList?.toggle("is-editor-presenting", enabled);
+  editorPresentationToggle.textContent = enabled ? "Ansicht schließen" : "Editor vorführen ⛶";
+  editorPresentationToggle.setAttribute?.("aria-pressed", String(enabled));
+  if (enabled) terminalWindow.requestFullscreen?.()?.catch?.(() => {});
+  else if (document.fullscreenElement === terminalWindow) document.exitFullscreen?.();
+  window.devquizEditor?.adaptTypography?.();
+  if (!window.devquizEditor?.isMounted?.()) adaptFallbackEditor(terminalEditor.value);
+  if (enabled && window.devquizEditor?.isMounted?.()) window.devquizEditor.focus();
+  else if (enabled) terminalEditor.focus();
+}
+
 function switchToQuiz() {
+  setEditorPresentation(false);
+  editorPresentationToggle.hidden = true;
+  exerciseHintButton.hidden = true;
   mode = "quiz";
   modeToggle.textContent = "Code-Übungen";
   skipExerciseButton.hidden = true;
@@ -379,6 +408,9 @@ function restartQuiz() {
   waitingForNext = false;
   codeRunning = false;
   mode = "quiz";
+  appShell?.classList?.remove("is-editor-presenting");
+  editorPresentationToggle.hidden = true;
+  exerciseHintButton.hidden = true;
   terminalOutput.innerHTML = "";
   terminalEditor.hidden = true;
   terminalEditor.disabled = true;
@@ -416,11 +448,37 @@ modeToggle.addEventListener("click", () => {
   if (mode === "code") switchToQuiz(); else switchToCode();
 });
 
+exerciseHintButton.addEventListener("click", () => {
+  if (mode !== "code" || codeRunning || exerciseHintButton.hidden) return;
+  const hints = codeExercises[currentExerciseIndex].hints || [];
+  if (hintIndex >= hints.length) return;
+  addLine(`<span class="hint">Hinweis ${hintIndex + 1} von ${hints.length}: ${escapeHtml(hints[hintIndex])}</span>`, "terminal-line exercise-hint-line");
+  hintIndex += 1;
+  exerciseHintButton.hidden = true;
+  if (window.devquizEditor?.isMounted?.()) window.devquizEditor.focus();
+  else terminalEditor.focus();
+});
+editorPresentationToggle.addEventListener("click", () => setEditorPresentation(!appShell?.classList?.contains("is-editor-presenting")));
+document.addEventListener("fullscreenchange", () => {
+  if (!document.fullscreenElement && appShell?.classList?.contains("is-editor-presenting")) setEditorPresentation(false);
+});
 document.addEventListener("keydown", (event) => {
   if (event.ctrlKey && event.key.toLowerCase() === "r") { event.preventDefault(); restartQuiz(); }
-});
+  if (mode === "code" && event.metaKey && !event.ctrlKey && !event.altKey && event.key.toLowerCase() === "p") {
+    event.preventDefault();
+    event.stopPropagation?.();
+    setEditorPresentation(!appShell?.classList?.contains("is-editor-presenting"));
+  } else if (event.key === "Escape" && appShell?.classList?.contains("is-editor-presenting")) {
+    event.preventDefault();
+    setEditorPresentation(false);
+  }
+}, true);
 
-terminalBody.addEventListener("click", () => (mode === "code" ? terminalEditor : terminalInput).focus());
+terminalBody.addEventListener("click", (event) => {
+  if (event.target !== terminalBody) return;
+  if (mode === "code" && window.devquizEditor?.isMounted?.()) window.devquizEditor.focus();
+  else (mode === "code" ? terminalEditor : terminalInput).focus();
+});
 selectRequestedExercise();
 if (presentationReturnLink) presentationReturnLink.href = getPresentationReturnUrl() || "presentation.html";
 updateStatus();

@@ -52,7 +52,7 @@
             <span class="window-control maximize"></span>
           </div>
           <p id="terminal-title">lernende@devquiz: ~/java-grundlagen</p>
-          <span class="terminal-menu" aria-hidden="true">•••</span>
+          <button id="editor-presentation-toggle" class="editor-presentation-toggle" type="button" aria-pressed="false" aria-keyshortcuts="Meta+P" hidden>Editor vorführen ⛶</button>
         </div>
 
         <div class="terminal-body" id="terminal-body" tabindex="-1">
@@ -64,6 +64,7 @@
             <div id="monaco-editor" class="monaco-editor" aria-label="Java-Code-Editor" hidden></div>
             <p id="editor-status" class="editor-status" role="status">Lokaler Editor · JDT LS wird geprüft…</p>
             <div class="exercise-actions">
+              <button id="exercise-hint" class="hint-button" type="button" hidden>Hinweis anzeigen</button>
               <button id="next-exercise" class="next-button" type="button" hidden>Weiter →</button>
               <button id="skip-exercise" class="skip-button" type="button" hidden>Übung überspringen →</button>
             </div>

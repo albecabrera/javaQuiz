@@ -75,11 +75,12 @@
   function adaptEditorTypography(value) {
     if (!editor || !editorContainer) return;
     const source = String(value ?? model?.getValue?.() ?? "");
-    const longestLine = Math.max(1, ...source.split("\\n").map((line) => line.length));
-    const lineCount = Math.max(1, source.split("\\n").length);
+    const lines = source.split("\n");
+    const longestLine = Math.max(1, ...lines.map((line) => line.length));
+    const lineCount = lines.length;
     const availableWidth = Math.max(320, editorContainer.clientWidth || 900);
     const widthFit = availableWidth / Math.max(1, longestLine * 0.62);
-    const fontSize = Math.round(Math.max(12, Math.min(28, widthFit)));
+    const fontSize = Math.round(Math.max(18, Math.min(42, widthFit)));
     const lineHeight = Math.round(fontSize * 1.55);
     const editorHeight = Math.min(680, Math.max(340, lineCount * lineHeight + 36));
     editor.updateOptions({ fontSize, lineHeight });
@@ -99,7 +100,32 @@
         });
       } else model.setValue(value);
       editorContainer = container;
-      editor = editor || monaco.editor.create(container, { model, theme: "vs-dark", minimap: { enabled: false }, automaticLayout: true, language: "java", tabSize: 4, insertSpaces: true, suggestOnTriggerCharacters: false, quickSuggestions: false, wordBasedSuggestions: "off", wordWrap: "off" });
+      monaco.editor.defineTheme("devquiz-atom-one-dark", {
+        base: "vs-dark", inherit: true,
+        rules: [
+          { token: "comment", foreground: "5C6370", fontStyle: "italic" },
+          { token: "keyword", foreground: "C678DD" },
+          { token: "string", foreground: "98C379" },
+          { token: "number", foreground: "D19A66" },
+          { token: "type", foreground: "E5C07B" }
+        ],
+        colors: {
+          "editor.background": "#282C34", "editor.foreground": "#ABB2BF",
+          "editorCursor.foreground": "#528BFF", "editor.lineHighlightBackground": "#2C313C",
+          "editorBracketHighlight.foreground1": "#E5C07B",
+          "editorBracketHighlight.foreground2": "#C678DD",
+          "editorBracketHighlight.foreground3": "#61AFEF",
+          "editorBracketHighlight.foreground4": "#98C379",
+          "editorBracketHighlight.foreground5": "#D19A66",
+          "editorBracketHighlight.foreground6": "#56B6C2"
+        }
+      });
+      editor = editor || monaco.editor.create(container, {
+        model, theme: "devquiz-atom-one-dark", fontFamily: '"Fira Code", monospace', fontLigatures: true,
+        bracketPairColorization: { enabled: true }, guides: { bracketPairs: true, highlightActiveBracketPair: true },
+        minimap: { enabled: false }, automaticLayout: true, language: "java", tabSize: 4, insertSpaces: true,
+        suggestOnTriggerCharacters: false, quickSuggestions: false, wordBasedSuggestions: "off", wordWrap: "off"
+      });
       editor.updateOptions({ readOnly: false });
       adaptEditorTypography(model.getValue());
       if (onExecute && !editor.__devquizExecuteAction) {
@@ -131,5 +157,6 @@
     }).catch((error) => { notify({ state: "unavailable", text: `Editor local nicht verfügbar: ${error.message}` }); return null; });
   }
 
+  global.addEventListener?.("resize", () => adaptEditorTypography());
   global.devquizEditor = { mount, getValue: () => model ? model.getValue() : null, focus: () => editor && editor.focus(), setReadOnly: (value) => editor && editor.updateOptions({ readOnly: value }), selectRange, adaptTypography: adaptEditorTypography, isMounted: () => Boolean(editor) };
 })(window);
