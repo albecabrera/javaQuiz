@@ -7,7 +7,9 @@ function terminal(fetch, fastBoot = false) {
   const elements = new Map();
   const document = {
     activeElement: null,
+    body: { classList: { values: new Set(), add(name) { this.values.add(name); }, remove(name) { this.values.delete(name); }, contains(name) { return this.values.has(name); }, toggle(name, enabled) { if (enabled) this.values.add(name); else this.values.delete(name); } } },
     listeners: {},
+    fullscreenElement: null,
     querySelector(selector) {
       if (!elements.has(selector)) elements.set(selector, element());
       return elements.get(selector);
@@ -54,6 +56,19 @@ test('mode button keeps multiple choice accessible and restores code focus', () 
   ui.get('#mode-toggle').listeners.click();
   assert.equal(ui.get('#terminal-mode').textContent, 'CODE-MODUS');
   assert.equal(ui.document.activeElement, ui.get('#terminal-editor'));
+});
+
+test('Cmd+Shift+L toggles the DevQuiz theme with a visible control', () => {
+  const ui = terminal(async () => { throw new Error('unexpected fetch'); });
+  let prevented = 0;
+  const keydown = ui.document.listeners.keydown;
+  keydown({ key: 'l', metaKey: true, shiftKey: true, preventDefault() { prevented++; } });
+  assert.equal(ui.document.body.classList.contains('devquiz-light'), true);
+  assert.equal(ui.get('#devquiz-theme-toggle').textContent, 'Dunkles Design');
+  ui.get('#devquiz-theme-toggle').listeners.click();
+  assert.equal(ui.document.body.classList.contains('devquiz-light'), false);
+  assert.equal(ui.get('#devquiz-theme-toggle').textContent, 'Helles Design');
+  assert.equal(prevented, 1);
 });
 
 test('Cmd+P presents the code editor and Escape restores it without affecting quiz mode', () => {

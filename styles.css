@@ -34,6 +34,20 @@ body {
 button, input { font: inherit; }
 
 .app-shell { width: min(100% - 3rem, 1280px); margin: 0 auto; padding: clamp(2rem, 5vh, 4.5rem) 0 2.5rem; }
+.devquiz-theme-toggle { display: block; margin: .8rem auto 0; padding: .45rem .75rem; border: 1px solid var(--terminal-border); border-radius: .4rem; background: var(--terminal); color: var(--text); cursor: pointer; font-size: .78rem; }
+.devquiz-theme-toggle:hover, .devquiz-theme-toggle:focus-visible { border-color: var(--cyan); outline: 2px solid var(--cyan); outline-offset: 2px; }
+.devquiz-light { color-scheme: light; --background: #f3f6fa; --terminal: #ffffff; --terminal-top: #e8eef4; --terminal-border: #c7d2df; --text: #1d2939; --muted: #66758a; --green: #087f5b; --green-dim: #51a886; --cyan: #126782; --purple: #6548a8; --yellow: #9a6500; --red: #bb344c; --shadow: 0 24px 60px rgba(52, 72, 96, .16); background-color: var(--background); background-image: radial-gradient(ellipse at 50% -10%, #ffffff 0, transparent 55%), linear-gradient(rgba(31, 52, 73, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(31, 52, 73, .045) 1px, transparent 1px); }
+.devquiz-light .entry-panel { background: linear-gradient(145deg, #ffffff, #edf3f8); }
+.devquiz-light .entry-panel h2, .devquiz-light h1, .devquiz-light .entry-card-content strong { color: #172033; }
+.devquiz-light .entry-card, .devquiz-light .entry-demo { border-color: #c7d2df; background: rgba(255, 255, 255, .88); }
+.devquiz-light .entry-card:hover, .devquiz-light .entry-card:focus-visible { background: #f4f8fc; }
+.devquiz-light .entry-demo-console { border-color: #c7d2df; }
+.devquiz-light .terminal-chrome, .devquiz-light .terminal-statusbar { border-color: var(--terminal-border); background: var(--terminal-top); color: var(--muted); }
+.devquiz-light .command-line, .devquiz-light .prompt-label, .devquiz-light .terminal-input { color: var(--text); }
+.devquiz-light .option-list { color: #34445a; }
+.devquiz-light .explanation-line { color: #405168; }
+.devquiz-light .progress-track { background: #dce5ee; }
+.devquiz-light .site-footer { color: #66758a; }
 .site-header { margin-bottom: 2.2rem; text-align: center; }
 .entry-panel { position: relative; display: flex; min-height: calc(100vh - 12rem); flex-direction: column; justify-content: center; margin: 0 auto 2.2rem; overflow: hidden; padding: clamp(2.5rem, 7vw, 6rem); border: 1px solid var(--terminal-border); border-radius: 1rem; background: linear-gradient(145deg, rgba(23, 29, 41, .97), rgba(14, 19, 29, .98)); box-shadow: var(--shadow); }
 .entry-panel::before { position: absolute; inset: 0; background: url("assets/presentation/java-transparent.png") 98% 0% / min(10rem, 16vw) auto no-repeat; content: ""; opacity: .13; filter: drop-shadow(-12px 10px 16px rgba(0, 0, 0, .28)); pointer-events: none; }

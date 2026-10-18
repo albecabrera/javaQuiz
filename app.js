@@ -20,12 +20,23 @@ const appShell = document.querySelector(".app-shell");
 const entryPanel = document.querySelector(".entry-panel");
 const startDevquizButton = document.querySelector("#start-devquiz");
 const backToEntryButton = document.querySelector("#back-to-entry");
+const devquizThemeToggle = document.querySelector("#devquiz-theme-toggle");
 const presentationReturnLink = document.querySelector(".presentation-return-link");
 
 function openDevquiz() {
   appShell?.classList?.add("devquiz-started");
   entryPanel?.setAttribute?.("aria-hidden", "true");
   terminalInput.focus();
+}
+
+function setDevquizTheme(light) {
+  document.body?.classList?.toggle("devquiz-light", light);
+  devquizThemeToggle.textContent = light ? "Dunkles Design" : "Helles Design";
+  devquizThemeToggle.setAttribute?.("aria-pressed", String(light));
+}
+
+function toggleDevquizTheme() {
+  setDevquizTheme(!document.body?.classList?.contains("devquiz-light"));
 }
 
 function returnToEntry() {
@@ -458,12 +469,18 @@ exerciseHintButton.addEventListener("click", () => {
   if (window.devquizEditor?.isMounted?.()) window.devquizEditor.focus();
   else terminalEditor.focus();
 });
+devquizThemeToggle.addEventListener("click", toggleDevquizTheme);
 editorPresentationToggle.addEventListener("click", () => setEditorPresentation(!appShell?.classList?.contains("is-editor-presenting")));
 document.addEventListener("fullscreenchange", () => {
   if (!document.fullscreenElement && appShell?.classList?.contains("is-editor-presenting")) setEditorPresentation(false);
 });
 document.addEventListener("keydown", (event) => {
   if (event.ctrlKey && event.key.toLowerCase() === "r") { event.preventDefault(); restartQuiz(); }
+  if (event.metaKey && event.shiftKey && !event.ctrlKey && !event.altKey && event.key.toLowerCase() === "l") {
+    event.preventDefault();
+    event.stopPropagation?.();
+    toggleDevquizTheme();
+  }
   if (mode === "code" && event.metaKey && !event.ctrlKey && !event.altKey && event.key.toLowerCase() === "p") {
     event.preventDefault();
     event.stopPropagation?.();

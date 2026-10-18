@@ -32,6 +32,7 @@ Die freien Werkzeuge werden nur einmal lokal installiert: Monaco 0.52 (MIT), `ws
 | Zur nächsten gelösten Übung | Weiter → |
 | Überspringen | Übung überspringen → |
 | Modus wechseln | Multiple-Choice-Quiz / Code-Übungen |
+| DevQuiz-Thema wechseln | Cmd + Umschalt + L oder die Schaltfläche „Helles Design“ / „Dunkles Design“ |
 | Code-Editor bildschirmfüllend vorführen | Cmd + P im Code-Modus oder „Editor vorführen ⛶“; mit Esc oder „Ansicht schließen“ beenden |
 | Gestuften Hinweis anzeigen | Nach einem fehlerhaften Versuch „Hinweis anzeigen“; ein weiterer Versuch schaltet den nächsten Hinweis frei |
 
