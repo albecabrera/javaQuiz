@@ -36,6 +36,7 @@ Status: implementation planned
 30. **S30 — Module 3.7 polymorphism**: “el 3.7 Polymorphie '/Users/acabrera/Downloads/javaeinstieg2017-woche3.7.pdf'”
 31. **S31 — Module 3.8 this and super**: “3.8 This is super '/Users/acabrera/Downloads/javaeinstieg2017-woche3.8.pdf'”
 32. **S32 — Learning clarity improvements**: “Entonces comienza con 1 + 2 + 4”
+33. **S33 — Separate presentation and DevQuiz integration**: “Dann Variante 2.”
 ## Tasks
 
 - T1 (S1-S5) — Copy approved assets into project-local presentation assets — commit: pending
@@ -66,6 +67,7 @@ Status: implementation planned
 - T26 (S30) — Add Chapter 3.7 Polymorphie after Chapter 3.6 — commit: pending
 - T27 (S31) — Add Chapter 3.8 this und super after Chapter 3.7 — commit: pending
 - T28 (S32) — Add learner objectives, chapter concept progress, and progressive code focus to the presentation — commit: pending
+- T29 (S33) — Strengthen separate-page navigation between presentation and DevQuiz — commit: pending
 
 ## Log
 
@@ -106,3 +108,4 @@ L34: Extracted Module 3.6 PDF topics: abstract class motivation, abstract keywor
 L35: Extracted Module 3.7 PDF topics: polymorphic arrays, superclass-typed variables, dynamic behavior, static method visibility, polymorphic parameters, and the Vielgestaltigkeit model.
 L36: Extracted Module 3.8 PDF topics: this attributes, this(), super methods, super(), constructor-first-call rules, and mutual exclusivity of this() and super().
 L37: User requested the improvements represented by “Entonces comienza con 1 + 2 + 4”.
+L38: User selected “Dann Variante 2.” for keeping presentation and DevQuiz as separate pages with stronger integration.

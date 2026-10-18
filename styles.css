@@ -148,8 +148,9 @@ h1 { margin: 0 0 .7rem; color: #f1f5fb; font-family: Inter, ui-sans-serif, syste
 .slide-card > .school-logo { position: absolute; top: 1rem; right: 1rem; z-index: 2; }
 .presentation-page:not(.presentation-light) .school-logo { border-color: rgba(146, 163, 184, .3); background: transparent; box-shadow: none; mix-blend-mode: normal; filter: drop-shadow(0 3px 8px rgba(0, 0, 0, .35)); }
 .theme-toggle { display: inline-grid; width: 2.25rem; height: 2.25rem; place-items: center; border: 1px solid var(--terminal-border); border-radius: 50%; background: var(--terminal); color: var(--yellow); cursor: pointer; font-size: 1.05rem; transition: border-color 180ms ease, transform 180ms ease; }.theme-toggle:hover, .theme-toggle:focus-visible { border-color: var(--cyan); outline: none; transform: rotate(12deg); }
-.back-link, .presentation-cta { color: var(--cyan); font-size: .75rem; text-decoration: none; }
-.back-link:hover, .back-link:focus-visible, .presentation-cta:hover, .presentation-cta:focus-visible { text-decoration: underline; outline: none; }
+.back-link, .presentation-cta, .presentation-practice-link { color: var(--cyan); font-size: .75rem; text-decoration: none; }
+.presentation-practice-link { color: var(--green); font-weight: 700; }
+.back-link:hover, .back-link:focus-visible, .presentation-cta:hover, .presentation-cta:focus-visible, .presentation-practice-link:hover, .presentation-practice-link:focus-visible { text-decoration: underline; outline: none; }
 .presentation-header .eyebrow { margin: 0; }
 .presentation-counter { margin: 0; color: var(--muted); font-size: .72rem; }
 .module-nav { display: flex; gap: .55rem; margin: 1rem 0 .7rem; }.module-button { flex: 1; padding: .7rem .85rem; border: 1px solid var(--terminal-border); border-radius: .45rem; background: rgba(17, 24, 36, .72); color: var(--muted); cursor: pointer; font: inherit; font-size: .72rem; text-align: left; }.presentation-light .module-button { background: rgba(255, 255, 255, .8); }.module-button:hover, .module-button:focus-visible { border-color: var(--cyan); color: var(--text); outline: none; }.module-button.is-active { border-color: var(--green-dim); background: rgba(29, 140, 104, .14); color: var(--green); font-weight: 700; }.presentation-light .module-button.is-active { background: #e5f3ed; }
