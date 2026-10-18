@@ -27,7 +27,7 @@ function terminal(fetch, fastBoot = false) {
       focus() { document.activeElement = this; },
     };
   }
-  const context = vm.createContext({ document, fetch, window: { clearTimeout() {} }, setTimeout: fastBoot ? (callback) => setImmediate(callback) : setTimeout, console });
+  const context = vm.createContext({ document, fetch, window: { clearTimeout() {}, location: { search: "", href: "" } }, setTimeout: fastBoot ? (callback) => setImmediate(callback) : setTimeout, console });
   vm.runInContext(fs.readFileSync(require.resolve('../quiz.js'), 'utf8'), context);
   vm.runInContext(fs.readFileSync(require.resolve('../app.js'), 'utf8'), context);
   return { context, document, get: (selector) => document.querySelector(selector) };
@@ -58,37 +58,48 @@ test('mode button keeps multiple choice accessible and restores code focus', () 
 test('only the active exercise remains visible after skipping', () => {
   const ui = terminal(async () => { throw new Error('unexpected fetch'); });
   vm.runInContext('switchToCode()', ui.context);
-  assert.ok(ui.get('#terminal-output').children.some((child) => child.innerHTML.includes('Hallo Welt')));
+  assert.ok(ui.get('#terminal-output').children.some((child) => child.innerHTML.includes('Mehrzeiliger Kommentar und Ausgabe')));
   ui.get('#skip-exercise').listeners.click();
   const html = ui.get('#terminal-output').children.map((child) => child.innerHTML).join(' ');
-  assert.match(html, /Eine Variable deklarieren/);
-  assert.doesNotMatch(html, /Hallo Welt/);
+  assert.match(html, /Eine Ausgabe mit println/);
+  assert.doesNotMatch(html, /Mehrzeiliger Kommentar und Ausgabe/);
 });
 
 test('skip advances to the next answer and focuses its selected marker', () => {
   const ui = terminal(async () => { throw new Error('unexpected fetch'); });
   vm.runInContext('switchToCode()', ui.context);
-  assert.equal(ui.get('#terminal-progress').textContent, '01 / 14');
+  assert.equal(ui.get('#terminal-progress').textContent, '01 / 04');
   ui.get('#skip-exercise').listeners.click();
-  assert.equal(ui.get('#terminal-progress').textContent, '02 / 14');
+  assert.equal(ui.get('#terminal-progress').textContent, '02 / 04');
   const editor = ui.get('#terminal-editor');
   assert.equal(ui.document.activeElement, editor);
   assert.equal(editor.value.slice(editor.selectionStart, editor.selectionEnd), '/* DEIN_CODE_HIER */');
 });
 
 test('successful execution keeps the result visible until Weiter is clicked', async () => {
-  const ui = terminal(async () => ({ json: async () => ({ ok: true, stdout: 'Hallo Welt\n' }) }));
+  const ui = terminal(async () => ({ json: async () => ({ ok: true, stdout: 'Hallo, ich bin Duke.\nWie heißt Du?\n' }) }));
   vm.runInContext('switchToCode()', ui.context);
   const nextButton = ui.get('#next-exercise');
+  assert.equal(ui.get('#terminal-progress').textContent, '01 / 04');
   assert.equal(nextButton.hidden, true);
   ui.get('#terminal-editor').listeners.keydown({ key: 'Enter', shiftKey: false, preventDefault() {} });
   await new Promise((resolve) => setImmediate(resolve));
-  assert.equal(ui.get('#terminal-progress').textContent, '01 / 14');
+  assert.equal(ui.get('#terminal-progress').textContent, '01 / 04');
   assert.equal(nextButton.hidden, false);
-  assert.match(ui.get('#terminal-output').children.map((child) => child.innerHTML).join(' '), /Hallo Welt/);
+  assert.match(ui.get('#terminal-output').children.map((child) => child.innerHTML).join(' '), /Hallo, ich bin Duke/);
   nextButton.listeners.click();
-  assert.equal(ui.get('#terminal-progress').textContent, '02 / 14');
+  assert.equal(ui.get('#terminal-progress').textContent, '02 / 04');
   assert.equal(nextButton.hidden, true);
+});
+
+test('completed presentation exercise returns to the next slide', async () => {
+  const ui = terminal(async () => ({ json: async () => ({ ok: true, stdout: 'Hallo, ich bin Duke.\nWie heißt Du?\n' }) }));
+  ui.context.window.location.search = '?exercise=1.1.1&returnChapter=chapter1&returnSlide=3';
+  vm.runInContext('selectRequestedExercise(); switchToCode()', ui.context);
+  ui.get('#terminal-editor').listeners.keydown({ key: 'Enter', shiftKey: false, preventDefault() {} });
+  await new Promise((resolve) => setImmediate(resolve));
+  ui.get('#next-exercise').listeners.click();
+  assert.equal(ui.context.window.location.href, 'presentation.html?chapter=chapter1&slide=3');
 });
 
 test('wrong output allows retry without advancing or losing focus', async () => {
@@ -96,7 +107,7 @@ test('wrong output allows retry without advancing or losing focus', async () => 
   vm.runInContext('switchToCode()', ui.context);
   ui.get('#terminal-editor').listeners.keydown({ key: 'Enter', shiftKey: false, preventDefault() {} });
   await new Promise((resolve) => setImmediate(resolve));
-  assert.equal(ui.get('#terminal-progress').textContent, '01 / 14');
+  assert.equal(ui.get('#terminal-progress').textContent, '01 / 04');
   assert.equal(ui.document.activeElement, ui.get('#terminal-editor'));
   assert.equal(ui.get('#terminal-editor').disabled, false);
   assert.equal(ui.get('#next-exercise').hidden, true);
@@ -116,7 +127,7 @@ test('unavailable backend leaves the current code editable and focused', async (
   vm.runInContext('switchToCode()', ui.context);
   ui.get('#terminal-editor').listeners.keydown({ key: 'Enter', shiftKey: false, preventDefault() {} });
   await new Promise((resolve) => setImmediate(resolve));
-  assert.equal(ui.get('#terminal-progress').textContent, '01 / 14');
+  assert.equal(ui.get('#terminal-progress').textContent, '01 / 04');
   assert.equal(ui.document.activeElement, ui.get('#terminal-editor'));
   assert.equal(ui.get('#terminal-editor').disabled, false);
 });

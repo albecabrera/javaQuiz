@@ -5,10 +5,10 @@ const vm = require('node:vm');
 
 const codeExercises = vm.runInNewContext(`${fs.readFileSync(require.resolve('../quiz.js'), 'utf8')}\ncodeExercises`);
 
-test('ten additional exercises progress from output to variables, conditions and loops', () => {
-  assert.equal(codeExercises.length, 14);
-  assert.deepEqual(Array.from(codeExercises.slice(0, 4), (exercise) => exercise.title), [
-    'Hallo Welt', 'Eine Variable deklarieren', 'Text verketten', 'Einfache Addition'
+test('Chapter 1.1 programming exercises match the presentation tasks', () => {
+  assert.equal(codeExercises.length, 4);
+  assert.deepEqual(Array.from(codeExercises, (exercise) => exercise.title), [
+    'Mehrzeiliger Kommentar und Ausgabe', 'Eine Ausgabe mit println', 'Output Aufgabe 1', 'Syntaxfehler finden'
   ]);
   assert.ok(codeExercises.every((exercise) => exercise.starter.includes('/* DEIN_CODE_HIER */')));
   assert.ok(codeExercises.every((exercise) => typeof exercise.expectedOutput === 'string'));

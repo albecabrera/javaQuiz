@@ -17,6 +17,7 @@ const appShell = document.querySelector(".app-shell");
 const entryPanel = document.querySelector(".entry-panel");
 const startDevquizButton = document.querySelector("#start-devquiz");
 const backToEntryButton = document.querySelector("#back-to-entry");
+const presentationReturnLink = document.querySelector(".presentation-return-link");
 
 function openDevquiz() {
   appShell?.classList?.add("devquiz-started");
@@ -241,7 +242,9 @@ async function submitCode() {
     waitingForNext = true;
     nextExerciseButton.hidden = false;
     nextExerciseButton.disabled = false;
-    terminalMode.textContent = currentExerciseIndex === codeExercises.length - 1 ? "FERTIG" : "WEITER";
+    const presentationReturnUrl = getPresentationReturnUrl();
+    terminalMode.textContent = presentationReturnUrl ? "PRÄSENTATION" : (currentExerciseIndex === codeExercises.length - 1 ? "FERTIG" : "WEITER");
+    nextExerciseButton.textContent = presentationReturnUrl ? "Zur Präsentation →" : "Weiter →";
     nextExerciseButton.focus();
   } else {
     if (window.devquizEditor?.isMounted?.()) window.devquizEditor.focus();
@@ -255,6 +258,11 @@ function advanceExercise(skipped = false) {
   nextExerciseButton.hidden = true;
   nextExerciseButton.disabled = true;
   if (skipped) addLine(`<span class="hint">Übung ${currentExerciseIndex + 1} übersprungen.</span>`, "terminal-line");
+  const presentationReturnUrl = getPresentationReturnUrl();
+  if (presentationReturnUrl) {
+    window.location.href = presentationReturnUrl;
+    return;
+  }
   if (currentExerciseIndex === codeExercises.length - 1) {
     addLine('<span class="success">Alle Übungen abgeschlossen. Zurück zum Quiz.</span>', "terminal-line");
     switchToQuiz();
@@ -278,6 +286,28 @@ async function continueQuiz() {
   await wait(180);
   printQuestion();
   terminalInput.disabled = false;
+}
+
+function getQueryParameter(name) {
+  const search = window.location?.search || "";
+  if (typeof URLSearchParams === "function") return new URLSearchParams(search).get(name);
+  const match = search.match(new RegExp(`[?&]${name}=([^&]*)`));
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function getPresentationReturnUrl() {
+  const chapter = getQueryParameter("returnChapter");
+  const slide = Number.parseInt(getQueryParameter("returnSlide"), 10);
+  if (!chapter || !Number.isInteger(slide) || slide < 0) return null;
+  return `presentation.html?chapter=${encodeURIComponent(chapter)}&slide=${slide}`;
+}
+
+function selectRequestedExercise() {
+  const requestedId = getQueryParameter("exercise");
+  const requestedIndex = codeExercises.findIndex((exercise) => exercise.id === requestedId);
+  if (requestedIndex < 0) return false;
+  currentExerciseIndex = requestedIndex;
+  return true;
 }
 
 function switchToCode() {
@@ -372,6 +402,8 @@ document.addEventListener("keydown", (event) => {
 });
 
 terminalBody.addEventListener("click", () => (mode === "code" ? terminalEditor : terminalInput).focus());
+selectRequestedExercise();
+if (presentationReturnLink) presentationReturnLink.href = getPresentationReturnUrl() || "presentation.html";
 updateStatus();
 bootTerminal();
-if (window.location?.hash === "#devquiz-terminal") openDevquiz();
+if (window.location?.hash === "#devquiz-terminal" || getQueryParameter("exercise")) openDevquiz();

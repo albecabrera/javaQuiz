@@ -118,3 +118,4 @@ L38: User selected “Dann Variante 2.” for keeping presentation and DevQuiz a
 L39: User supplied screenshots containing openHPI exercises for Module 1 Chapters 1.1 and 1.3 and requested their integration into the corresponding module.
 L40: User supplied a CodeOcean screenshot for the Chapter 1.1 output task “Willkommen Detektiv Duke!”.
 L41: User supplied four further screenshots for Chapter 1.1; the first and last repeat already integrated tasks, while the middle two add output and syntax-correction tasks.
+L42: User approved the proposed chapter-to-programming-task mapping with “ja bitte”.

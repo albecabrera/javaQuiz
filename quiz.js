@@ -82,13 +82,30 @@ const questions = [
   }
 ];
 
-// Lokale Übungen: Das Backend kompiliert und startet sie als Main.java.
+// Lokale Übungen aus Kapitel 1.1. Das Backend kompiliert und startet sie als Main.java.
 // Der Marker wird beim Laden der Übung automatisch ausgewählt.
 const codeExercises = [
   {
-    title: "Hallo Welt",
-    prompt: "Gib exakt Hallo Welt in der Konsole aus.",
-    expectedOutput: "Hallo Welt",
+    id: "1.1.1",
+    chapter: "chapter1",
+    title: "Mehrzeiliger Kommentar und Ausgabe",
+    prompt: "Ändere die einzeiligen Kommentare in den Zeilen 3–5 zu einem mehrzeiligen Kommentar. Gib anschließend in zwei Zeilen „Hallo, ich bin Duke.“ und „Wie heißt Du?“ aus.",
+    expectedOutput: "Hallo, ich bin Duke.\nWie heißt Du?",
+    starter: `public class Main {
+  public static void main(String[] args) {
+    // Kommentar 1
+    // Kommentar 2
+    // Kommentar 3
+    /* DEIN_CODE_HIER */
+  }
+}`
+  },
+  {
+    id: "1.1.2",
+    chapter: "chapter1",
+    title: "Eine Ausgabe mit println",
+    prompt: "Schreibe ein Java-Programm, das in einer Zeile „Willkommen Detektiv Duke!“ ausgibt und anschließend in eine neue Zeile springt.",
+    expectedOutput: "Willkommen Detektiv Duke!",
     starter: `public class Main {
   public static void main(String[] args) {
     /* DEIN_CODE_HIER */
@@ -96,9 +113,11 @@ const codeExercises = [
 }`
   },
   {
-    title: "Eine Variable deklarieren",
-    prompt: "Deklariere eine String-Variable namens name mit dem Wert Ada und gib sie in der Konsole aus.",
-    expectedOutput: "Ada",
+    id: "1.1.3",
+    chapter: "chapter1",
+    title: "Output Aufgabe 1",
+    prompt: "Benutze System.out.println(), um genau „Der Anfang einer Reise!“ auszugeben.",
+    expectedOutput: "Der Anfang einer Reise!",
     starter: `public class Main {
   public static void main(String[] args) {
     /* DEIN_CODE_HIER */
@@ -106,126 +125,14 @@ const codeExercises = [
 }`
   },
   {
-    title: "Text verketten",
-    prompt: "Verwende die Variablen name und alter und gib aus: Ich bin Ada und 20 Jahre alt.",
-    expectedOutput: "Ich bin Ada und 20 Jahre alt.",
+    id: "1.1.4",
+    chapter: "chapter1",
+    title: "Syntaxfehler finden",
+    prompt: "Finde und behebe die zwei Syntaxfehler im Programm. Gib danach „Hallo Welt.“ aus.",
+    expectedOutput: "Hallo Welt.",
     starter: `public class Main {
   public static void main(String[] args) {
-    String name = "Ada";
-    int alter = 20;
-    /* DEIN_CODE_HIER */
-  }
-}`
-  },
-  {
-    title: "Einfache Addition",
-    prompt: "Berechne und gib das Ergebnis von 7 + 5 aus.",
-    expectedOutput: "12",
-    starter: `public class Main {
-  public static void main(String[] args) {
-    int ergebnis = 7 + 5;
-    /* DEIN_CODE_HIER */
-  }
-}`
-  },
-  {
-    title: "Eine weitere Zeile ausgeben",
-    prompt: "Gib exakt Ich lerne Java mit System.out.println aus.",
-    expectedOutput: "Ich lerne Java",
-    starter: `public class Main {
-  public static void main(String[] args) {
-    /* DEIN_CODE_HIER */
-  }
-}`
-  },
-  {
-    title: "Ganzzahlige Variable",
-    prompt: "Deklariere einen int namens alter mit dem Wert 18 und gib ihn aus.",
-    expectedOutput: "18",
-    starter: `public class Main {
-  public static void main(String[] args) {
-    /* DEIN_CODE_HIER */
-  }
-}`
-  },
-  {
-    title: "Dezimalzahl",
-    prompt: "Deklariere einen double namens preis mit dem Wert 2.5 und gib ihn aus.",
-    expectedOutput: "2.5",
-    starter: `public class Main {
-  public static void main(String[] args) {
-    /* DEIN_CODE_HIER */
-  }
-}`
-  },
-  {
-    title: "Boolescher Wert",
-    prompt: "Deklariere einen boolean namens aktiv mit dem Wert true und gib ihn aus.",
-    expectedOutput: "true",
-    starter: `public class Main {
-  public static void main(String[] args) {
-    /* DEIN_CODE_HIER */
-  }
-}`
-  },
-  {
-    title: "Ein Zeichen",
-    prompt: "Deklariere ein char namens anfangsbuchstabe mit dem Wert 'J' und gib es aus.",
-    expectedOutput: "J",
-    starter: `public class Main {
-  public static void main(String[] args) {
-    /* DEIN_CODE_HIER */
-  }
-}`
-  },
-  {
-    title: "Multiplikation",
-    prompt: "Multipliziere 6 mit 4 und gib das Ergebnis aus.",
-    expectedOutput: "24",
-    starter: `public class Main {
-  public static void main(String[] args) {
-    /* DEIN_CODE_HIER */
-  }
-}`
-  },
-  {
-    title: "Eine Variable aktualisieren",
-    prompt: "Starte mit punkte = 3, addiere 2 und gib den neuen Wert aus.",
-    expectedOutput: "5",
-    starter: `public class Main {
-  public static void main(String[] args) {
-    int punkte = 3;
-    /* DEIN_CODE_HIER */
-  }
-}`
-  },
-  {
-    title: "Zahlen vergleichen",
-    prompt: "Vergleiche, ob 8 größer als 5 ist, und gib den booleschen Wert aus.",
-    expectedOutput: "true",
-    starter: `public class Main {
-  public static void main(String[] args) {
-    /* DEIN_CODE_HIER */
-  }
-}`
-  },
-  {
-    title: "If-Bedingung",
-    prompt: "Gib Bestanden aus, wenn note größer oder gleich 6 ist, sonst Nicht bestanden.",
-    expectedOutput: "Bestanden",
-    starter: `public class Main {
-  public static void main(String[] args) {
-    int note = 8;
-    /* DEIN_CODE_HIER */
-  }
-}`
-  },
-  {
-    title: "For-Schleife",
-    prompt: "Verwende eine for-Schleife, um die Zahlen von 1 bis 3 jeweils in einer Zeile auszugeben.",
-    expectedOutput: "1\n2\n3",
-    starter: `public class Main {
-  public static void main(String[] args) {
+    System.out.println("Hallo Welt.")
     /* DEIN_CODE_HIER */
   }
 }`

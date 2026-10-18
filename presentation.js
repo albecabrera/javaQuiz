@@ -4,7 +4,7 @@ const chapters = {
     slides: [
       { kicker: "KAPITEL 1 · START", title: "Dein erstes Java-Programm", text: "Java-Programme bestehen aus klaren Bausteinen. In dieser Einführung baust du dein erstes Programm Schritt für Schritt auf.", code: "class HelloPaco {\n}", character: "robot", caption: "Wir bauen es gemeinsam auf." },
       { kicker: "01 · KLASSE", title: "Die Klasse ist der Rahmen.", text: "class ist ein Schlüsselwort. Eine Klasse ist die Grundeinheit der objektorientierten Programmierung und enthält deinen Code.", code: "class HelloPaco {\n  // Inhalt der Klasse\n}", character: "robot", caption: "Ein Rahmen für deinen Code." },
-      { kicker: "02 · CODE-BLOCK", title: "Geschweifte Klammern strukturieren.", text: "Alles zwischen { und } gehört zum aktuellen Code-Block. Die Pfeile markieren, wo der Block beginnt und endet.", code: "class HelloPaco <span class=\"brace-highlight\">{</span>\n  // Inhalt des Code-Blocks\n<span class=\"brace-highlight\">}</span>\n<span class=\"brace-guide\">↳ Beginn und Ende gehören zusammen</span>", character: "detective", caption: "Ich finde jeden Code-Block." },
+      { kicker: "02 · CODE-BLOCK", title: "Geschweifte Klammern strukturieren.", text: "Alles zwischen { und } gehört zum aktuellen Code-Block. Die Pfeile markieren, wo der Block beginnt und endet.", code: "class HelloPaco <span class=\"brace-arrow brace-arrow-open\" aria-label=\"Pfeil zur öffnenden Klammer\">→ öffnende Klammer</span> <span class=\"brace-highlight\">{</span>\n  // Inhalt des Code-Blocks\n<span class=\"brace-arrow brace-arrow-close\" aria-label=\"Pfeil zur schließenden Klammer\">→ schließende Klammer</span> <span class=\"brace-highlight\">}</span>\n<span class=\"brace-guide\">↳ Beginn und Ende gehören zusammen</span>", character: "detective", caption: "Ich finde jeden Code-Block." },
       { kicker: "03 · MAIN", title: "main() ist der Startpunkt.", text: "Die main()-Methode gibt es genau einmal pro Programm. Hier beginnt Java mit der Ausführung deines Codes.", code: "public static void main(String[] args) <span class=\"brace-highlight\">{</span>\n  // hier startet das Programm\n<span class=\"brace-highlight\">}</span>", character: "robot", caption: "Startklar!" },
       { kicker: "04 · KOMMENTARE", title: "Kommentare erklären deinen Code.", text: "Einzeilige und mehrzeilige Kommentare werden bei der Ausführung ignoriert. Sie helfen Entwicklerinnen und Entwicklern beim Verstehen.", code: "// einzeiliger Kommentar\n/* mehrzeiliger\n   Kommentar */", character: "detective", caption: "Notizen für dein zukünftiges Ich." },
       { kicker: "05 · AUSGABE", title: "println schreibt eine Zeile.", text: "System.out.println() ist eine Methode. Sie gibt den Text in den Klammern in der Konsole aus.", code: 'System.out.println(<span class="string">"Hallo Paco"</span>);', character: "robot", caption: "Die Konsole antwortet." },
@@ -281,6 +281,15 @@ const chapters = {
   }
 };
 
+const chapterTaskMap = {
+  chapter1: [
+    { id: "1.1.1", label: "1.1.1 · Mehrzeiliger Kommentar und Ausgabe" },
+    { id: "1.1.2", label: "1.1.2 · Eine Ausgabe mit println" },
+    { id: "1.1.3", label: "1.1.3 · Output Aufgabe 1" },
+    { id: "1.1.4", label: "1.1.4 · Syntaxfehler finden" }
+  ]
+};
+
 const chapterExercises = {
   chapter1: [
     {
@@ -303,25 +312,29 @@ const chapterExercises = {
       type: "task",
       title: "Mehrzeiliger Kommentar und Ausgabe",
       prompt: "Ändere die einzeiligen Kommentare in den Zeilen 3–5 zu einem mehrzeiligen Kommentar. Gib anschließend in zwei Zeilen „Hallo, ich bin Duke.“ und „Wie heißt Du?“ aus.",
-      linkLabel: "Im DevQuiz programmieren →"
+      linkLabel: "Im DevQuiz programmieren →",
+      exerciseId: "1.1.1"
     },
     {
       type: "task",
       title: "Eine Ausgabe mit println",
       prompt: "Schreibe ein Java-Programm, das in einer Zeile „Willkommen Detektiv Duke!“ ausgibt und anschließend in eine neue Zeile springt.",
-      linkLabel: "Im DevQuiz programmieren →"
+      linkLabel: "Im DevQuiz programmieren →",
+      exerciseId: "1.1.2"
     },
     {
       type: "task",
       title: "Output Aufgabe 1",
       prompt: "Benutze System.out.println(), um genau „Der Anfang einer Reise!“ auszugeben.",
-      linkLabel: "Im DevQuiz programmieren →"
+      linkLabel: "Im DevQuiz programmieren →",
+      exerciseId: "1.1.3"
     },
     {
       type: "task",
       title: "Syntaxfehler finden",
       prompt: "Finde und behebe die zwei Syntaxfehler im Programm. Gib danach „Hallo Welt.“ aus.",
-      linkLabel: "Im DevQuiz programmieren →"
+      linkLabel: "Im DevQuiz programmieren →",
+      exerciseId: "1.1.4"
     }
   ],
   chapter3: [
@@ -434,25 +447,65 @@ function renderOverview() {
   });
 }
 
+function nextPresentationPosition() {
+  if (currentSlide < activeSlides().length - 1) return { chapter: currentChapterId, slide: currentSlide + 1 };
+  const chapterIndex = chapterOrder.indexOf(currentChapterId);
+  if (chapterIndex >= 0 && chapterIndex < chapterOrder.length - 1) return { chapter: chapterOrder[chapterIndex + 1], slide: 0 };
+  return { chapter: currentChapterId, slide: currentSlide };
+}
+
+function devquizExerciseHref(exerciseId) {
+  const next = nextPresentationPosition();
+  return `index.html?exercise=${encodeURIComponent(exerciseId)}&returnChapter=${encodeURIComponent(next.chapter)}&returnSlide=${next.slide}#devquiz-terminal`;
+}
+
+function appendChapterTaskLinks(tasks, isFinalSlide) {
+  if (!isFinalSlide || !tasks.length) return;
+  const heading = document.createElement("p");
+  heading.className = "slide-exercise-task-heading";
+  heading.textContent = "Danach programmieren:";
+  slideExerciseOptions.appendChild(heading);
+  tasks.forEach((task) => {
+    const link = document.createElement("a");
+    link.className = "slide-exercise-link";
+    link.href = devquizExerciseHref(task.id);
+    link.textContent = task.label;
+    slideExerciseOptions.appendChild(link);
+  });
+}
+
 function renderSlideExercise() {
-  const exercises = chapterExercises[currentChapterId];
-  if (!exercises?.length) {
+  const exercises = chapterExercises[currentChapterId] || [];
+  const tasks = chapterTaskMap[currentChapterId] || [];
+  const isFinalSlide = currentSlide === activeSlides().length - 1;
+  if (!exercises.length && (!tasks.length || !isFinalSlide)) {
     slideExercise.hidden = true;
     slideExerciseOptions.innerHTML = "";
     return;
   }
-  const exercise = exercises[currentSlide % exercises.length];
+  const exercise = exercises.length ? exercises[currentSlide % exercises.length] : null;
   slideExercise.hidden = false;
-  slideExerciseTitle.textContent = `${exercise.title} · Übung ${(currentSlide % exercises.length) + 1} von ${exercises.length}`;
-  slideExercisePrompt.textContent = exercise.prompt;
+  slideExerciseTitle.textContent = exercise ? `${exercise.title} · Übung ${(currentSlide % exercises.length) + 1} von ${exercises.length}` : "Jetzt programmieren";
+  slideExercisePrompt.textContent = exercise ? exercise.prompt : "Du hast die Grundlagen gelernt. Wähle jetzt die passende Programmieraufgabe für dieses Kapitel.";
   slideExerciseFeedback.textContent = "";
   slideExerciseOptions.innerHTML = "";
+  if (!exercise) {
+    tasks.forEach((task) => {
+      const link = document.createElement("a");
+      link.className = "slide-exercise-link";
+      link.href = devquizExerciseHref(task.id);
+      link.textContent = task.label;
+      slideExerciseOptions.appendChild(link);
+    });
+    return;
+  }
   if (exercise.type === "task") {
     const link = document.createElement("a");
     link.className = "slide-exercise-link";
-    link.href = "index.html#devquiz-terminal";
+    link.href = devquizExerciseHref(exercise.exerciseId);
     link.textContent = exercise.linkLabel;
     slideExerciseOptions.appendChild(link);
+    appendChapterTaskLinks(tasks, isFinalSlide);
     return;
   }
   const selected = new Set();
@@ -490,6 +543,7 @@ function renderSlideExercise() {
     });
     slideExerciseOptions.appendChild(button);
   });
+  appendChapterTaskLinks(tasks, isFinalSlide);
 }
 
 function renderSlide() {
@@ -547,8 +601,11 @@ function setTheme(theme) {
 }
 
 function loadRequestedChapter() {
-  const requestedChapter = new URLSearchParams(window.location.search).get("chapter");
+  const params = new URLSearchParams(window.location.search);
+  const requestedChapter = params.get("chapter");
+  const requestedSlide = Number.parseInt(params.get("slide"), 10);
   if (requestedChapter && chapters[requestedChapter]) currentChapterId = requestedChapter;
+  if (Number.isInteger(requestedSlide) && requestedSlide >= 0 && requestedSlide < activeSlides().length) currentSlide = requestedSlide;
 }
 
 function loadTheme() {
