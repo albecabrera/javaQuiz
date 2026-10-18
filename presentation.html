@@ -48,7 +48,7 @@
         <button class="chapter-button" id="chapter-3-8-button" type="button" data-module="module3" data-chapter="chapter38" aria-pressed="false" hidden>Kapitel 3.8 · this und super</button>
       </nav>
       <div class="presentation-layout">
-        <section class="slide-card" aria-live="polite" aria-labelledby="slide-title">
+        <section class="slide-card" aria-live="polite" aria-labelledby="slide-objective">
           <img class="school-logo" src="assets/presentation/java-transparent.png" alt="Java-Logo" />
           <p class="slide-kicker" id="slide-kicker">START</p>
           <div class="slide-learning" aria-live="polite">
@@ -60,8 +60,15 @@
           <p class="slide-text" id="slide-text">Du beschreibst Schritt für Schritt, was dein Programm tun soll. Java übersetzt diese Anweisungen in ausführbaren Code.</p>
           <div class="slide-main">
             <pre class="slide-code" id="slide-code"><code>class HelloPaco {\n}</code></pre>
-            <div class="character-stage" id="character-stage"><img id="slide-character" src="assets/presentation/robot.jpeg" alt="Java-Roboter" /><span id="character-caption">Bereit zum Programmieren?</span></div>
+            <div class="character-stage" id="character-stage"><img id="slide-character" src="assets/presentation/robot-transparent.png" alt="Java-Roboter" /><span id="character-caption">Bereit zum Programmieren?</span></div>
           </div>
+          <section class="slide-exercise" id="slide-exercise" aria-labelledby="slide-exercise-title" hidden>
+            <p class="slide-exercise-kicker">ÜBUNG ZUM KAPITEL</p>
+            <h2 id="slide-exercise-title">Jetzt ausprobieren</h2>
+            <p id="slide-exercise-prompt"></p>
+            <div id="slide-exercise-options" class="slide-exercise-options"></div>
+            <p id="slide-exercise-feedback" class="slide-exercise-feedback" role="status"></p>
+          </section>
           <aside class="teacher-notes" id="teacher-notes" hidden><p class="teacher-notes-kicker">LEHRMODUS</p><p id="teacher-note"></p><p><strong>Lösung:</strong> <span id="teacher-answer"></span></p></aside>
           <div class="slide-progress"><span id="slide-progress-bar"></span></div>
         </section>

@@ -26,6 +26,7 @@ const CONTENT_TYPES = {
   "/app.js": "text/javascript; charset=utf-8",
   "/presentation.js": "text/javascript; charset=utf-8",
   "/assets/presentation/robot.jpeg": "image/jpeg",
+  "/assets/presentation/robot-transparent.png": "image/png",
   "/assets/presentation/detective.webp": "image/webp",
   "/assets/presentation/detective.png": "image/png",
   "/assets/presentation/detective-transparent.png": "image/png",

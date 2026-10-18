@@ -281,6 +281,77 @@ const chapters = {
   }
 };
 
+const chapterExercises = {
+  chapter1: [
+    {
+      type: "single",
+      title: "Code-Blöcke erkennen",
+      prompt: "Wofür benutzt man geschweifte Klammern in Java?",
+      options: ["Zum Starten eines Programms", "Zur Abgrenzung eines Codeblocks", "Zum Kennzeichnen von Zeichenketten"],
+      correct: 1,
+      explanation: "Geschweifte Klammern markieren den Anfang und das Ende eines Codeblocks."
+    },
+    {
+      type: "single",
+      title: "Ausgabe verstehen",
+      prompt: "Vervollständige den Satz: Mit System.out.println(...) ...",
+      options: ["... wird der Inhalt des Systems ausgegeben.", "... kann man Text auf dem Bildschirm ausgeben.", "... wird der angegebene Text von der Soundkarte vertont.", "... wird der angegebene Text ins openHPI Forum gepostet."],
+      correct: 1,
+      explanation: "System.out.println(...) schreibt eine Ausgabe in die Konsole."
+    },
+    {
+      type: "task",
+      title: "Mehrzeiliger Kommentar und Ausgabe",
+      prompt: "Ändere die einzeiligen Kommentare in den Zeilen 3–5 zu einem mehrzeiligen Kommentar. Gib anschließend in zwei Zeilen „Hallo, ich bin Duke.“ und „Wie heißt Du?“ aus.",
+      linkLabel: "Im DevQuiz programmieren →"
+    },
+    {
+      type: "task",
+      title: "Eine Ausgabe mit println",
+      prompt: "Schreibe ein Java-Programm, das in einer Zeile „Willkommen Detektiv Duke!“ ausgibt und anschließend in eine neue Zeile springt.",
+      linkLabel: "Im DevQuiz programmieren →"
+    },
+    {
+      type: "task",
+      title: "Output Aufgabe 1",
+      prompt: "Benutze System.out.println(), um genau „Der Anfang einer Reise!“ auszugeben.",
+      linkLabel: "Im DevQuiz programmieren →"
+    },
+    {
+      type: "task",
+      title: "Syntaxfehler finden",
+      prompt: "Finde und behebe die zwei Syntaxfehler im Programm. Gib danach „Hallo Welt.“ aus.",
+      linkLabel: "Im DevQuiz programmieren →"
+    }
+  ],
+  chapter3: [
+    {
+      type: "multi",
+      title: "Bestandteile einer Variablendefinition",
+      prompt: "Welche Bestandteile hat jede Variablendefinition? Mehrere Antworten sind möglich.",
+      options: ["Kürzel des Autors", "Datentyp", "Eindeutiger Bezeichner", "Verweildauer im Programm"],
+      correct: [1, 2],
+      explanation: "Eine Variablendefinition braucht mindestens Datentyp und eindeutigen Bezeichner."
+    },
+    {
+      type: "single",
+      title: "Datentyp bei Variablen",
+      prompt: "Welche Aussage ist wahr?",
+      options: ["Variablen ohne Datentypen sind universell einsetzbar", "Der Datentyp wird nur bei der Deklaration einer Variablen angegeben", "Der Datentyp einer Variablen kann beliebig gewechselt werden"],
+      correct: 1,
+      explanation: "Der Datentyp gehört zur Deklaration. Bei einer späteren Zuweisung wird er nicht erneut angegeben."
+    },
+    {
+      type: "multi",
+      title: "Gültige Datentypen",
+      prompt: "Welche Datentypen kennst du bereits? Mehrere Antworten sind möglich.",
+      options: ["String", "int", "text", "variable", "double", "break-number"],
+      correct: [0, 1, 4],
+      explanation: "String, int und double sind gültige Java-Datentypen aus diesem Kapitel."
+    }
+  ]
+};
+
 let currentChapterId = "chapter1";
 let currentSlide = 0;
 const $ = (selector) => document.querySelector(selector);
@@ -290,6 +361,11 @@ const counter = $("#presentation-counter");
 const kicker = $("#slide-kicker");
 const slideObjective = $("#slide-objective");
 const slideLearningProgress = $("#slide-learning-progress");
+const slideExercise = $("#slide-exercise");
+const slideExerciseTitle = $("#slide-exercise-title");
+const slideExercisePrompt = $("#slide-exercise-prompt");
+const slideExerciseOptions = $("#slide-exercise-options");
+const slideExerciseFeedback = $("#slide-exercise-feedback");
 const teacherNotes = $("#teacher-notes");
 const teacherNote = $("#teacher-note");
 const teacherAnswer = $("#teacher-answer");
@@ -358,6 +434,64 @@ function renderOverview() {
   });
 }
 
+function renderSlideExercise() {
+  const exercises = chapterExercises[currentChapterId];
+  if (!exercises?.length) {
+    slideExercise.hidden = true;
+    slideExerciseOptions.innerHTML = "";
+    return;
+  }
+  const exercise = exercises[currentSlide % exercises.length];
+  slideExercise.hidden = false;
+  slideExerciseTitle.textContent = `${exercise.title} · Übung ${(currentSlide % exercises.length) + 1} von ${exercises.length}`;
+  slideExercisePrompt.textContent = exercise.prompt;
+  slideExerciseFeedback.textContent = "";
+  slideExerciseOptions.innerHTML = "";
+  if (exercise.type === "task") {
+    const link = document.createElement("a");
+    link.className = "slide-exercise-link";
+    link.href = "index.html#devquiz-terminal";
+    link.textContent = exercise.linkLabel;
+    slideExerciseOptions.appendChild(link);
+    return;
+  }
+  const selected = new Set();
+  exercise.options.forEach((option, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "slide-exercise-option";
+    button.textContent = option;
+    button.setAttribute("aria-pressed", "false");
+    button.addEventListener("click", () => {
+      if (exercise.type === "multi") {
+        if (selected.has(index)) selected.delete(index); else selected.add(index);
+        button.classList.toggle("is-selected", selected.has(index));
+        button.setAttribute("aria-pressed", String(selected.has(index)));
+        slideExerciseFeedback.textContent = "Wähle alle passenden Antworten und prüfe deine Auswahl.";
+        if (!slideExerciseOptions.querySelector(".slide-exercise-check")) {
+          const check = document.createElement("button");
+          check.type = "button";
+          check.className = "slide-exercise-check";
+          check.textContent = "Auswahl prüfen";
+          check.addEventListener("click", () => {
+            const correct = selected.size === exercise.correct.length && exercise.correct.every((answer) => selected.has(answer));
+            slideExerciseFeedback.textContent = correct ? `✓ Richtig. ${exercise.explanation}` : `Noch nicht. ${exercise.explanation}`;
+            slideExerciseFeedback.classList.toggle("is-correct", correct);
+          });
+          slideExerciseOptions.appendChild(check);
+        }
+        return;
+      }
+      slideExerciseOptions.querySelectorAll("button").forEach((item) => { item.disabled = true; });
+      const correct = index === exercise.correct;
+      button.classList.add(correct ? "is-correct" : "is-wrong");
+      slideExerciseFeedback.textContent = correct ? `✓ Richtig. ${exercise.explanation}` : `Noch nicht. ${exercise.explanation}`;
+      slideExerciseFeedback.classList.toggle("is-correct", correct);
+    });
+    slideExerciseOptions.appendChild(button);
+  });
+}
+
 function renderSlide() {
   const slides = activeSlides();
   const slide = slides[currentSlide];
@@ -372,8 +506,9 @@ function renderSlide() {
   text.textContent = slide.text;
   const codeLines = slide.code.split("\n").map((line, index) => `<span class="code-line-reveal" style="--line-index: ${index}">${line || "&nbsp;"}</span>`).join("");
   code.innerHTML = `<code>${codeLines}</code>`;
+  renderSlideExercise();
   const isDetective = slide.character === "detective";
-  character.src = `assets/presentation/${isDetective ? "detective-transparent.png" : "robot.jpeg"}`;
+  character.src = `assets/presentation/${isDetective ? "detective-transparent.png" : "robot-transparent.png"}`;
   character.alt = isDetective ? "Java-Detektiv" : "Java-Roboter";
   characterStage.classList.toggle("detective-stage", isDetective);
   characterCaption.textContent = slide.caption;

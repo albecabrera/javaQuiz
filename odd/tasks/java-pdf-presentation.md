@@ -37,6 +37,9 @@ Status: implementation planned
 31. **S31 — Module 3.8 this and super**: “3.8 This is super '/Users/acabrera/Downloads/javaeinstieg2017-woche3.8.pdf'”
 32. **S32 — Learning clarity improvements**: “Entonces comienza con 1 + 2 + 4”
 33. **S33 — Separate presentation and DevQuiz integration**: “Dann Variante 2.”
+34. **S34 — Screenshot exercises by module**: “entonce incluye estos ejercicios al modulo correspondiente. '/Users/acabrera/Desktop/CleanShot 2026-10-18 at 19.21.53@2x.png''/Users/acabrera/Desktop/CleanShot 2026-10-18 at 19.21.59@2x.png''/Users/acabrera/Desktop/CleanShot 2026-10-18 at 19.22.45@2x.png'”
+35. **S35 — Output programming exercise**: “'/Users/acabrera/Desktop/CleanShot 2026-10-18 at 19.29.06@2x.png'”
+36. **S36 — Additional Chapter 1.1 programming tasks**: “'/Users/acabrera/Desktop/CleanShot 2026-10-18 at 19.29.06@2x.png''/Users/acabrera/Desktop/CleanShot 2026-10-18 at 19.30.08@2x.png''/Users/acabrera/Desktop/CleanShot 2026-10-18 at 19.30.24@2x.png''/Users/acabrera/Desktop/CleanShot 2026-10-18 at 19.30.41@2x.png'”
 ## Tasks
 
 - T1 (S1-S5) — Copy approved assets into project-local presentation assets — commit: pending
@@ -68,6 +71,9 @@ Status: implementation planned
 - T27 (S31) — Add Chapter 3.8 this und super after Chapter 3.7 — commit: pending
 - T28 (S32) — Add learner objectives, chapter concept progress, and progressive code focus to the presentation — commit: pending
 - T29 (S33) — Strengthen separate-page navigation between presentation and DevQuiz — commit: pending
+- T30 (S34) — Integrate screenshot-derived Java exercises into the corresponding presentation chapters — commit: pending
+- T31 (S35) — Add the Chapter 1.1 “Willkommen Detektiv Duke!” output exercise — commit: pending
+- T32 (S36) — Add the additional Chapter 1.1 output and syntax-correction exercises — commit: pending
 
 ## Log
 
@@ -109,3 +115,6 @@ L35: Extracted Module 3.7 PDF topics: polymorphic arrays, superclass-typed varia
 L36: Extracted Module 3.8 PDF topics: this attributes, this(), super methods, super(), constructor-first-call rules, and mutual exclusivity of this() and super().
 L37: User requested the improvements represented by “Entonces comienza con 1 + 2 + 4”.
 L38: User selected “Dann Variante 2.” for keeping presentation and DevQuiz as separate pages with stronger integration.
+L39: User supplied screenshots containing openHPI exercises for Module 1 Chapters 1.1 and 1.3 and requested their integration into the corresponding module.
+L40: User supplied a CodeOcean screenshot for the Chapter 1.1 output task “Willkommen Detektiv Duke!”.
+L41: User supplied four further screenshots for Chapter 1.1; the first and last repeat already integrated tasks, while the middle two add output and syntax-correction tasks.
