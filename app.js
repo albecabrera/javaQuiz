@@ -96,6 +96,17 @@ function printQuestion() {
   terminalInput.focus();
 }
 
+function adaptFallbackEditor(value) {
+  const source = String(value ?? "");
+  const longestLine = Math.max(1, ...source.split("\n").map((line) => line.length));
+  const lineCount = Math.max(1, source.split("\n").length);
+  const availableWidth = Math.max(320, terminalEditor.clientWidth || 900);
+  const fontSize = Math.round(Math.max(12, Math.min(28, availableWidth / Math.max(1, longestLine * 0.62))));
+  terminalEditor.style.fontSize = `${fontSize}px`;
+  terminalEditor.style.lineHeight = "1.55";
+  terminalEditor.style.minHeight = `${Math.min(680, Math.max(230, lineCount * fontSize * 1.55 + 36))}px`;
+}
+
 function printExercise() {
   terminalOutput.innerHTML = "";
   const exercise = codeExercises[currentExerciseIndex];
@@ -106,6 +117,7 @@ function printExercise() {
   addLine(`<span class="muted-line">Erwartete Ausgabe: ${escapeHtml(exercise.expectedOutput)}</span>`, "terminal-line expected-output-line");
   addLine("Enter führt aus · Umschalt + Enter fügt eine Zeile ein · Überspringen geht weiter.", "terminal-line muted-line");
   terminalEditor.value = exercise.starter;
+  adaptFallbackEditor(terminalEditor.value);
   const answerMarker = "/* DEIN_CODE_HIER */";
   const answerPosition = exercise.starter.indexOf(answerMarker);
   if (typeof window.devquizEditor?.mount === "function") {
@@ -247,6 +259,12 @@ async function submitCode() {
     nextExerciseButton.textContent = presentationReturnUrl ? "Zur Präsentation →" : "Weiter →";
     nextExerciseButton.focus();
   } else {
+    const presentationReturnUrl = getPresentationReturnUrl();
+    if (presentationReturnUrl) {
+      nextExerciseButton.hidden = false;
+      nextExerciseButton.disabled = false;
+      nextExerciseButton.textContent = "Zur Präsentation →";
+    }
     if (window.devquizEditor?.isMounted?.()) window.devquizEditor.focus();
     else terminalEditor.focus();
   }
@@ -384,6 +402,7 @@ terminalForm.addEventListener("submit", (event) => {
   submitAnswer(value);
 });
 
+terminalEditor.addEventListener("input", () => adaptFallbackEditor(terminalEditor.value));
 terminalEditor.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
     event.preventDefault();

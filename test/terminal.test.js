@@ -102,6 +102,19 @@ test('completed presentation exercise returns to the next slide', async () => {
   assert.equal(ui.context.window.location.href, 'presentation.html?chapter=chapter1&slide=3');
 });
 
+test('incomplete presentation exercise can return without passing', async () => {
+  const ui = terminal(async () => ({ json: async () => ({ ok: true, stdout: 'Falsch\n' }) }));
+  ui.context.window.location.search = '?exercise=1.1.1&returnChapter=chapter1&returnSlide=3';
+  vm.runInContext('selectRequestedExercise(); switchToCode()', ui.context);
+  ui.get('#terminal-editor').listeners.keydown({ key: 'Enter', shiftKey: false, preventDefault() {} });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(ui.get('#next-exercise').hidden, false);
+  assert.equal(ui.get('#next-exercise').textContent, 'Zur Präsentation →');
+  assert.equal(ui.get('#terminal-editor').disabled, false);
+  ui.get('#next-exercise').listeners.click();
+  assert.equal(ui.context.window.location.href, 'presentation.html?chapter=chapter1&slide=3');
+});
+
 test('wrong output allows retry without advancing or losing focus', async () => {
   const ui = terminal(async () => ({ json: async () => ({ ok: true, stdout: 'Falsch\n' }) }));
   vm.runInContext('switchToCode()', ui.context);

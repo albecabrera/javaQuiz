@@ -7,6 +7,7 @@
   let model;
   let socket;
   let reconnectTimer;
+  let editorContainer;
   let reconnectAttempt = 0;
   const notify = (message) => global.dispatchEvent && global.dispatchEvent(new CustomEvent("devquiz-editor-status", { detail: message }));
 
@@ -71,6 +72,21 @@
     editor.focus();
   }
 
+  function adaptEditorTypography(value) {
+    if (!editor || !editorContainer) return;
+    const source = String(value ?? model?.getValue?.() ?? "");
+    const longestLine = Math.max(1, ...source.split("\\n").map((line) => line.length));
+    const lineCount = Math.max(1, source.split("\\n").length);
+    const availableWidth = Math.max(320, editorContainer.clientWidth || 900);
+    const widthFit = availableWidth / Math.max(1, longestLine * 0.62);
+    const fontSize = Math.round(Math.max(12, Math.min(28, widthFit)));
+    const lineHeight = Math.round(fontSize * 1.55);
+    const editorHeight = Math.min(680, Math.max(340, lineCount * lineHeight + 36));
+    editor.updateOptions({ fontSize, lineHeight });
+    editorContainer.style.height = `${editorHeight}px`;
+    editor.layout();
+  }
+
   function mount(container, value, onChange, onExecute) {
     return loadMonaco().then((monaco) => {
       if (!model) {
@@ -78,11 +94,14 @@
         monaco.languages.setLanguageConfiguration("java", { indentationRules: { increaseIndentPattern: /\{[^}"']*$/, decreaseIndentPattern: /^\s*\}/ }, brackets: [["{", "}"], ["[", "]"], ["(", ")"]] });
         model.onDidChangeContent(() => {
           if (onChange) onChange(model.getValue());
+          adaptEditorTypography(model.getValue());
           send({ type: "change", source: model.getValue() });
         });
       } else model.setValue(value);
+      editorContainer = container;
       editor = editor || monaco.editor.create(container, { model, theme: "vs-dark", minimap: { enabled: false }, automaticLayout: true, language: "java", tabSize: 4, insertSpaces: true, suggestOnTriggerCharacters: false, quickSuggestions: false, wordBasedSuggestions: "off", wordWrap: "off" });
       editor.updateOptions({ readOnly: false });
+      adaptEditorTypography(model.getValue());
       if (onExecute && !editor.__devquizExecuteAction) {
         editor.__devquizExecuteAction = true;
         editor.onKeyDown((event) => {
@@ -112,5 +131,5 @@
     }).catch((error) => { notify({ state: "unavailable", text: `Editor local nicht verfügbar: ${error.message}` }); return null; });
   }
 
-  global.devquizEditor = { mount, getValue: () => model ? model.getValue() : null, focus: () => editor && editor.focus(), setReadOnly: (value) => editor && editor.updateOptions({ readOnly: value }), selectRange, isMounted: () => Boolean(editor) };
+  global.devquizEditor = { mount, getValue: () => model ? model.getValue() : null, focus: () => editor && editor.focus(), setReadOnly: (value) => editor && editor.updateOptions({ readOnly: value }), selectRange, adaptTypography: adaptEditorTypography, isMounted: () => Boolean(editor) };
 })(window);
