@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Eine interaktive Einführung in die Java-Grundlagen." />
+    <title>DevQuiz | Java-Präsentation</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="presentation-page">
+    <main class="presentation-shell">
+      <header class="presentation-header">
+        <a class="back-link" href="index.html">← Zum Hauptpanel</a>
+        <p class="eyebrow"><span class="eyebrow-dot"></span> java.grundlagen</p>
+        <div class="presentation-brand"><p class="presentation-counter" id="presentation-counter">01 / 09</p><button id="theme-toggle" class="theme-toggle" type="button" title="Cmd/Ctrl + Shift + L" aria-label="Helles Design aktivieren" aria-pressed="false"><span id="theme-icon" aria-hidden="true">☼</span></button></div>
+      </header>
+      <nav class="module-nav" aria-label="Module auswählen">
+        <button class="module-button is-active" type="button" data-module="module1" aria-pressed="true">Modul 1 · Java-Grundlagen</button>
+        <button class="module-button" type="button" data-module="module2" aria-pressed="false">Modul 2 · Methoden erweitern</button>
+        <button class="module-button" type="button" data-module="module3" aria-pressed="false">Modul 3 · Vererbung und Sichtbarkeit</button>
+      </nav>
+      <section class="module-heading" aria-labelledby="module-title">
+        <div><p class="module-kicker">MODUL 1</p><h2 id="module-title">Java-Grundlagen</h2></div>
+        <p class="module-description" id="module-description">Kapitel 1.1 bis 1.7 · Vom ersten Programm bis zu Methoden mit Rückgabewerten</p>
+      </section>
+      <nav class="chapter-nav" aria-label="Kapitel in Modul 1 auswählen">
+        <button class="chapter-button is-active" id="chapter-1-button" type="button" data-module="module1" data-chapter="chapter1" aria-pressed="true">Kapitel 1.1 · Java-Grundlagen</button>
+        <button class="chapter-button" id="chapter-2-button" type="button" data-module="module1" data-chapter="chapter2" aria-pressed="false">Kapitel 1.2 · Klassen und Objekte</button>
+        <button class="chapter-button" id="chapter-3-button" type="button" data-module="module1" data-chapter="chapter3" aria-pressed="false">Kapitel 1.3 · Variablen (1)</button>
+        <button class="chapter-button" id="chapter-4-button" type="button" data-module="module1" data-chapter="chapter4" aria-pressed="false">Kapitel 1.4 · Variablen (2)</button>
+        <button class="chapter-button" id="chapter-5-button" type="button" data-module="module1" data-chapter="chapter5" aria-pressed="false">Kapitel 1.5 · Attribute</button>
+        <button class="chapter-button" id="chapter-6-button" type="button" data-module="module1" data-chapter="chapter6" aria-pressed="false">Kapitel 1.6 · Methoden</button>
+        <button class="chapter-button" id="chapter-7-button" type="button" data-module="module1" data-chapter="chapter7" aria-pressed="false">Kapitel 1.7 · Methoden und Rückgabewerte</button>
+        <button class="chapter-button" id="chapter-2-1-button" type="button" data-module="module2" data-chapter="chapter21" aria-pressed="false" hidden>Kapitel 2.1 · Parameter</button>
+        <button class="chapter-button" id="chapter-2-2-button" type="button" data-module="module2" data-chapter="chapter22" aria-pressed="false" hidden>Kapitel 2.2 · Boolean</button>
+        <button class="chapter-button" id="chapter-2-3-button" type="button" data-module="module2" data-chapter="chapter23" aria-pressed="false" hidden>Kapitel 2.3 · Verzweigungen</button>
+        <button class="chapter-button" id="chapter-2-4-button" type="button" data-module="module2" data-chapter="chapter24" aria-pressed="false" hidden>Kapitel 2.4 · Schleifen</button>
+        <button class="chapter-button" id="chapter-2-5-button" type="button" data-module="module2" data-chapter="chapter25" aria-pressed="false" hidden>Kapitel 2.5 · Primitive Arrays</button>
+        <button class="chapter-button" id="chapter-2-6-button" type="button" data-module="module2" data-chapter="chapter26" aria-pressed="false" hidden>Kapitel 2.6 · Konstruktoren</button>
+        <button class="chapter-button" id="chapter-3-1-button" type="button" data-module="module3" data-chapter="chapter31" aria-pressed="false" hidden>Kapitel 3.1 · Vererbung</button>
+        <button class="chapter-button" id="chapter-3-2-button" type="button" data-module="module3" data-chapter="chapter32" aria-pressed="false" hidden>Kapitel 3.2 · Sichtbarkeiten</button>
+        <button class="chapter-button" id="chapter-3-3-button" type="button" data-module="module3" data-chapter="chapter33" aria-pressed="false" hidden>Kapitel 3.3 · Kapselung</button>
+        <button class="chapter-button" id="chapter-3-4-button" type="button" data-module="module3" data-chapter="chapter34" aria-pressed="false" hidden>Kapitel 3.4 · Überschreiben von Methoden (Override)</button>
+        <button class="chapter-button" id="chapter-3-5-button" type="button" data-module="module3" data-chapter="chapter35" aria-pressed="false" hidden>Kapitel 3.5 · Überladen von Methoden (Overload)</button>
+        <button class="chapter-button" id="chapter-3-6-button" type="button" data-module="module3" data-chapter="chapter36" aria-pressed="false" hidden>Kapitel 3.6 · Abstrakte Klassen</button>
+        <button class="chapter-button" id="chapter-3-7-button" type="button" data-module="module3" data-chapter="chapter37" aria-pressed="false" hidden>Kapitel 3.7 · Polymorphie</button>
+        <button class="chapter-button" id="chapter-3-8-button" type="button" data-module="module3" data-chapter="chapter38" aria-pressed="false" hidden>Kapitel 3.8 · this und super</button>
+      </nav>
+      <div class="presentation-layout">
+        <section class="slide-card" aria-live="polite" aria-labelledby="slide-title">
+          <img class="school-logo" src="assets/presentation/java-transparent.png" alt="Java-Logo" />
+          <p class="slide-kicker" id="slide-kicker">START</p>
+          <h1 id="slide-title">Java beginnt mit einer Idee.</h1>
+          <p class="slide-text" id="slide-text">Du beschreibst Schritt für Schritt, was dein Programm tun soll. Java übersetzt diese Anweisungen in ausführbaren Code.</p>
+          <div class="slide-main">
+            <pre class="slide-code" id="slide-code"><code>class HelloPaco {\n}</code></pre>
+            <div class="character-stage" id="character-stage"><img id="slide-character" src="assets/presentation/robot.jpeg" alt="Java-Roboter" /><span id="character-caption">Bereit zum Programmieren?</span></div>
+          </div>
+          <div class="slide-progress"><span id="slide-progress-bar"></span></div>
+        </section>
+        <aside class="slide-overview" aria-label="Folienübersicht">
+          <p class="overview-label" id="overview-label">FOLIEN · KAPITEL 1</p>
+          <div class="slide-overview-list" id="slide-overview-list"></div>
+        </aside>
+      </div>
+      <nav class="slide-controls" aria-label="Präsentationssteuerung">
+        <button id="previous-slide" type="button">← Zurück</button>
+        <button id="fullscreen-slide" class="fullscreen-action" type="button">⛶ Vollbild</button>
+        <button id="next-slide" class="primary-action" type="button">Weiter →</button>
+      </nav>
+      <a class="presentation-cta" href="index.html#devquiz-terminal">Jetzt im DevQuiz üben →</a>
+    </main>
+    <script src="presentation.js"></script>
+  </body>
+</html>

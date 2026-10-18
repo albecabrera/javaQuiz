@@ -13,6 +13,25 @@ const progressBar = document.querySelector("#progress-bar");
 const scoreBadge = document.querySelector("#score-badge");
 const terminalProgress = document.querySelector("#terminal-progress");
 const terminalMode = document.querySelector("#terminal-mode");
+const appShell = document.querySelector(".app-shell");
+const entryPanel = document.querySelector(".entry-panel");
+const startDevquizButton = document.querySelector("#start-devquiz");
+const backToEntryButton = document.querySelector("#back-to-entry");
+
+function openDevquiz() {
+  appShell?.classList?.add("devquiz-started");
+  entryPanel?.setAttribute?.("aria-hidden", "true");
+  terminalInput.focus();
+}
+
+function returnToEntry() {
+  appShell?.classList?.remove("devquiz-started");
+  entryPanel?.setAttribute?.("aria-hidden", "false");
+  startDevquizButton?.focus?.();
+}
+
+startDevquizButton.addEventListener("click", openDevquiz);
+backToEntryButton.addEventListener("click", returnToEntry);
 
 let currentQuestionIndex = 0;
 let currentExerciseIndex = 0;
@@ -352,3 +371,4 @@ document.addEventListener("keydown", (event) => {
 terminalBody.addEventListener("click", () => (mode === "code" ? terminalEditor : terminalInput).focus());
 updateStatus();
 bootTerminal();
+if (window.location?.hash === "#devquiz-terminal") openDevquiz();

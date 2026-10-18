@@ -12,10 +12,39 @@
       <header class="site-header">
         <p class="eyebrow"><span class="eyebrow-dot"></span> devquiz.exe</p>
         <h1>Java im Terminal lernen.</h1>
-        <p class="subtitle">Antworte, als würdest du Code in einer echten Konsole ausführen.</p>
+        <p class="subtitle">Wähle deinen Lernweg und starte direkt mit Java.</p>
+        <button class="panel-return" id="back-to-entry" type="button">← Zum Lernweg</button>
       </header>
 
-      <section class="terminal-window" aria-labelledby="terminal-title">
+      <section class="entry-panel" aria-labelledby="entry-title">
+        <div class="entry-panel-heading">
+          <p class="entry-kicker">DEIN LERNWEG</p>
+          <h2 id="entry-title">Wie möchtest du Java lernen?</h2>
+          <p>Starte mit einer kurzen Einführung oder übe direkt im interaktiven DevQuiz.</p>
+        </div>
+        <div class="entry-options">
+          <a class="entry-card presentation-card" href="presentation.html">
+            <span class="entry-card-number">01</span>
+            <span class="entry-card-icon" aria-hidden="true">▤</span>
+            <span class="entry-card-content"><strong>Lerne Java mit der Präsentation</strong><span>Grundlagen Schritt für Schritt verstehen – mit kurzen, interaktiven Folien.</span></span>
+            <span class="entry-card-arrow" aria-hidden="true">↗</span>
+          </a>
+          <button class="entry-card quiz-card" id="start-devquiz" type="button">
+            <span class="entry-card-number">02</span>
+            <span class="entry-card-icon" aria-hidden="true">&gt;_</span>
+            <span class="entry-card-content"><strong>Übe Java mit dem DevQuiz</strong><span>Fragen beantworten, Code schreiben und deine Lösungen direkt testen.</span></span>
+            <span class="entry-card-arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+        <p class="entry-hint"><span class="status-pulse"></span> Beide Wege sind kostenlos und laufen lokal in deinem Browser.</p>
+        <section class="entry-demo" aria-label="Java-Beispiel mit Ausgabe">
+          <p class="entry-demo-label">LIVE JAVA · EINGABE UND AUSGABE</p>
+          <pre class="entry-demo-code" aria-label="Java-Code"><code>System.out.println("<span id="entry-demo-code-text">Nun lernen wir Java!</span>");<span class="entry-demo-caret" aria-hidden="true"></span></code></pre>
+          <div class="entry-demo-console"><span class="entry-demo-prompt">&gt;</span><span id="entry-demo-output">Nun lernen wir Java!</span></div>
+        </section>
+      </section>
+
+      <section class="terminal-window" id="devquiz-terminal" aria-labelledby="terminal-title">
         <div class="terminal-chrome">
           <div class="window-controls" aria-hidden="true">
             <span class="window-control close"></span>

@@ -13,7 +13,7 @@ bash scripts/install-jdtls.sh
 npm start
 ```
 
-Öffne **http://127.0.0.1:3000**. Es wird nur die aktuelle Übung angezeigt; der Cursor steht direkt an der Antwortstelle. Falls das Image fehlt, lade es einmal mit `docker pull eclipse-temurin:21-jdk`.
+Öffne **http://127.0.0.1:3000**. Zuerst wählst du zwischen der interaktiven Java-Präsentation und dem DevQuiz. Die Präsentation ist auch direkt unter **http://127.0.0.1:3000/presentation.html** erreichbar. Im DevQuiz wird nur die aktuelle Übung angezeigt; der Cursor steht direkt an der Antwortstelle. Falls das Image fehlt, lade es einmal mit `docker pull eclipse-temurin:21-jdk`.
 
 Die freien Werkzeuge werden nur einmal lokal installiert: Monaco 0.52 (MIT), `ws` (MIT) und Eclipse JDT LS 1.50 (EPL-2.0). Das Installationsskript prüft die offizielle SHA-256-Prüfsumme von JDT LS und entpackt es nach `.local/jdtls-compatible/`, das von Git ignoriert wird. Während des Quiz läuft alles auf deinem Rechner.
 
