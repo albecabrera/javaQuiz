@@ -103,7 +103,7 @@ function printQuestion() {
     .join("<br>");
 
   addLine(`<span class="comment">// Frage ${questionNumber} von ${questions.length}</span>`, "terminal-line question-comment");
-  addLine(`<span class="keyword">Frage</span> q${questionNumber} = <span class="string">"${escapeHtml(currentQuestion.question)}"</span>;`, "terminal-line code-line");
+  addLine(`<span class="keyword">Frage</span> = <span class="string">"${escapeHtml(currentQuestion.question)}"</span>;`, "terminal-line code-line");
   addLine(`<span class="concept-line">Konzept: <strong>${escapeHtml(currentQuestion.concept)}</strong> · <a href="presentation.html?chapter=${encodeURIComponent(currentQuestion.presentationChapter)}">In der Präsentation wiederholen →</a></span>`, "terminal-line");
   addLine(options, "terminal-line option-list");
   addLine(`<span class="hint">Gib A, B, C oder D ein. Du kannst auch <strong>code</strong> für Java-Übungen eingeben.</span>`, "terminal-line hint-line");
