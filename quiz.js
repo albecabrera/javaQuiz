@@ -181,5 +181,32 @@ const codeExercises = [
     /* DEIN_CODE_HIER */
   }
 }`
+  },
+  {
+    id: "1.4.1",
+    chapter: "chapter4",
+    title: "Java Einstieg Variablen Aufgabe 2",
+    prompt: "Ergänze für die Variablen name, age und runtime den jeweils am besten passenden Datentyp.",
+    expectedOutput: "",
+    solution: `public class Main {
+  public static void main(String[] args) {
+    String name = "Duke";
+    int age = 42;
+    double runtime = 3.5;
+    System.out.println();
+  }
+}`,
+    hints: [
+      "name speichert Text und braucht deshalb den Datentyp String.",
+      "age speichert eine ganze Zahl und runtime eine Kommazahl.",
+      "Verwende int für ganze Zahlen und double für Fließkommazahlen."
+    ],
+    starter: `public class Main {
+  public static void main(String[] args) {
+    // Ergänze den richtigen Datentyp für name, age und runtime.
+    /* DEIN_CODE_HIER */
+    System.out.println();
+  }
+}`
   }
 ];
