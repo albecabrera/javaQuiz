@@ -95,6 +95,7 @@ function updateStatus() {
 }
 
 function printQuestion() {
+  terminalForm.setAttribute("data-awaiting-next", "false");
   terminalOutput.innerHTML = "";
   const currentQuestion = questions[currentQuestionIndex];
   const questionNumber = currentQuestionIndex + 1;
@@ -218,7 +219,8 @@ async function submitAnswer(value) {
   waitingForNext = true;
   terminalMode.textContent = currentQuestionIndex === questions.length - 1 ? "ERGEBNIS" : "WEITER";
   await wait(450);
-  addLine(`<span class="hint">${currentQuestionIndex === questions.length - 1 ? "Drücke Enter, um dein Ergebnis zu sehen." : "Drücke Enter, um fortzufahren."}</span>`, "terminal-line hint-line");
+  if (isCorrect) terminalForm.setAttribute("data-awaiting-next", "true");
+  else addLine(`<span class="hint">${currentQuestionIndex === questions.length - 1 ? "Drücke Enter, um dein Ergebnis zu sehen." : "Drücke Enter, um fortzufahren."}</span>`, "terminal-line hint-line");
   terminalInput.disabled = false;
   terminalInput.placeholder = "Enter drücken...";
   terminalInput.focus();
@@ -359,6 +361,7 @@ function switchToCode() {
   waitingForNext = false;
   terminalInput.disabled = true;
   terminalInput.hidden = true;
+  terminalForm.setAttribute("data-awaiting-next", "false");
   terminalMode.textContent = "CODE-MODUS";
   addLine("<span class=\"keyword\">$ modus code</span>", "terminal-line command-line");
   printExercise();
@@ -431,6 +434,7 @@ function restartQuiz() {
   nextExerciseButton.hidden = true;
   nextExerciseButton.disabled = true;
   terminalInput.hidden = false;
+  terminalForm.setAttribute("data-awaiting-next", "false");
   terminalMode.textContent = "QUIZ-MODUS";
   terminalInput.value = "";
   updateStatus();
