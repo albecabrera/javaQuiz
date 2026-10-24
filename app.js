@@ -328,6 +328,7 @@ async function continueQuiz() {
   await wait(180);
   printQuestion();
   terminalInput.disabled = false;
+  terminalInput.focus();
 }
 
 function getQueryParameter(name) {
