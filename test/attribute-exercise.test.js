@@ -16,3 +16,11 @@ test('chapter 1.5.1 prints the default name before changing the robot name to Ro
   assert.match(exercise.solution, /Robot robin = new Robot\(\);\s*System\.out\.println\(robin\.name\);\s*robin\.name = "Robin";\s*System\.out\.println\(robin\.name\);/);
   assert.match(exercise.solution, /class Robot \{\s*String name = "Unbenannt";/);
 });
+
+test('chapter 1.5.2 assigns and prints a Robot task attribute', () => {
+  const exercise = exercises.find(({ id }) => id === '1.5.2');
+  assert.ok(exercise);
+  assert.equal(exercise.expectedOutput, 'Paco finden.');
+  assert.match(exercise.starter, /String task;/);
+  assert.match(exercise.solution, /String task;[\s\S]*Robot robin = new Robot\(\);[\s\S]*robin\.task = "Paco finden\.";[\s\S]*System\.out\.println\(robin\.task\);/);
+});

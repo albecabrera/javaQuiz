@@ -299,5 +299,39 @@ const codeExercises = [
     /* DEIN_CODE_HIER */
   }
 }`
+  },
+  {
+    id: "1.5.2",
+    chapter: "chapter5",
+    title: "Java Einstieg Attribute Aufgabe 2",
+    prompt: "Lege in Robot ein String-Attribut task an. Erzeuge in main ein Robot-Objekt namens robin, weise robin.task den Wert \"Paco finden.\" zu und gib das Attribut aus.",
+    expectedOutput: "Paco finden.",
+    solution: `public class Main {
+  static class Robot {
+    String task;
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    robin.task = "Paco finden.";
+    System.out.println(robin.task);
+  }
+}`,
+    hints: [
+      "Definiere in Robot das Attribut String task.",
+      "Erzeuge mit new Robot() die Referenz robin.",
+      "Setze robin.task auf \"Paco finden.\" und gib robin.task aus."
+    ],
+    starter: `public class Main {
+  static class Robot {
+    String task;
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    // Weise robin.task "Paco finden." zu und gib das Attribut aus.
+    /* DEIN_CODE_HIER */
+  }
+}`
   }
 ];
