@@ -17,6 +17,10 @@ npm start
 
 Die freien Werkzeuge werden nur einmal lokal installiert: Monaco 0.52 (MIT), `ws` (MIT) und Eclipse JDT LS 1.50 (EPL-2.0). Das Installationsskript prüft die offizielle SHA-256-Prüfsumme von JDT LS und entpackt es nach `.local/jdtls-compatible/`, das von Git ignoriert wird. Während des Quiz läuft alles auf deinem Rechner.
 
+## Lernpfad
+
+Öffne die Präsentation und wähle ein Kapitel. Rechts findest du die Schritte in Reihenfolge: **Verstehen** (Folien), **Wissen prüfen** (Kapitel-Fragen), **Programmieren** (DevQuiz-Aufgaben). Mit „Weiter“ gehst du zum nächsten Schritt; nach einer Programmieraufgabe führt „Zur Präsentation“ zum nächsten Schritt zurück. Auf dem iPhone steht der Lernpfad oberhalb der aktuellen Lektion und lässt sich innerhalb der Liste scrollen.
+
 ## Steuerung
 
 | Aktion | Taste oder Schaltfläche |

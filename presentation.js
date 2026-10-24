@@ -493,6 +493,24 @@ const chapterExercises = {
   ]
 };
 
+// A chapter is a single path: concepts, then each question once, then code tasks.
+function chapterSteps(chapterId) {
+  return [
+    ...chapters[chapterId].slides.map((slide) => ({ ...slide, kind: "lesson" })),
+    ...(chapterExercises[chapterId] || []).filter((exercise) => exercise.type !== "task").map((exercise, index) => ({
+      kind: "question", exercise, title: exercise.title,
+      kicker: `ÜBUNG ${index + 1}`, text: "Prüfe dein Verständnis, bevor du weiter programmierst.",
+      code: "", character: "detective", caption: "Löse die Aufgabe und gehe dann weiter."
+    })),
+    ...(chapterTaskMap[chapterId] || []).map((task, index) => ({
+      kind: "code", exerciseId: task.id, title: task.label,
+      kicker: `PROGRAMMIERAUFGABE ${index + 1}`,
+      text: "Setze das Gelernte im Java-Editor um. Nach dem Ausführen kehrst du zum nächsten Schritt zurück.",
+      code: "", character: "robot", caption: "Jetzt bist du dran."
+    }))
+  ];
+}
+
 let currentChapterId = "chapter1";
 let currentSlide = 0;
 const $ = (selector) => document.querySelector(selector);
@@ -536,7 +554,7 @@ const moduleGroups = [
 ];
 const chapterOrder = moduleGroups.flatMap((module) => module.chapterIds);
 
-function activeSlides() { return chapters[currentChapterId].slides; }
+function activeSlides() { return chapterSteps(currentChapterId); }
 
 function activeModule() { return moduleGroups.find((module) => module.chapterIds.includes(currentChapterId)); }
 
@@ -563,13 +581,26 @@ function renderChapterButtons() {
 
 function renderOverview() {
   const slides = activeSlides();
-  overviewLabel.textContent = `FOLIEN · ${chapters[currentChapterId].label.toUpperCase()}`;
+  overviewLabel.textContent = `LERNPFAD · ${chapters[currentChapterId].label.toUpperCase()}`;
   overviewList.innerHTML = "";
+  let section;
   slides.forEach((slide, index) => {
+    if (section !== slide.kind) {
+      section = slide.kind;
+      const heading = document.createElement("p");
+      heading.className = "overview-section-label";
+      heading.textContent = { lesson: "01 · Verstehen", question: "02 · Wissen prüfen", code: "03 · Programmieren" }[section];
+      overviewList.appendChild(heading);
+    }
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "slide-thumbnail";
-    button.innerHTML = `<span class="thumbnail-number">${String(index + 1).padStart(2, "0")}</span><span>${slide.title}</span>`;
+    button.className = `slide-thumbnail step-${slide.kind}`;
+    const number = document.createElement("span");
+    number.className = "thumbnail-number";
+    number.textContent = String(index + 1).padStart(2, "0");
+    const label = document.createElement("span");
+    label.textContent = slide.title;
+    button.append(number, label);
     button.addEventListener("click", () => { currentSlide = index; renderSlide(); });
     overviewList.appendChild(button);
   });
@@ -587,55 +618,25 @@ function devquizExerciseHref(exerciseId) {
   return `index.html?exercise=${encodeURIComponent(exerciseId)}&returnChapter=${encodeURIComponent(next.chapter)}&returnSlide=${next.slide}#devquiz-terminal`;
 }
 
-function appendChapterTaskLinks(tasks, isFinalSlide) {
-  if (!isFinalSlide || !tasks.length) return;
-  const heading = document.createElement("p");
-  heading.className = "slide-exercise-task-heading";
-  heading.textContent = "Danach programmieren:";
-  slideExerciseOptions.appendChild(heading);
-  tasks.forEach((task) => {
-    const link = document.createElement("a");
-    link.className = "slide-exercise-link";
-    link.href = devquizExerciseHref(task.id);
-    link.textContent = task.label;
-    slideExerciseOptions.appendChild(link);
-  });
-}
-
 function renderSlideExercise() {
-  const exercises = chapterExercises[currentChapterId] || [];
-  const tasks = chapterTaskMap[currentChapterId] || [];
-  const isFinalSlide = currentSlide === activeSlides().length - 1;
-  if (!exercises.length && (!tasks.length || !isFinalSlide)) {
-    slideExercise.hidden = true;
-    slideExerciseOptions.innerHTML = "";
-    return;
-  }
-  const exercise = exercises.length ? exercises[currentSlide % exercises.length] : null;
-  slideExercise.hidden = false;
-  slideExerciseTitle.textContent = exercise ? `${exercise.title} · Übung ${(currentSlide % exercises.length) + 1} von ${exercises.length}` : "Jetzt programmieren";
-  slideExercisePrompt.textContent = exercise ? exercise.prompt : "Du hast die Grundlagen gelernt. Wähle jetzt die passende Programmieraufgabe für dieses Kapitel.";
-  slideExerciseFeedback.textContent = "";
+  const step = activeSlides()[currentSlide];
+  slideExercise.hidden = step.kind === "lesson";
   slideExerciseOptions.innerHTML = "";
-  if (!exercise) {
-    tasks.forEach((task) => {
-      const link = document.createElement("a");
-      link.className = "slide-exercise-link";
-      link.href = devquizExerciseHref(task.id);
-      link.textContent = task.label;
-      slideExerciseOptions.appendChild(link);
-    });
-    return;
-  }
-  if (exercise.type === "task") {
+  slideExerciseFeedback.textContent = "";
+  slideExerciseFeedback.classList.remove("is-correct");
+  if (step.kind === "lesson") return;
+  slideExerciseTitle.textContent = step.title;
+  if (step.kind === "code") {
+    slideExercisePrompt.textContent = "Öffne die Java-Aufgabe und teste deinen Code im DevQuiz.";
     const link = document.createElement("a");
     link.className = "slide-exercise-link";
-    link.href = devquizExerciseHref(exercise.exerciseId);
-    link.textContent = exercise.linkLabel;
+    link.href = devquizExerciseHref(step.exerciseId);
+    link.textContent = "Im DevQuiz programmieren →";
     slideExerciseOptions.appendChild(link);
-    appendChapterTaskLinks(tasks, isFinalSlide);
     return;
   }
+  const exercise = step.exercise;
+  slideExercisePrompt.textContent = exercise.prompt;
   const selected = new Set();
   exercise.options.forEach((option, index) => {
     const button = document.createElement("button");
@@ -671,7 +672,6 @@ function renderSlideExercise() {
     });
     slideExerciseOptions.appendChild(button);
   });
-  appendChapterTaskLinks(tasks, isFinalSlide);
 }
 
 function renderSlide() {
@@ -682,7 +682,9 @@ function renderSlide() {
   slideObjective.textContent = slide.title;
   slideCard.classList.toggle("is-title-long", slide.title.length > 38);
   slideCard.classList.toggle("is-code-dense", slide.code.replace(/<[^>]+>/g, "").length > 190 || slide.code.split("\n").length > 8);
-  slideLearningProgress.textContent = `Konzept ${currentSlide + 1} von ${slides.length} · ${chapters[currentChapterId].label}`;
+  slideLearningProgress.textContent = `Schritt ${currentSlide + 1} von ${slides.length} · ${chapters[currentChapterId].label}`;
+  slideCard.querySelector(".slide-learning-label").textContent = { lesson: "VERSTEHEN", question: "WISSEN PRÜFEN", code: "PROGRAMMIEREN" }[slide.kind];
+  slideCard.querySelector(".slide-main").hidden = slide.kind !== "lesson";
   teacherNote.textContent = slide.text;
   teacherAnswer.textContent = slide.title;
   text.textContent = slide.text;
@@ -698,7 +700,7 @@ function renderSlide() {
   const chapterIndex = chapterOrder.indexOf(currentChapterId);
   previous.disabled = currentSlide === 0 && chapterIndex === 0;
   next.textContent = currentSlide === slides.length - 1 ? (chapterIndex < chapterOrder.length - 1 ? `${chapters[chapterOrder[chapterIndex + 1]].label} →` : "Zum DevQuiz →") : "Weiter →";
-  [...overviewList.children].forEach((button, index) => {
+  overviewList.querySelectorAll(".slide-thumbnail").forEach((button, index) => {
     button.classList.toggle("is-active", index === currentSlide);
     button.setAttribute("aria-current", index === currentSlide ? "step" : "false");
   });
@@ -759,7 +761,7 @@ previous.addEventListener("click", () => {
   const chapterIndex = chapterOrder.indexOf(currentChapterId);
   if (chapterIndex > 0) {
     const previousChapter = chapterOrder[chapterIndex - 1];
-    switchChapter(previousChapter, chapters[previousChapter].slides.length - 1);
+    switchChapter(previousChapter, chapterSteps(previousChapter).length - 1);
   }
 });
 next.addEventListener("click", () => {
