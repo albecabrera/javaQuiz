@@ -71,6 +71,7 @@ const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => (
 
 const practiceLinks = {
   "main() als Startpunkt": { label: "Übung 1.1.1 öffnen", href: "index.html?exercise=1.1.1#devquiz-terminal" },
+  "Datentypen und Variablen": { label: "Übung 1.3.1 öffnen", href: "index.html?exercise=1.3.1#devquiz-terminal" },
   "String und Text": { label: "Übung 1.1.2 öffnen", href: "index.html?exercise=1.1.2#devquiz-terminal" },
   "Java-Syntax": { label: "Übung 1.1.4 öffnen", href: "index.html?exercise=1.1.4#devquiz-terminal" }
 };

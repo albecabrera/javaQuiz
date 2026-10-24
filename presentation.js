@@ -287,6 +287,9 @@ const chapterTaskMap = {
     { id: "1.1.2", label: "1.1.2 · Eine Ausgabe mit println" },
     { id: "1.1.3", label: "1.1.3 · Output Aufgabe 1" },
     { id: "1.1.4", label: "1.1.4 · Syntaxfehler finden" }
+  ],
+  chapter3: [
+    { id: "1.3.1", label: "1.3.1 · Java Einstieg Variablen Aufgabe 1" }
   ]
 };
 

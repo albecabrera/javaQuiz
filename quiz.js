@@ -156,5 +156,30 @@ const codeExercises = [
     /* DEIN_CODE_HIER */
   }
 }`
+  },
+  {
+    id: "1.3.1",
+    chapter: "chapter3",
+    title: "Java Einstieg Variablen Aufgabe 1",
+    prompt: "Lege eine Variable vom Datentyp String an, mit dem Bezeichner greeting und dem Wert \"Willkommen Duke.\" Gib anschließend den Inhalt der Variable greeting aus.",
+    expectedOutput: "Willkommen Duke.",
+    solution: `public class Main {
+  public static void main(String[] args) {
+    String greeting = "Willkommen Duke.";
+    System.out.println(greeting);
+  }
+}`,
+    hints: [
+      "Deklariere eine Variable mit dem Datentyp String und dem Bezeichner greeting.",
+      "Weise greeting den Text \"Willkommen Duke.\" zu.",
+      "Gib die Variable greeting mit System.out.println(...) aus."
+    ],
+    starter: `public class Main {
+  public static void main(String[] args) {
+    // Erstelle eine String-Variable greeting mit dem Wert "Willkommen Duke."
+    // Gib anschließend den Inhalt der Variable greeting aus.
+    /* DEIN_CODE_HIER */
+  }
+}`
   }
 ];
