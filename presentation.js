@@ -490,6 +490,48 @@ const chapterExercises = {
       correct: [1, 3],
       explanation: "Java wertet zuerst die rechte Seite aus und speichert anschließend das Ergebnis links. Die genannten arithmetischen Operatoren funktionieren bei Ganz- und Fließkommazahlen."
     }
+  ],
+  chapter5: [
+    {
+      type: "multi",
+      title: "Objekte instanziieren",
+      prompt: "Was gilt bei der Instanziierung von Objekten? (Eine oder mehrere richtige Antworten sind möglich)",
+      options: [
+        "Es können pro Klasse maximal 10 Objekte in der normalen Version von Java instanziiert werden. Mehr werden erst mit der Enterprise Edition möglich.",
+        "Um ein Objekt einer Variable zuzuweisen, wird anstelle des (primitiven) Datentyps der Klassenname vor den Bezeichner geschrieben.",
+        "Neue Objekte einer Klasse werden mit dem Aufruf new <Klassenname>() erzeugt.",
+        "Klassennamen müssen bei der Instanziierung vollständig in Großbuchstaben geschrieben werden."
+      ],
+      correct: [1, 2],
+      explanation: "Eine Objektreferenz hat den Klassennamen als Datentyp; new Klassenname() erzeugt ein neues Objekt."
+    },
+    {
+      type: "single",
+      title: "Punkt-Operator",
+      prompt: "Der Punkt Operator...",
+      options: [
+        "... erlaubt den Zugriff auf bereits gelöschte Objekte.",
+        "... komprimiert die Objekte im Speicher.",
+        "... erlaubt den Zugriff auf Attribute und Methoden eines Objekts oder einer Klasse."
+      ],
+      correct: 2,
+      explanation: "Der Punkt-Operator ermöglicht den Zugriff auf Attribute und Methoden eines Objekts oder auf statische Elemente einer Klasse."
+    },
+    {
+      type: "multi",
+      title: "Attribute und Zustand",
+      prompt: "Welche Aussagen sind wahr? (Eine oder mehrere richtige Antworten sind möglich)",
+      options: [
+        "Attribute bilden das Verhalten eines Objekts ab",
+        "Attribute besitzen einen Bezeichner, analog zu Variablen",
+        "Attribute bilden den Zustand eines Objekts ab",
+        "Attribute werden in Klassen definiert",
+        "Attribute benötigen keine Bezeichner, da sie direkt zur Klasse gehören",
+        "Attributwerte werden immer über alle Instanzen einer Klasse geteilt"
+      ],
+      correct: [1, 2, 3],
+      explanation: "Attribute werden in Klassen mit Bezeichner definiert und beschreiben den Zustand eines Objekts. Instanzattribute haben eigene Werte pro Objekt."
+    }
   ]
 };
 

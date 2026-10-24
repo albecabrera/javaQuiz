@@ -61,6 +61,43 @@ test('chapter sidebar navigates concept, question and code steps in order', () =
   assert.match(ui.get('#slide-exercise-options').children[0].href, /exercise=1\.1\.2/);
 });
 
+test('chapter 1.5 checks object instantiation with both correct answers', () => {
+  const ui = presentation('chapter5');
+  const questions = ui.get('#slide-overview-list').querySelectorAll('.slide-thumbnail').filter((button) => button.className.includes('step-question'));
+  assert.equal(questions.length, 3);
+  questions[0].click();
+  assert.equal(ui.get('#slide-exercise-prompt').textContent, 'Was gilt bei der Instanziierung von Objekten? (Eine oder mehrere richtige Antworten sind möglich)');
+  const options = ui.get('#slide-exercise-options');
+  assert.equal(options.children.length, 4);
+  options.children[1].click();
+  options.children[2].click();
+  options.children.at(-1).click();
+  assert.match(ui.get('#slide-exercise-feedback').textContent, /^✓ Richtig/);
+});
+
+test('chapter 1.5 checks the dot operator as a single choice', () => {
+  const ui = presentation('chapter5');
+  const questions = ui.get('#slide-overview-list').querySelectorAll('.slide-thumbnail').filter((button) => button.className.includes('step-question'));
+  questions[1].click();
+  assert.equal(ui.get('#slide-exercise-prompt').textContent, 'Der Punkt Operator...');
+  const options = ui.get('#slide-exercise-options');
+  assert.equal(options.children.length, 3);
+  options.children[2].click();
+  assert.match(ui.get('#slide-exercise-feedback').textContent, /^✓ Richtig/);
+});
+
+test('chapter 1.5 checks three properties of attributes', () => {
+  const ui = presentation('chapter5');
+  const questions = ui.get('#slide-overview-list').querySelectorAll('.slide-thumbnail').filter((button) => button.className.includes('step-question'));
+  questions[2].click();
+  assert.equal(ui.get('#slide-exercise-prompt').textContent, 'Welche Aussagen sind wahr? (Eine oder mehrere richtige Antworten sind möglich)');
+  const options = ui.get('#slide-exercise-options');
+  assert.equal(options.children.length, 6);
+  for (const index of [1, 2, 3]) options.children[index].click();
+  options.children.at(-1).click();
+  assert.match(ui.get('#slide-exercise-feedback').textContent, /^✓ Richtig/);
+});
+
 test('a completed final code step returns to the next chapter', () => {
   const ui = presentation('chapter4');
   const buttons = ui.get('#slide-overview-list').querySelectorAll('.slide-thumbnail');
