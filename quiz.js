@@ -208,5 +208,32 @@ const codeExercises = [
     System.out.println();
   }
 }`
+  },
+  {
+    id: "1.4.2",
+    chapter: "chapter4",
+    title: "Java Einstieg Variablen Aufgabe 3",
+    prompt: "Lege int-Variablen a mit dem Wert 4 und b mit dem Wert 7 an. Berechne anschließend (a+b)², speichere das Ergebnis in int c und gib c aus.",
+    expectedOutput: "121",
+    solution: `public class Main {
+  public static void main(String[] args) {
+    int a = 4;
+    int b = 7;
+    int c = (a + b) * (a + b);
+    System.out.println(c);
+  }
+}`,
+    hints: [
+      "Lege a und b als int-Variablen mit den Werten 4 und 7 an.",
+      "Speichere (a + b) * (a + b) in der int-Variable c.",
+      "Gib c mit System.out.println(c) aus."
+    ],
+    starter: `public class Main {
+  public static void main(String[] args) {
+    // Lege a = 4 und b = 7 an.
+    // Berechne (a + b)², speichere das Ergebnis in c und gib c aus.
+    /* DEIN_CODE_HIER */
+  }
+}`
   }
 ];

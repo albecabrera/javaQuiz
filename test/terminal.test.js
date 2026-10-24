@@ -129,9 +129,9 @@ test('only the active exercise remains visible after skipping', () => {
 test('skip advances to the next answer and focuses its selected marker', () => {
   const ui = terminal(async () => { throw new Error('unexpected fetch'); });
   vm.runInContext('switchToCode()', ui.context);
-  assert.equal(ui.get('#terminal-progress').textContent, '01 / 06');
+  assert.equal(ui.get('#terminal-progress').textContent, '01 / 07');
   ui.get('#skip-exercise').listeners.click();
-  assert.equal(ui.get('#terminal-progress').textContent, '02 / 06');
+  assert.equal(ui.get('#terminal-progress').textContent, '02 / 07');
   const editor = ui.get('#terminal-editor');
   assert.equal(ui.document.activeElement, editor);
   assert.equal(editor.value.slice(editor.selectionStart, editor.selectionEnd), '/* DEIN_CODE_HIER */');
@@ -141,15 +141,15 @@ test('successful execution keeps the result visible until Weiter is clicked', as
   const ui = terminal(async () => ({ json: async () => ({ ok: true, stdout: 'Hallo, ich bin Duke.\nWie heißt Du?\n' }) }));
   vm.runInContext('switchToCode()', ui.context);
   const nextButton = ui.get('#next-exercise');
-  assert.equal(ui.get('#terminal-progress').textContent, '01 / 06');
+  assert.equal(ui.get('#terminal-progress').textContent, '01 / 07');
   assert.equal(nextButton.hidden, true);
   ui.get('#terminal-editor').listeners.keydown({ key: 'Enter', shiftKey: false, preventDefault() {} });
   await new Promise((resolve) => setImmediate(resolve));
-  assert.equal(ui.get('#terminal-progress').textContent, '01 / 06');
+  assert.equal(ui.get('#terminal-progress').textContent, '01 / 07');
   assert.equal(nextButton.hidden, false);
   assert.match(ui.get('#terminal-output').children.map((child) => child.innerHTML).join(' '), /Hallo, ich bin Duke/);
   nextButton.listeners.click();
-  assert.equal(ui.get('#terminal-progress').textContent, '02 / 06');
+  assert.equal(ui.get('#terminal-progress').textContent, '02 / 07');
   assert.equal(nextButton.hidden, true);
 });
 
@@ -205,7 +205,7 @@ test('wrong output allows retry without advancing or losing focus', async () => 
   vm.runInContext('switchToCode()', ui.context);
   ui.get('#terminal-editor').listeners.keydown({ key: 'Enter', shiftKey: false, preventDefault() {} });
   await new Promise((resolve) => setImmediate(resolve));
-  assert.equal(ui.get('#terminal-progress').textContent, '01 / 06');
+  assert.equal(ui.get('#terminal-progress').textContent, '01 / 07');
   assert.equal(ui.document.activeElement, ui.get('#terminal-editor'));
   assert.equal(ui.get('#terminal-editor').disabled, false);
   assert.equal(ui.get('#next-exercise').hidden, true);
@@ -225,7 +225,7 @@ test('unavailable backend leaves the current code editable and focused', async (
   vm.runInContext('switchToCode()', ui.context);
   ui.get('#terminal-editor').listeners.keydown({ key: 'Enter', shiftKey: false, preventDefault() {} });
   await new Promise((resolve) => setImmediate(resolve));
-  assert.equal(ui.get('#terminal-progress').textContent, '01 / 06');
+  assert.equal(ui.get('#terminal-progress').textContent, '01 / 07');
   assert.equal(ui.document.activeElement, ui.get('#terminal-editor'));
   assert.equal(ui.get('#terminal-editor').disabled, false);
 });

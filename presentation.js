@@ -292,7 +292,8 @@ const chapterTaskMap = {
     { id: "1.3.1", label: "1.3.1 · Java Einstieg Variablen Aufgabe 1" }
   ],
   chapter4: [
-    { id: "1.4.1", label: "1.4.1 · Java Einstieg Variablen Aufgabe 2" }
+    { id: "1.4.1", label: "1.4.1 · Java Einstieg Variablen Aufgabe 2" },
+    { id: "1.4.2", label: "1.4.2 · Java Einstieg Variablen Aufgabe 3" }
   ]
 };
 
