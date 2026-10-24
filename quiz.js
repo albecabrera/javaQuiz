@@ -235,5 +235,34 @@ const codeExercises = [
     /* DEIN_CODE_HIER */
   }
 }`
+  },
+  {
+    id: "1.4.3",
+    chapter: "chapter4",
+    title: "Java Einstieg Variablen Aufgabe 4",
+    prompt: "Lege int-Variablen mainBattery mit dem Wert 7 und replacementBattery mit dem Wert 5 an. Berechne runtime als Summe beider Variablen und gib runtime aus. Erzeuge anschließend den String result mit \"Robin hat insgesamt eine Laufzeit von: \" + runtime + \" Stunden\" und gib result aus.",
+    expectedOutput: "12\nRobin hat insgesamt eine Laufzeit von: 12 Stunden",
+    solution: `public class Main {
+  public static void main(String[] args) {
+    int mainBattery = 7;
+    int replacementBattery = 5;
+    int runtime = mainBattery + replacementBattery;
+    System.out.println(runtime);
+    String result = "Robin hat insgesamt eine Laufzeit von: " + runtime + " Stunden";
+    System.out.println(result);
+  }
+}`,
+    hints: [
+      "Lege mainBattery und replacementBattery als int-Variablen an.",
+      "Addiere beide Batteriewerte in der neuen int-Variable runtime.",
+      "Verkette den Text mit runtime und \" Stunden\" in der String-Variable result."
+    ],
+    starter: `public class Main {
+  public static void main(String[] args) {
+    // Berechne die Laufzeit aus mainBattery = 7 und replacementBattery = 5.
+    // Gib runtime und anschließend den vollständigen result-Text aus.
+    /* DEIN_CODE_HIER */
+  }
+}`
   }
 ];
