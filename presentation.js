@@ -337,6 +337,83 @@ const chapterExercises = {
       exerciseId: "1.1.4"
     }
   ],
+  chapter2: [
+    {
+      type: "single",
+      title: "Grundideen der OOP",
+      prompt: "Welche der folgenden Aussagen im Bezug auf OOP ist falsch?",
+      options: [
+        "Probleme werden jeweils durch einzelne, voneinander isolierte Objekte gelöst",
+        "Wichtige Bestandteile sind Klassen und Objekte",
+        "Struktur ähnelt der menschlichen Denkweise"
+      ],
+      correct: 0,
+      explanation: "Objekte arbeiten zusammen und sind nicht voneinander isoliert. Klassen und Objekte gehören zu den wichtigen Bestandteilen der OOP."
+    },
+    {
+      type: "multi",
+      title: "Zustand und Verhalten",
+      prompt: "Welche der folgenden Aussagen sind wahr? (Eine oder mehrere richtige Antworten sind möglich)",
+      options: [
+        "Zustand hat keinen Einfluss auf das Verhalten",
+        "Zustand und Verhalten beeinflussen sich gegenseitig",
+        "Attribute beschreiben den Zustand eines Objekts",
+        "Methoden beschreiben den Zustand eines Objekt",
+        "Klassen beschreiben entweder nur den Zustand oder nur das Verhalten"
+      ],
+      correct: [1, 2],
+      explanation: "Attribute beschreiben den Zustand, Methoden das Verhalten. Beide beeinflussen sich gegenseitig."
+    },
+    {
+      type: "single",
+      title: "Eigenschaften als Attribute",
+      prompt: "Wodurch kann die Haarfarbe eines Menschen am besten in OOP repräsentiert werden?",
+      options: ["Methode", "Objekt", "Attribut", "Klasse"],
+      correct: 2,
+      explanation: "Die Haarfarbe ist eine Eigenschaft und wird deshalb als Attribut eines Objekts modelliert."
+    },
+    {
+      type: "single",
+      title: "Aktivität als Methode",
+      prompt: "Welches Konstrukt in der Objektorientierung repräsentiert den Vorgang bzw. die Aktivität des Fliegens am besten?",
+      options: ["Objekt", "Methode", "Attribut", "Klasse"],
+      correct: 1,
+      explanation: "Ein Vorgang oder eine Aktivität wird in OOP durch eine Methode beschrieben."
+    },
+    {
+      type: "single",
+      title: "Ein Hund in OOP",
+      prompt: "Wodurch kann ein Hund am besten in OOP repräsentiert werden?",
+      options: ["Methode", "Klasse", "Attribut"],
+      correct: 1,
+      explanation: "Ein Hund als allgemeiner Bauplan wird durch eine Klasse repräsentiert."
+    },
+    {
+      type: "multi",
+      title: "Klassen und Instanzen",
+      prompt: "Welche Aussagen sind wahr? (Eine oder mehrere richtige Antworten sind möglich)",
+      options: [
+        "Objekte werden aus Klassen instanziiert",
+        "Objekte sind Vorlagen für Klassen",
+        "Zu jedem Objekt gibt es eine zugehörige Klasse",
+        "Es kann Objekte ohne Klassen geben"
+      ],
+      correct: [0, 2],
+      explanation: "Objekte sind konkrete Instanzen einer Klasse. Die Klasse ist die Vorlage, nicht das Objekt."
+    },
+    {
+      type: "multi",
+      title: "Unterschiede zwischen Objekten",
+      prompt: "Welche Aussagen sind wahr? (Eine oder mehrere richtige Antworten sind möglich)",
+      options: [
+        "Mehrere Objekte einer Klasse unterscheiden sich nicht",
+        "Unterschiedliche Objekte einer Klasse unterscheiden sich durch ihren Zustand",
+        "Unterschiedliche Objekte einer Klasse können sich in ihrem Verhalten unterscheiden"
+      ],
+      correct: [1, 2],
+      explanation: "Objekte derselben Klasse können unterschiedliche Zustände und – abhängig von ihrer Implementierung – unterschiedliches Verhalten zeigen."
+    }
+  ],
   chapter3: [
     {
       type: "multi",
