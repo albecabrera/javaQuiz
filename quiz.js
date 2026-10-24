@@ -264,5 +264,40 @@ const codeExercises = [
     /* DEIN_CODE_HIER */
   }
 }`
+  },
+  {
+    id: "1.5.1",
+    chapter: "chapter5",
+    title: "Java Einstieg Attribute Aufgabe 1",
+    prompt: "Erstelle die Klasse Robot mit dem String-Attribut name und dem Standardwert \"Unbenannt\". Erzeuge in main ein Robot-Objekt namens robin, gib zunächst robin.name aus, setze das Attribut anschließend auf \"Robin\" und gib robin.name erneut aus.",
+    expectedOutput: "Unbenannt\nRobin",
+    solution: `public class Main {
+  static class Robot {
+    String name = "Unbenannt";
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    System.out.println(robin.name);
+    robin.name = "Robin";
+    System.out.println(robin.name);
+  }
+}`,
+    hints: [
+      "Definiere in Robot das String-Attribut name mit dem Startwert \"Unbenannt\".",
+      "Greife über die Referenz robin mit dem Punkt-Operator auf name zu.",
+      "Gib robin.name vor und nach der Zuweisung \"Robin\" mit println aus."
+    ],
+    starter: `public class Main {
+  static class Robot {
+    String name = "Unbenannt";
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    // Gib den Standardwert aus, setze name auf "Robin" und gib ihn erneut aus.
+    /* DEIN_CODE_HIER */
+  }
+}`
   }
 ];
