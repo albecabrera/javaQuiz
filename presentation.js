@@ -311,28 +311,28 @@ const chapterExercises = {
     {
       type: "task",
       title: "Mehrzeiliger Kommentar und Ausgabe",
-      prompt: "Ändere die einzeiligen Kommentare in den Zeilen 3–5 zu einem mehrzeiligen Kommentar. Gib anschließend in zwei Zeilen „Hallo, ich bin Duke.“ und „Wie heißt Du?“ aus.",
+      prompt: "Ändere die einzeiligen Kommentare in den Zeilen 3–5 zu einem mehrzeiligen Kommentar. Gib anschließend in zwei Zeilen “Hallo, ich bin Duke.“ und “Wie heißt Du?“ aus.",
       linkLabel: "Im DevQuiz programmieren →",
       exerciseId: "1.1.1"
     },
     {
       type: "task",
       title: "Eine Ausgabe mit println",
-      prompt: "Schreibe ein Java-Programm, das in einer Zeile „Willkommen Detektiv Duke!“ ausgibt und anschließend in eine neue Zeile springt.",
+      prompt: "Schreibe ein Java-Programm, das in einer Zeile “Willkommen Detektiv Duke!“ ausgibt und anschließend in eine neue Zeile springt.",
       linkLabel: "Im DevQuiz programmieren →",
       exerciseId: "1.1.2"
     },
     {
       type: "task",
       title: "Output Aufgabe 1",
-      prompt: "Benutze System.out.println(), um genau „Der Anfang einer Reise!“ auszugeben.",
+      prompt: "Benutze System.out.println(), um genau “Der Anfang einer Reise!“ auszugeben.",
       linkLabel: "Im DevQuiz programmieren →",
       exerciseId: "1.1.3"
     },
     {
       type: "task",
       title: "Syntaxfehler finden",
-      prompt: "Finde und behebe die zwei Syntaxfehler im Programm. Gib danach „Hallo Welt.“ aus.",
+      prompt: "Finde und behebe die zwei Syntaxfehler im Programm. Gib danach “Hallo Welt.“ aus.",
       linkLabel: "Im DevQuiz programmieren →",
       exerciseId: "1.1.4"
     }
