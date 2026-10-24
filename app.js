@@ -219,11 +219,18 @@ async function submitAnswer(value) {
   waitingForNext = true;
   terminalMode.textContent = currentQuestionIndex === questions.length - 1 ? "ERGEBNIS" : "WEITER";
   await wait(450);
-  if (isCorrect) terminalForm.setAttribute("data-awaiting-next", "true");
-  else addLine(`<span class="hint">${currentQuestionIndex === questions.length - 1 ? "Drücke Enter, um dein Ergebnis zu sehen." : "Drücke Enter, um fortzufahren."}</span>`, "terminal-line hint-line");
-  terminalInput.disabled = false;
-  terminalInput.placeholder = "Enter drücken...";
-  terminalInput.focus();
+  if (isCorrect) {
+    terminalForm.setAttribute("data-awaiting-next", "true");
+    nextExerciseButton.textContent = "Weiter →";
+    nextExerciseButton.hidden = false;
+    nextExerciseButton.disabled = false;
+    nextExerciseButton.focus();
+  } else {
+    addLine(`<span class="hint">${currentQuestionIndex === questions.length - 1 ? "Drücke Enter, um dein Ergebnis zu sehen." : "Drücke Enter, um fortzufahren."}</span>`, "terminal-line hint-line");
+    terminalInput.disabled = false;
+    terminalInput.placeholder = "Enter drücken...";
+    terminalInput.focus();
+  }
 }
 
 async function submitCode() {
@@ -320,6 +327,8 @@ function advanceExercise(skipped = false) {
 async function continueQuiz() {
   if (!waitingForNext) return;
   waitingForNext = false;
+  nextExerciseButton.hidden = true;
+  nextExerciseButton.disabled = true;
   terminalInput.value = "";
   terminalInput.disabled = true;
   addLine("", "terminal-line");
@@ -458,7 +467,10 @@ terminalEditor.addEventListener("keydown", (event) => {
   }
 });
 skipExerciseButton.addEventListener("click", () => advanceExercise(true));
-nextExerciseButton.addEventListener("click", () => advanceExercise());
+nextExerciseButton.addEventListener("click", () => {
+  if (mode === "quiz" && waitingForNext) continueQuiz();
+  else advanceExercise();
+});
 modeToggle.addEventListener("click", () => {
   if (codeRunning) return;
   if (mode === "code") switchToQuiz(); else switchToCode();
@@ -480,6 +492,11 @@ document.addEventListener("fullscreenchange", () => {
   if (!document.fullscreenElement && appShell?.classList?.contains("is-editor-presenting")) setEditorPresentation(false);
 });
 document.addEventListener("keydown", (event) => {
+  if (mode === "quiz" && waitingForNext && event.key === "ArrowRight") {
+    event.preventDefault();
+    continueQuiz();
+    return;
+  }
   if (event.ctrlKey && event.key.toLowerCase() === "r") { event.preventDefault(); restartQuiz(); }
   if (event.metaKey && event.shiftKey && !event.ctrlKey && !event.altKey && event.key.toLowerCase() === "l") {
     event.preventDefault();

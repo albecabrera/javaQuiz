@@ -235,3 +235,19 @@ test('existing multiple-choice answer still awards a point', async () => {
   await vm.runInContext("submitAnswer('B')", ui.context);
   assert.equal(ui.get('#score-badge').textContent, 1);
 });
+
+
+test('correct answer offers Weiter and ArrowRight advances the quiz', async () => {
+  const ui = terminal(async () => { throw new Error('unexpected fetch'); });
+  await vm.runInContext("submitAnswer('B')", ui.context);
+  const nextButton = ui.get('#next-exercise');
+  assert.equal(nextButton.hidden, false);
+  assert.equal(nextButton.textContent, 'Weiter →');
+  assert.equal(ui.get('#terminal-form')['data-awaiting-next'], 'true');
+
+  ui.document.listeners.keydown({ key: 'ArrowRight', preventDefault() {} });
+  await new Promise((resolve) => setTimeout(resolve, 220));
+  assert.equal(ui.get('#terminal-progress').textContent, '02 / 10');
+  assert.equal(nextButton.hidden, true);
+  assert.equal(ui.document.activeElement, ui.get('#terminal-input'));
+});
