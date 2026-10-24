@@ -251,3 +251,14 @@ test('correct answer offers Weiter and ArrowRight advances the quiz', async () =
   assert.equal(nextButton.hidden, true);
   assert.equal(ui.document.activeElement, ui.get('#terminal-input'));
 });
+
+
+test('final results include topic graph and actionable learning links', () => {
+  const ui = terminal(async () => { throw new Error('unexpected fetch'); });
+  vm.runInContext('questionResults = [true, false, true, false, true, false, true, false, true, false]; score = 5; showResults()', ui.context);
+  const html = ui.get('#terminal-output').children.map((child) => child.innerHTML).join(' ');
+  assert.match(html, /DEIN LERNPROFIL/);
+  assert.match(html, /Datentypen und Variablen/);
+  assert.match(html, /presentation\.html\?chapter=chapter3/);
+  assert.match(html, /index\.html\?exercise=1\.1\.1/);
+});

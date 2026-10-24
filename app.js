@@ -51,6 +51,7 @@ backToEntryButton.addEventListener("click", returnToEntry);
 let currentQuestionIndex = 0;
 let currentExerciseIndex = 0;
 let score = 0;
+let questionResults = [];
 let waitingForNext = false;
 let codeRunning = false;
 let hintIndex = 0;
@@ -67,6 +68,12 @@ if (typeof window.addEventListener === "function") {
 
 const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[character]));
+
+const practiceLinks = {
+  "main() als Startpunkt": { label: "Übung 1.1.1 öffnen", href: "index.html?exercise=1.1.1#devquiz-terminal" },
+  "String und Text": { label: "Übung 1.1.2 öffnen", href: "index.html?exercise=1.1.2#devquiz-terminal" },
+  "Java-Syntax": { label: "Übung 1.1.4 öffnen", href: "index.html?exercise=1.1.4#devquiz-terminal" }
+};
 
 function addLine(content = "", className = "terminal-line") {
   const line = document.createElement("div");
@@ -203,6 +210,7 @@ async function submitAnswer(value) {
   const currentQuestion = questions[currentQuestionIndex];
   const selectedIndex = answer.charCodeAt(0) - 65;
   const isCorrect = selectedIndex === currentQuestion.correctAnswer;
+  questionResults[currentQuestionIndex] = isCorrect;
   await wait(350);
   if (isCorrect) {
     score += 1;
@@ -409,6 +417,26 @@ function switchToQuiz() {
   printQuestion();
 }
 
+function renderResultsEvaluation() {
+  const results = questions.map((question, index) => ({ question, correct: questionResults[index] === true }));
+  const correctResults = results.filter((result) => result.correct);
+  const reviewResults = results.filter((result) => !result.correct);
+  const percentage = Math.round((correctResults.length / results.length) * 100);
+  const linkFor = (question) => practiceLinks[question.concept] || {
+    label: "Präsentation wiederholen",
+    href: `presentation.html?chapter=${encodeURIComponent(question.presentationChapter)}`
+  };
+  const rows = results.map(({ question, correct }) => {
+    const link = linkFor(question);
+    return `<div class="result-topic-row"><div class="result-topic-heading"><span>${escapeHtml(question.concept)}</span><strong>${correct ? "100%" : "0%"}</strong></div><div class="result-topic-track"><span class="result-topic-fill ${correct ? "is-good" : "needs-review"}" style="width: ${correct ? 100 : 8}%"></span></div><a href="${escapeHtml(link.href)}">${escapeHtml(link.label)} →</a></div>`;
+  }).join("");
+  const list = (items, emptyMessage) => items.length ? `<ul>${items.map(({ question }) => {
+    const link = linkFor(question);
+    return `<li><span>${escapeHtml(question.concept)}</span><a href="${escapeHtml(link.href)}">${escapeHtml(link.label)} →</a></li>`;
+  }).join("")}</ul>` : `<p class="results-empty">${emptyMessage}</p>`;
+  return `<section class="results-evaluation" aria-label="Auswertung der Ergebnisse"><div class="results-evaluation-header"><span class="results-kicker">DEIN LERNPROFIL</span><strong>${percentage}% richtig</strong></div><p class="results-intro">Hier siehst du, was schon sitzt und wo sich eine Wiederholung lohnt.</p><div class="results-topic-graph">${rows}</div><div class="results-recommendations"><section><h3>Das sitzt</h3>${list(correctResults, "Noch kein Bereich abgeschlossen.")}</section><section><h3>Noch einmal wiederholen</h3>${list(reviewResults, "Stark — alles richtig beantwortet!")}</section></div></section>`;
+}
+
 function showResults() {
   const percentage = Math.round((score / questions.length) * 100);
   terminalMode.textContent = "FERTIG";
@@ -418,6 +446,7 @@ function showResults() {
   addLine("<span class=\"result-title\">QUIZ ABGESCHLOSSEN</span>", "terminal-line result-title-line");
   addLine(`Punktzahl: <strong class="score-value">${score}/${questions.length}</strong> (${percentage}%)`, "terminal-line final-score-line");
   addLine(percentage >= 70 ? "<span class=\"success\">Level freigeschaltet: Java Apprentice.</span>" : "<span class=\"hint\">Übe weiter. Jeder Fehler ist ein neuer Hinweis.</span>", "terminal-line");
+  addLine(renderResultsEvaluation(), "terminal-line results-evaluation-line");
   addLine("Gib <strong>restart</strong> ein, um neu zu starten.", "terminal-line hint-line");
   terminalInput.disabled = false;
   terminalInput.placeholder = "restart...";
@@ -429,6 +458,7 @@ function restartQuiz() {
   currentQuestionIndex = 0;
   currentExerciseIndex = 0;
   score = 0;
+  questionResults = [];
   waitingForNext = false;
   codeRunning = false;
   mode = "quiz";
