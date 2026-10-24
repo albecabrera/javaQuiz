@@ -418,7 +418,7 @@ const chapterExercises = {
     {
       type: "multi",
       title: "Bestandteile einer Variablendefinition",
-      prompt: "Welche Bestandteile hat jede Variablendefinition? Mehrere Antworten sind möglich.",
+      prompt: "Welche Bestandteile hat jede Variablendefinition? (Eine oder mehrere richtige Antworten sind möglich)",
       options: ["Kürzel des Autors", "Datentyp", "Eindeutiger Bezeichner", "Verweildauer im Programm"],
       correct: [1, 2],
       explanation: "Eine Variablendefinition braucht mindestens Datentyp und eindeutigen Bezeichner."
@@ -434,7 +434,7 @@ const chapterExercises = {
     {
       type: "multi",
       title: "Gültige Datentypen",
-      prompt: "Welche Datentypen kennst du bereits? Mehrere Antworten sind möglich.",
+      prompt: "Was sind gültige Datentypen, die wir bereits kennen gelernt haben? (Eine oder mehrere richtige Antworten sind möglich)",
       options: ["String", "int", "text", "variable", "double", "break-number"],
       correct: [0, 1, 4],
       explanation: "String, int und double sind gültige Java-Datentypen aus diesem Kapitel."
