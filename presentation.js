@@ -442,6 +442,49 @@ const chapterExercises = {
       correct: [0, 1, 4],
       explanation: "String, int und double sind gültige Java-Datentypen aus diesem Kapitel."
     }
+  ],
+  chapter4: [
+    {
+      type: "multi",
+      title: "Verkettung von Datentypen",
+      prompt: "Welche Aussagen zur Verkettung von Datentypen sind korrekt? (Eine oder mehrere richtige Antworten sind möglich)",
+      options: [
+        "Variablen unterschiedlicher Datentypen können nicht kombiniert werden",
+        "Die Verkettung einer Ganzzahl und einer Zeichenkette mit dem + Operator ergibt eine Ganzzahl",
+        "Die Verkettung zweier Ganzzahlen mit dem + Operator ergibt eine Zeichenkette",
+        "Die Verkettung einer Ganzzahl und einer Zeichenkette mit dem + Operator ergibt eine Zeichenkette",
+        "Die Verkettung zweier Ganzzahlen mit dem + Operator ergibt eine Ganzzahl",
+        "Die Verkettung zweier Zeichenketten mit dem + Operator ergibt eine Zeichenkette"
+      ],
+      correct: [3, 4, 5],
+      explanation: "Mit + werden Zeichenketten verkettet. Zwei Ganzzahlen werden addiert; sobald eine Zeichenkette beteiligt ist, entsteht eine Zeichenkette."
+    },
+    {
+      type: "multi",
+      title: "Fließkommazahlen",
+      prompt: "Vervollständige den Satz. (Eine oder mehrere richtige Antworten sind möglich)\n\nFließkommazahlen...",
+      options: [
+        "... sind immer genau.",
+        "... können nach Berechnungen Ungenauigkeiten aufweisen.",
+        "... werden im Format 0,2 (Vorkommastellen Komma Nachkommastellen) angegeben.",
+        "... werden im Format 0.2 (Vorkommastellen Punkt Nachkommastellen) angegeben."
+      ],
+      correct: [1, 3],
+      explanation: "Fließkommazahlen können durch ihre interne Darstellung kleine Ungenauigkeiten enthalten und werden in Java mit einem Punkt geschrieben."
+    },
+    {
+      type: "multi",
+      title: "Variablenzuweisung und Berechnungen",
+      prompt: "Welche Aussagen sind wahr? (Eine oder mehrere richtige Antworten sind möglich)",
+      options: [
+        "Bei einer Variablenzuweisung wird immer der Wert direkt hinter dem = Zeichen zugewiesen, restliche Anweisungen werden aus Gründen der Performance übersprungen",
+        "Bei der Ausführung von Variablenzuweisungen wird zunächst der gesamte rechte Teil einer Zuweisung vollständig ausgeführt, dann wird das Ergebnis der Variablen zugewiesen",
+        "Wenn bei einer Zuweisung der linke und der rechte Teil der Zuweisung, die durch ein = Zeichen getrennt sind, nicht identisch sind, wird die Zuweisung nicht vorgenommen.",
+        "Sowohl auf Ganzzahl- als auch auf Fließkomma-Variablen können Addition, Multiplikation, Subtraktion, Division und Modulo ausgeführt werden"
+      ],
+      correct: [1, 3],
+      explanation: "Java wertet zuerst die rechte Seite aus und speichert anschließend das Ergebnis links. Die genannten arithmetischen Operatoren funktionieren bei Ganz- und Fließkommazahlen."
+    }
   ]
 };
 
