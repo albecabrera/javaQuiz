@@ -22,13 +22,14 @@ function element() {
     get innerHTML() { return this._html; },
     addEventListener(name, handler) { (this.listeners ||= {})[name] = handler; },
     setAttribute(name, value) { (this.attributes ||= {})[name] = value; },
+    getAttribute(name) { return this.attributes?.[name] ?? null; },
     querySelector(selector) { if (selector === '.slide-exercise-check') return children.find((child) => child.className === 'slide-exercise-check'); return element(); },
     querySelectorAll(selector) { return selector === '.slide-thumbnail' ? children.filter((child) => child.className?.includes('slide-thumbnail')) : children.filter((child) => child.type === 'button'); },
     click() { this.listeners?.click?.(); }
   };
 }
 
-function presentation(chapter = 'chapter1', slide = 0) {
+function presentation(chapter = 'chapter1', slide = 0, saved = new Map()) {
   const nodes = new Map();
   const get = (selector) => nodes.get(selector) || (nodes.set(selector, element()), nodes.get(selector));
   const chapterButtons = Array.from({ length: 8 }, (_, index) => Object.assign(element(), { dataset: { chapter: `chapter${index + 1}`, module: 'module1' } }));
@@ -38,9 +39,10 @@ function presentation(chapter = 'chapter1', slide = 0) {
     querySelectorAll(selector) { return selector === '.chapter-button' ? chapterButtons : moduleButtons; },
     addEventListener() {}, body: { classList: element().classList }
   };
-  const window = { location: { search: `?chapter=${chapter}&slide=${slide}` }, localStorage: { getItem: () => null, setItem() {} } };
-  const source = fs.readFileSync(require.resolve('../presentation.js'), 'utf8');
-  vm.runInNewContext(source, { document, window, URLSearchParams });
+  const window = { location: { search: `?chapter=${chapter}&slide=${slide}` }, localStorage: { getItem: (key) => saved.get(key) ?? null, setItem(key, value) { saved.set(key, value); } } };
+  const context = vm.createContext({ document, window, URLSearchParams });
+  vm.runInContext(fs.readFileSync(require.resolve('../progress.js'), 'utf8'), context);
+  vm.runInContext(fs.readFileSync(require.resolve('../presentation.js'), 'utf8'), context);
   return { get, window, chapterButtons };
 }
 
@@ -114,6 +116,23 @@ test('chapter 1.6 links its methods coding task after the lesson', () => {
   assert.match(finalStep.className, /step-code/);
   finalStep.click();
   assert.match(ui.get('#slide-exercise-options').children[0].href, /exercise=1\.6\.3&returnChapter=chapter7&returnSlide=0/);
+});
+
+test('a correct question alone does not complete a chapter with unfinished code', () => {
+  const saved = new Map();
+  const ui = presentation('chapter7', 0, saved);
+  const question = ui.get('#slide-overview-list').querySelectorAll('.slide-thumbnail').find((button) => button.className.includes('step-question'));
+  question.click();
+  const options = ui.get('#slide-exercise-options');
+  options.children[3].click();
+  options.children.at(-1).click();
+  assert.match(ui.get('#slide-exercise-feedback').textContent, /^Noch nicht/);
+  options.children[4].click();
+  options.children.at(-1).click();
+  const reopened = presentation('chapter7', 0, saved);
+  const chapter = reopened.chapterButtons.find((button) => button.dataset.chapter === 'chapter7');
+  assert.match(chapter.getAttribute('aria-label'), /In Arbeit/);
+  assert.doesNotMatch(chapter.getAttribute('aria-label'), /Abgeschlossen/);
 });
 
 test('chapter 1.8 is reachable from the chapter navigation', () => {

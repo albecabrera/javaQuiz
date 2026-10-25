@@ -350,6 +350,7 @@ async function submitCode() {
   }
 
   if (passed) {
+    window.devquizProgress?.markExercise(exercise.id);
     exerciseHintButton.hidden = true;
     waitingForNext = true;
     nextExerciseButton.hidden = false;

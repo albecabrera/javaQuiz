@@ -641,10 +641,19 @@ function activeSlides() { return chapterSteps(currentChapterId); }
 
 function activeModule() { return moduleGroups.find((module) => module.chapterIds.includes(currentChapterId)); }
 
+function learningStatus(chapterId) {
+  const questions = (chapterExercises[chapterId] || []).filter((exercise) => exercise.type !== "task");
+  const taskIds = (chapterTaskMap[chapterId] || []).map((task) => task.id);
+  return window.devquizProgress?.status(chapterId, questions.length, taskIds) || "new";
+}
+
 function renderModuleButtons() {
   const module = activeModule();
   moduleButtons.forEach((button) => {
+    const group = moduleGroups.find((item) => item.id === button.dataset.module);
     const active = button.dataset.module === module.id;
+    const completed = group.chapterIds.filter((id) => learningStatus(id) === "complete").length;
+    button.textContent = `${group.label} · ${completed}/${group.chapterIds.length} Kapitel`;
     button.classList.toggle("is-active", active);
     button.setAttribute("aria-pressed", String(active));
   });
@@ -658,6 +667,9 @@ function renderChapterButtons() {
     const active = button.dataset.chapter === currentChapterId;
     button.hidden = button.dataset.module !== module.id;
     button.classList.toggle("is-active", active);
+    button.classList.toggle("is-complete", learningStatus(button.dataset.chapter) === "complete");
+    button.classList.toggle("is-started", learningStatus(button.dataset.chapter) === "started");
+    button.setAttribute("aria-label", `${chapters[button.dataset.chapter].label} · ${{ complete: "Abgeschlossen", started: "In Arbeit", new: "Noch nicht begonnen" }[learningStatus(button.dataset.chapter)]}`);
     button.setAttribute("aria-pressed", String(active));
   });
 }
@@ -742,6 +754,11 @@ function renderSlideExercise() {
             const correct = selected.size === exercise.correct.length && exercise.correct.every((answer) => selected.has(answer));
             slideExerciseFeedback.textContent = correct ? `✓ Richtig. ${exercise.explanation}` : `Noch nicht. ${exercise.explanation}`;
             slideExerciseFeedback.classList.toggle("is-correct", correct);
+            if (correct) {
+              window.devquizProgress?.markQuestion(currentChapterId, activeSlides().slice(0, currentSlide).filter((step) => step.kind === "question").length);
+              renderModuleButtons();
+              renderChapterButtons();
+            }
           });
           slideExerciseOptions.appendChild(check);
         }
@@ -752,6 +769,11 @@ function renderSlideExercise() {
       button.classList.add(correct ? "is-correct" : "is-wrong");
       slideExerciseFeedback.textContent = correct ? `✓ Richtig. ${exercise.explanation}` : `Noch nicht. ${exercise.explanation}`;
       slideExerciseFeedback.classList.toggle("is-correct", correct);
+      if (correct) {
+        window.devquizProgress?.markQuestion(currentChapterId, activeSlides().slice(0, currentSlide).filter((step) => step.kind === "question").length);
+        renderModuleButtons();
+        renderChapterButtons();
+      }
     });
     slideExerciseOptions.appendChild(button);
   });
@@ -760,6 +782,7 @@ function renderSlideExercise() {
 function renderSlide() {
   const slides = activeSlides();
   const slide = slides[currentSlide];
+  window.devquizProgress?.markStep(currentChapterId, currentSlide === slides.length - 1);
   counter.textContent = `${String(currentSlide + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
   kicker.textContent = slide.kicker;
   slideObjective.textContent = slide.title;
