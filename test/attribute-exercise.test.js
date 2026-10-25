@@ -62,3 +62,19 @@ test('chapter 1.7.2 provides a clickable age return path', () => {
   assert.equal(exercise.guidedSteps.length, 3);
   assert.match(exercise.guidedSteps.at(-1).code, /int getAge\(\)[\s\S]*return age;[\s\S]*Robin ist .* robin\.getAge\(\)/);
 });
+
+test('chapter 1.7.3 provides a clickable password delegation path', () => {
+  const exercise = exercises.find(({ id }) => id === '1.7.3');
+  assert.ok(exercise);
+  assert.equal(exercise.expectedOutput, 'Paco123!');
+  assert.equal(exercise.guidedSteps.length, 4);
+  assert.match(exercise.guidedSteps.at(-1).code, /office\.printPassword\(\);/);
+});
+
+test('module 1 bonus provides a clickable multi-robot return path', () => {
+  const exercise = exercises.find(({ id }) => id === 'bonus1.1');
+  assert.ok(exercise);
+  assert.equal(exercise.expectedOutput, 'Ich bin Carl und Ich löse Matheaufgaben.\nIch bin Putzi und ich putze das Haus.');
+  assert.equal(exercise.guidedSteps.length, 4);
+  assert.match(exercise.guidedSteps.at(-1).code, /carl\.getName\(\)[\s\S]*putzi\.getTask\(\)/);
+});

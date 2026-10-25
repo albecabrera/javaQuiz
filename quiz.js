@@ -713,6 +713,409 @@ const codeExercises = [
 }`
       }
     ]
+  },
+  {
+    id: "1.7.3",
+    chapter: "chapter7",
+    title: "Java Einstieg Recap 1 Aufgabe 1",
+    prompt: "Lege in Office das String-Attribut password und die Methode printPassword() an. Erzeuge einen PasswordGenerator und weise ihn pg zu. Hole mit pg.getPassword() das Passwort und speichere es in password. Gib password aus.",
+    expectedOutput: "Paco123!",
+    solution: `public class Main {
+  static class Password {
+    String getPassValue() {
+      return "Paco123!";
+    }
+  }
+
+  static class PasswordGenerator {
+    Password password = new Password();
+
+    String getPassword() {
+      return password.getPassValue();
+    }
+  }
+
+  static class Office {
+    String password;
+    PasswordGenerator pg;
+
+    void printPassword() {
+      password = pg.getPassword();
+      System.out.println(password);
+    }
+  }
+
+  public static void main(String[] args) {
+    Office office = new Office();
+    office.pg = new PasswordGenerator();
+    office.printPassword();
+  }
+}`,
+    hints: [
+      "Office braucht String password und PasswordGenerator pg.",
+      "Speichere pg.getPassword() in password.",
+      "Erzeuge office, setze office.pg und rufe office.printPassword() auf."
+    ],
+    starter: `public class Main {
+  static class Password {
+    String getPassValue() {
+      return "Paco123!";
+    }
+  }
+
+  static class PasswordGenerator {
+    Password password = new Password();
+
+    String getPassword() {
+      return password.getPassValue();
+    }
+  }
+
+  static class Office {
+    PasswordGenerator pg;
+    // Ergänze password und printPassword().
+    /* DEIN_CODE_HIER */
+  }
+
+  public static void main(String[] args) {
+    // Erzeuge office, einen PasswordGenerator und rufe printPassword() auf.
+  }
+}`,
+    guidedSteps: [
+      {
+        label: "1 · Office vorbereiten",
+        instruction: "Klicke, um password und printPassword() in Office anzulegen.",
+        code: `public class Main {
+  static class Password {
+    String getPassValue() {
+      return "Paco123!";
+    }
+  }
+
+  static class PasswordGenerator {
+    Password password = new Password();
+
+    String getPassword() {
+      return password.getPassValue();
+    }
+  }
+
+  static class Office {
+    String password;
+    PasswordGenerator pg;
+
+    void printPassword() {
+      // Der nächste Schritt holt das Passwort über pg.
+    }
+  }
+
+  public static void main(String[] args) {
+    // Erzeuge office und pg.
+  }
+}`
+      },
+      {
+        label: "2 · Passwort holen",
+        instruction: "Klicke, um pg.getPassword() in password zu speichern und auszugeben.",
+        code: `public class Main {
+  static class Password {
+    String getPassValue() {
+      return "Paco123!";
+    }
+  }
+
+  static class PasswordGenerator {
+    Password password = new Password();
+
+    String getPassword() {
+      return password.getPassValue();
+    }
+  }
+
+  static class Office {
+    String password;
+    PasswordGenerator pg;
+
+    void printPassword() {
+      password = pg.getPassword();
+      System.out.println(password);
+    }
+  }
+
+  public static void main(String[] args) {
+    // Erzeuge office und pg.
+  }
+}`
+      },
+      {
+        label: "3 · Generator zuweisen",
+        instruction: "Klicke, um office und den PasswordGenerator zu erzeugen und pg zuzuweisen.",
+        code: `public class Main {
+  static class Password {
+    String getPassValue() {
+      return "Paco123!";
+    }
+  }
+
+  static class PasswordGenerator {
+    Password password = new Password();
+
+    String getPassword() {
+      return password.getPassValue();
+    }
+  }
+
+  static class Office {
+    String password;
+    PasswordGenerator pg;
+
+    void printPassword() {
+      password = pg.getPassword();
+      System.out.println(password);
+    }
+  }
+
+  public static void main(String[] args) {
+    Office office = new Office();
+    office.pg = new PasswordGenerator();
+  }
+}`
+      },
+      {
+        label: "4 · Passwort ausgeben",
+        instruction: "Klicke, um office.printPassword() aufzurufen. Danach kannst du ausführen.",
+        code: `public class Main {
+  static class Password {
+    String getPassValue() {
+      return "Paco123!";
+    }
+  }
+
+  static class PasswordGenerator {
+    Password password = new Password();
+
+    String getPassword() {
+      return password.getPassValue();
+    }
+  }
+
+  static class Office {
+    String password;
+    PasswordGenerator pg;
+
+    void printPassword() {
+      password = pg.getPassword();
+      System.out.println(password);
+    }
+  }
+
+  public static void main(String[] args) {
+    Office office = new Office();
+    office.pg = new PasswordGenerator();
+    office.printPassword();
+  }
+}`
+      }
+    ]
+  },
+  {
+    id: "bonus1.1",
+    chapter: "chapter7",
+    title: "Java Einstieg Woche1 Bonus4",
+    prompt: "Implementiere in MathRobot die Methoden getTask() und getName() mit String-Rückgabewerten. getTask() soll \"Ich löse Matheaufgaben.\" und getName() soll \"Carl\" zurückgeben. Erzeuge außerdem Carl und Putzi und gib beide Namen mit ihren Aufgaben aus.",
+    expectedOutput: "Ich bin Carl und Ich löse Matheaufgaben.\nIch bin Putzi und ich putze das Haus.",
+    solution: `public class Main {
+  static class MathRobot {
+    String task = "Ich löse Matheaufgaben.";
+    String name = "Carl";
+
+    String getTask() {
+      return task;
+    }
+
+    String getName() {
+      return name;
+    }
+  }
+
+  static class CleaningRobot {
+    String task = "ich putze das Haus.";
+    String name = "Putzi";
+
+    String getTask() {
+      return task;
+    }
+
+    String getName() {
+      return name;
+    }
+  }
+
+  public static void main(String[] args) {
+    MathRobot carl = new MathRobot();
+    CleaningRobot putzi = new CleaningRobot();
+    System.out.println("Ich bin " + carl.getName() + " und " + carl.getTask());
+    System.out.println("Ich bin " + putzi.getName() + " und " + putzi.getTask());
+  }
+}`,
+    hints: [
+      "MathRobot braucht die String-Attribute task und name.",
+      "Beide get-Methoden geben ihr jeweiliges Attribut mit return zurück.",
+      "Erzeuge carl und putzi und verkette Name und Aufgabe in zwei Ausgaben."
+    ],
+    starter: `public class Main {
+  static class MathRobot {
+    // Lege task = "Ich löse Matheaufgaben." und name = "Carl" an.
+    /* DEIN_CODE_HIER */
+  }
+
+  static class CleaningRobot {
+    String task = "ich putze das Haus.";
+    String name = "Putzi";
+  }
+
+  public static void main(String[] args) {
+    // Erzeuge carl und putzi und gib Name und Aufgabe beider Roboter aus.
+  }
+}`,
+    guidedSteps: [
+      {
+        label: "1 · MathRobot ausstatten",
+        instruction: "Klicke, um die Attribute und Rückgabemethoden von MathRobot einzufügen.",
+        code: `public class Main {
+  static class MathRobot {
+    String task = "Ich löse Matheaufgaben.";
+    String name = "Carl";
+
+    String getTask() {
+      return task;
+    }
+
+    String getName() {
+      return name;
+    }
+  }
+
+  static class CleaningRobot {
+    String task = "ich putze das Haus.";
+    String name = "Putzi";
+  }
+
+  public static void main(String[] args) {
+    // Erzeuge im nächsten Schritt beide Roboter.
+  }
+}`
+      },
+      {
+        label: "2 · CleaningRobot ergänzen",
+        instruction: "Klicke, um auch CleaningRobot mit getTask() und getName() auszustatten.",
+        code: `public class Main {
+  static class MathRobot {
+    String task = "Ich löse Matheaufgaben.";
+    String name = "Carl";
+
+    String getTask() {
+      return task;
+    }
+
+    String getName() {
+      return name;
+    }
+  }
+
+  static class CleaningRobot {
+    String task = "ich putze das Haus.";
+    String name = "Putzi";
+
+    String getTask() {
+      return task;
+    }
+
+    String getName() {
+      return name;
+    }
+  }
+
+  public static void main(String[] args) {
+    // Erzeuge im nächsten Schritt beide Roboter.
+  }
+}`
+      },
+      {
+        label: "3 · Roboter erzeugen",
+        instruction: "Klicke, um carl und putzi in main zu erzeugen.",
+        code: `public class Main {
+  static class MathRobot {
+    String task = "Ich löse Matheaufgaben.";
+    String name = "Carl";
+
+    String getTask() {
+      return task;
+    }
+
+    String getName() {
+      return name;
+    }
+  }
+
+  static class CleaningRobot {
+    String task = "ich putze das Haus.";
+    String name = "Putzi";
+
+    String getTask() {
+      return task;
+    }
+
+    String getName() {
+      return name;
+    }
+  }
+
+  public static void main(String[] args) {
+    MathRobot carl = new MathRobot();
+    CleaningRobot putzi = new CleaningRobot();
+  }
+}`
+      },
+      {
+        label: "4 · Beide Aufgaben ausgeben",
+        instruction: "Klicke, um Name und Aufgabe beider Roboter auszugeben. Danach kannst du ausführen.",
+        code: `public class Main {
+  static class MathRobot {
+    String task = "Ich löse Matheaufgaben.";
+    String name = "Carl";
+
+    String getTask() {
+      return task;
+    }
+
+    String getName() {
+      return name;
+    }
+  }
+
+  static class CleaningRobot {
+    String task = "ich putze das Haus.";
+    String name = "Putzi";
+
+    String getTask() {
+      return task;
+    }
+
+    String getName() {
+      return name;
+    }
+  }
+
+  public static void main(String[] args) {
+    MathRobot carl = new MathRobot();
+    CleaningRobot putzi = new CleaningRobot();
+    System.out.println("Ich bin " + carl.getName() + " und " + carl.getTask());
+    System.out.println("Ich bin " + putzi.getName() + " und " + putzi.getTask());
+  }
+}`
+      }
+    ]
   }
 
 ];

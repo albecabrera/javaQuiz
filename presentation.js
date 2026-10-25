@@ -307,7 +307,9 @@ const chapterTaskMap = {
   ],
   chapter7: [
     { id: "1.7.1", label: "1.7.1 · Java Einstieg Rückgabewerte Aufgabe 1" },
-    { id: "1.7.2", label: "1.7.2 · Java Einstieg Rückgabewerte Aufgabe 2" }
+    { id: "1.7.2", label: "1.7.2 · Java Einstieg Rückgabewerte Aufgabe 2" },
+    { id: "1.7.3", label: "1.7.3 · Java Einstieg Recap 1 Aufgabe 1" },
+    { id: "bonus1.1", label: "Bonus · Java Einstieg Woche1 Bonus4" }
   ]
 };
 
