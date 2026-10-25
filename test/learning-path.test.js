@@ -49,6 +49,7 @@ test('course navigation names modules and chapters and keeps reading controls le
   assert.match(css, /body\s*\{[^}]*font-family:\s*[^;]*sans-serif/);
   assert.match(css, /\.chapter-button\s*\{[^}]*font-size:\s*1rem/);
   assert.match(css, /\.module-button\s*\{[^}]*font-size:\s*1rem/);
+  assert.match(css, /\.terminal-body\s*\{[^}]*font-family:\s*"Fira Code"/);
 });
 
 test('chapter 1.8 is its own module 1 chapter', () => {

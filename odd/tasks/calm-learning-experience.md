@@ -8,10 +8,11 @@ S3. "Schlage mir vor, ob es sinnvoll ist Videos zu den Kapitel oder Themen einzu
 S4. "fange mal mit deinen Plan und wenn du Fragen hast, melde dich"
 
 ## Tasks
-T1 [S1,S2,S4] inline — Clarify module/chapter navigation and reading typography; checks: focused 14/14, suite 61/61; commit pending.
+T1 [S1,S2,S4] inline — Clarify module/chapter navigation and reading typography; commits 079c642 + correction pending; focused 5/5, suite 61/61.
 T2 [S1,S2,S4] inline — Simplify learning and exercise surfaces, accessibility/motion; commit pending.
 T3 [S1,S3,S4] inline — Check completion semantics, make a decision on optional resume/video presentation, verify end-to-end; commit pending.
 
 ## Log
 L1: "fange mal mit deinen Plan und wenn du Fragen hast, melde dich"
 L2: Previous user request (S1-S3) included above verbatim; original worktree has unrelated edits to README.md, lsp-bridge.js, quiz.js, test/exercises.test.js, test/lsp-bridge.test.js, test/terminal.test.js and untracked artifacts. Preserve them. No push authorized for this turn.
+L3: Independent verification found the global sans-serif body could change terminal text. Added explicit terminal monospace and regression assertion. Local suite 61/61; verifier's scratch baseline reported 17 failures and no browser was available.
