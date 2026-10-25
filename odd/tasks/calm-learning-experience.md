@@ -12,8 +12,8 @@ S6. "mach dann weiter bis zum Ende und mach ein commit + push"
 ## Tasks
 T1 [S1,S2,S4] inline — Clarify module/chapter navigation and reading typography; commits 079c642 + dfc6175; focused 5/5, suite 61/61.
 T2 [S1,S2,S4] inline — Remove continuous decorative motion, keep code visible, enlarge chapter-step targets; commit 3a6f61f; focused 17/17 and suite 62/62; independent static verdict met, browser QA unavailable.
-T3 [S1,S3,S4,S5] inline — Commit 0f19261; focused isolated 13/13, worktree suite 66/66, independent static verdict met; browser visual proof unavailable.
-T4 [S4,S6] inline — Repair stale catalog count, two code-mode denominators and missing fake-DOM setAttribute; isolated candidate suite 63/63; commit pending.
+T3 [S1,S3,S4,S5] inline — Done, commit 0f19261; focused isolated 13/13, worktree suite 66/66, independent static verdict met; browser visual proof unavailable.
+T4 [S4,S6] inline — Done, commit bbd20cb; stale catalog count, two code-mode denominators and fake-DOM setAttribute fixed; clean committed HEAD suite 63/63.
 
 ## Log
 L1: "fange mal mit deinen Plan und wenn du Fragen hast, melde dich"
@@ -25,3 +25,4 @@ L6: Implemented browser-local progress without credentials: reaching final step 
 L7: Commit 0f19261 passes isolated focused 13/13 and full working-tree suite 66/66. Clean committed HEAD suite fails 17/63, matching 17 baseline failures reported by prior independent verifier before this slice. Independent verifier: S1/S3/S4/S5 statically met, no rendered browser proof.
 L8: User verbatim: "ja bitte, untersuche sie". Comparing HEAD with 7932bb8 gave the same 17 failures. Diagnosed one stale catalog test (expects 12 while catalog has 18) and 16 terminal tests with an incomplete fake DOM element missing setAttribute. User then requested verbatim S6, authorizing a commit and push of this feature and the necessary isolated test fixes; unrelated working-tree changes remain out of scope.
 L9: The minimal test-fixture patch reduced clean-checkout failures to two stale code-mode counters (02 / 10 instead of 02 / 18); the quiz-mode 02 / 10 assertion remains unchanged. Applying only the selective staged test patch to a Git archive of HEAD gives 63/63 passing. The scratch patch must use patch --directory because git apply in a nested non-worktree resolves to the parent repository.
+L10: Commit bbd20cb contains the minimal test fixes. Fresh Git archive of committed HEAD passes full suite 63/63. Working-tree 66/66 includes unrelated uncommitted tests. Browser-rendered UX QA was skipped because no browser runner is available; independent verifier checked UX semantics statically. No third-party video was embedded.
