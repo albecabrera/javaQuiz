@@ -8,8 +8,8 @@ S3. "Schlage mir vor, ob es sinnvoll ist Videos zu den Kapitel oder Themen einzu
 S4. "fange mal mit deinen Plan und wenn du Fragen hast, melde dich"
 
 ## Tasks
-T1 [S1,S2,S4] inline — Clarify module/chapter navigation and reading typography; commits 079c642 + correction pending; focused 5/5, suite 61/61.
-T2 [S1,S2,S4] inline — Simplify learning and exercise surfaces, accessibility/motion; commit pending.
+T1 [S1,S2,S4] inline — Clarify module/chapter navigation and reading typography; commits 079c642 + dfc6175; focused 5/5, suite 61/61.
+T2 [S1,S2,S4] inline — Remove continuous decorative motion, keep code visible, enlarge chapter-step targets; focused 17/17 and suite 62/62; commit pending.
 T3 [S1,S3,S4] inline — Check completion semantics, make a decision on optional resume/video presentation, verify end-to-end; commit pending.
 
 ## Log

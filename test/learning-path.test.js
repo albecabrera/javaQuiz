@@ -52,6 +52,14 @@ test('course navigation names modules and chapters and keeps reading controls le
   assert.match(css, /\.terminal-body\s*\{[^}]*font-family:\s*"Fira Code"/);
 });
 
+test('lesson content is steady and chapter steps have readable labels', () => {
+  const css = fs.readFileSync(require.resolve('../styles.css'), 'utf8');
+  assert.match(css, /\.slide-thumbnail\s*\{[^}]*font-size:\s*1rem/);
+  assert.match(css, /\.code-line-reveal\s*\{[^}]*opacity:\s*1/);
+  assert.match(css, /\.attention-arrow\s*\{[^}]*animation:\s*none/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)\s*\{[^}]*animation-duration:\s*0\.01ms/);
+});
+
 test('chapter 1.8 is its own module 1 chapter', () => {
   assert.equal(curriculum.chapters.chapter8.label, 'Kapitel 1.8 · Lerninhalte Spielwiese');
   assert.deepEqual(Array.from(curriculum.chapterTaskMap.chapter8, (task) => task.id), ['1.8.1']);
