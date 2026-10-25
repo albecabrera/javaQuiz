@@ -428,5 +428,42 @@ const codeExercises = [
     // Erzeuge bookworm und rufe zuerst robin.giveTask(), dann bookworm.giveTask() auf.
   }
 }`
+  },
+  {
+    id: "1.6.3",
+    chapter: "chapter6",
+    title: "Java Einstieg Methoden Aufgabe 3",
+    prompt: "Lege in Robot das int-Attribut age mit dem Wert 1 an. Implementiere die Methode sayAge(), die \"Ich bin \" + age + \" Jahr alt.\" ausgibt. Erzeuge in main das Objekt robin und rufe robin.sayAge() auf.",
+    expectedOutput: "Ich bin 1 Jahr alt.",
+    solution: `public class Main {
+  static class Robot {
+    int age = 1;
+
+    void sayAge() {
+      System.out.println("Ich bin " + age + " Jahr alt.");
+    }
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    robin.sayAge();
+  }
+}`,
+    hints: [
+      "Definiere int age = 1 als Attribut in Robot.",
+      "Verkette den Text mit age in der Methode sayAge().",
+      "Erzeuge robin und rufe robin.sayAge() auf."
+    ],
+    starter: `public class Main {
+  static class Robot {
+    int age = 1;
+    // Implementiere sayAge() mit der Ausgabe des Alters.
+    /* DEIN_CODE_HIER */
+  }
+
+  public static void main(String[] args) {
+    // Erzeuge Robot robin und rufe robin.sayAge() auf.
+  }
+}`
   }
  ];

@@ -39,3 +39,10 @@ test('chapter 1.6.2 creates ReadingRobot and calls giveTask in order', () => {
   assert.equal(exercise.expectedOutput, 'Hallo!\nIch kann helfen.\nIch kann lesen.');
   assert.match(exercise.solution, /class ReadingRobot[\s\S]*void giveTask\(\)[\s\S]*Robot robin = new Robot\(\);[\s\S]*robin\.giveTask\(\);[\s\S]*ReadingRobot bookworm = new ReadingRobot\(\);[\s\S]*bookworm\.giveTask\(\);/);
 });
+
+test('chapter 1.6.3 stores age and prints it through sayAge', () => {
+  const exercise = exercises.find(({ id }) => id === '1.6.3');
+  assert.ok(exercise);
+  assert.equal(exercise.expectedOutput, 'Ich bin 1 Jahr alt.');
+  assert.match(exercise.solution, /int age = 1;[\s\S]*void sayAge\(\)[\s\S]*Ich bin .* age .* Jahr alt\.[\s\S]*Robot robin = new Robot\(\);[\s\S]*robin\.sayAge\(\);/);
+});

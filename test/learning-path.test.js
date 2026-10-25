@@ -10,7 +10,7 @@ curriculum.chapters.chapter4.slides = curriculum.chapters.chapter3.slides.splice
 const codeExercises = vm.runInNewContext(`${fs.readFileSync(require.resolve('../quiz.js'), 'utf8')}\ncodeExercises`);
 
 test('each chapter puts its lessons before one copy of each question and coding task', () => {
-  for (const chapterId of ['chapter1', 'chapter2', 'chapter3', 'chapter4', 'chapter5']) {
+  for (const chapterId of ['chapter1', 'chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6', 'chapter7']) {
     const steps = curriculum.chapterSteps(chapterId);
     const kinds = Array.from(steps, (step) => step.kind);
     const lessonCount = kinds.filter((kind) => kind === 'lesson').length;

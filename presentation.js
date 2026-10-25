@@ -302,7 +302,8 @@ const chapterTaskMap = {
   ],
   chapter6: [
     { id: "1.6.1", label: "1.6.1 · Java Einstieg Methoden Aufgabe 1" },
-    { id: "1.6.2", label: "1.6.2 · Java Einstieg Methoden Aufgabe 2" }
+    { id: "1.6.2", label: "1.6.2 · Java Einstieg Methoden Aufgabe 2" },
+    { id: "1.6.3", label: "1.6.3 · Java Einstieg Methoden Aufgabe 3" }
   ]
 };
 
@@ -539,6 +540,22 @@ const chapterExercises = {
       ],
       correct: [1, 2, 3],
       explanation: "Attribute werden in Klassen mit Bezeichner definiert und beschreiben den Zustand eines Objekts. Instanzattribute haben eigene Werte pro Objekt."
+    }
+  ],
+  chapter7: [
+    {
+      type: "multi",
+      title: "Methoden mit Rückgabewerten",
+      prompt: "Welche Aussagen sind wahr? (Eine oder mehrere richtige Antworten sind möglich)",
+      options: [
+        "Eine Methode die Werte zurückgibt, muss in einer gesonderten Datei abgelegt werden",
+        "Der Datentyp für Rückgaben muss nicht festgelegt werden, es können beliebige Werte zurückgegeben werden",
+        "Für Rückgaben wird das Schlüsselwort back verwendet",
+        "Für Rückgaben wird das Schlüsselwort return verwendet",
+        "Der Rückgabetyp für die Rückgabe wird vor dem Methodenbezeichner angegeben. Dies kann ein Datentyp oder void sein"
+      ],
+      correct: [3, 4],
+      explanation: "Java-Methoden geben Werte mit return zurück. Der Rückgabetyp steht vor dem Methodennamen und kann ein Datentyp oder void sein."
     }
   ]
 };

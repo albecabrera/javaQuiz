@@ -113,7 +113,18 @@ test('chapter 1.6 links its methods coding task after the lesson', () => {
   const finalStep = buttons.at(-1);
   assert.match(finalStep.className, /step-code/);
   finalStep.click();
-  assert.match(ui.get('#slide-exercise-options').children[0].href, /exercise=1\.6\.2&returnChapter=chapter7&returnSlide=0/);
+  assert.match(ui.get('#slide-exercise-options').children[0].href, /exercise=1\.6\.3&returnChapter=chapter7&returnSlide=0/);
+});
+
+test('chapter 1.7 presents its return-value question', () => {
+  const ui = presentation('chapter7');
+  const questions = ui.get('#slide-overview-list').querySelectorAll('.slide-thumbnail').filter((button) => button.className.includes('step-question'));
+  assert.equal(questions.length, 1);
+  questions[0].click();
+  assert.equal(ui.get('#slide-exercise-options').children.length, 5);
+  for (const index of [3, 4]) ui.get('#slide-exercise-options').children[index].click();
+  ui.get('#slide-exercise-options').children.at(-1).click();
+  assert.match(ui.get('#slide-exercise-feedback').textContent, /^✓ Richtig/);
 });
 
 test('a completed final code step returns to the next chapter', () => {
