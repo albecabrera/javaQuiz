@@ -299,6 +299,10 @@ const chapterTaskMap = {
   chapter5: [
     { id: "1.5.1", label: "1.5.1 · Java Einstieg Attribute Aufgabe 1" },
     { id: "1.5.2", label: "1.5.2 · Java Einstieg Attribute Aufgabe 2" }
+  ],
+  chapter6: [
+    { id: "1.6.1", label: "1.6.1 · Java Einstieg Methoden Aufgabe 1" },
+    { id: "1.6.2", label: "1.6.2 · Java Einstieg Methoden Aufgabe 2" }
   ]
 };
 

@@ -107,6 +107,15 @@ test('chapter 1.5 presents its attribute coding task after the questions', () =>
   assert.match(ui.get('#slide-exercise-options').children[0].href, /exercise=1\.5\.2&returnChapter=chapter6&returnSlide=0/);
 });
 
+test('chapter 1.6 links its methods coding task after the lesson', () => {
+  const ui = presentation('chapter6');
+  const buttons = ui.get('#slide-overview-list').querySelectorAll('.slide-thumbnail');
+  const finalStep = buttons.at(-1);
+  assert.match(finalStep.className, /step-code/);
+  finalStep.click();
+  assert.match(ui.get('#slide-exercise-options').children[0].href, /exercise=1\.6\.2&returnChapter=chapter7&returnSlide=0/);
+});
+
 test('a completed final code step returns to the next chapter', () => {
   const ui = presentation('chapter4');
   const buttons = ui.get('#slide-overview-list').querySelectorAll('.slide-thumbnail');

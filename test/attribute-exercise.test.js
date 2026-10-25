@@ -24,3 +24,18 @@ test('chapter 1.5.2 assigns and prints a Robot task attribute', () => {
   assert.match(exercise.starter, /String task;/);
   assert.match(exercise.solution, /String task;[\s\S]*Robot robin = new Robot\(\);[\s\S]*robin\.task = "Paco finden\.";[\s\S]*System\.out\.println\(robin\.task\);/);
 });
+
+test('chapter 1.6.1 creates alex and calls sayWelcome', () => {
+  const exercise = exercises.find(({ id }) => id === '1.6.1');
+  assert.ok(exercise);
+  assert.equal(exercise.expectedOutput, 'Hallo!\nWillkommen!');
+  assert.match(exercise.starter, /Robot robin = new Robot\(\);[\s\S]*robin\.sayHello\(\);/);
+  assert.match(exercise.solution, /Robot alex = new Robot\(\);[\s\S]*alex\.sayWelcome\(\);/);
+});
+
+test('chapter 1.6.2 creates ReadingRobot and calls giveTask in order', () => {
+  const exercise = exercises.find(({ id }) => id === '1.6.2');
+  assert.ok(exercise);
+  assert.equal(exercise.expectedOutput, 'Hallo!\nIch kann helfen.\nIch kann lesen.');
+  assert.match(exercise.solution, /class ReadingRobot[\s\S]*void giveTask\(\)[\s\S]*Robot robin = new Robot\(\);[\s\S]*robin\.giveTask\(\);[\s\S]*ReadingRobot bookworm = new ReadingRobot\(\);[\s\S]*bookworm\.giveTask\(\);/);
+});

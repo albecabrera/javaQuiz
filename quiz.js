@@ -333,5 +333,100 @@ const codeExercises = [
     /* DEIN_CODE_HIER */
   }
 }`
+  },
+  {
+    id: "1.6.1",
+    chapter: "chapter6",
+    title: "Java Einstieg Methoden Aufgabe 1",
+    prompt: "Erstelle in main zusätzlich zum vorhandenen Objekt robin ein weiteres Robot-Objekt alex und rufe auf alex die Methode sayWelcome() auf.",
+    expectedOutput: "Hallo!\nWillkommen!",
+    solution: `public class Main {
+  static class Robot {
+    void sayHello() {
+      System.out.println("Hallo!");
+    }
+
+    void sayWelcome() {
+      System.out.println("Willkommen!");
+    }
   }
-];
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    robin.sayHello();
+    Robot alex = new Robot();
+    alex.sayWelcome();
+  }
+}`,
+    hints: [
+      "Erzeuge mit Robot alex = new Robot() ein zweites Objekt.",
+      "Rufe die Methode über die Referenz alex auf.",
+      "Die vollständige Anweisung lautet alex.sayWelcome();."
+    ],
+    starter: `public class Main {
+  static class Robot {
+    void sayHello() {
+      System.out.println("Hallo!");
+    }
+
+    void sayWelcome() {
+      System.out.println("Willkommen!");
+    }
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    robin.sayHello();
+    // Erzeuge alex und rufe alex.sayWelcome() auf.
+    /* DEIN_CODE_HIER */
+  }
+}`
+  },
+  {
+    id: "1.6.2",
+    chapter: "chapter6",
+    title: "Java Einstieg Methoden Aufgabe 2",
+    prompt: "Erstelle die Klasse ReadingRobot mit der Methode giveTask(), die \"Ich kann lesen.\" ausgibt. Erzeuge in main ein ReadingRobot-Objekt namens bookworm. Rufe zuerst robin.giveTask() und danach bookworm.giveTask() auf.",
+    expectedOutput: "Hallo!\nIch kann helfen.\nIch kann lesen.",
+    solution: `public class Main {
+  static class Robot {
+    void giveTask() {
+      System.out.println("Ich kann helfen.");
+    }
+  }
+
+  static class ReadingRobot {
+    void giveTask() {
+      System.out.println("Ich kann lesen.");
+    }
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    robin.giveTask();
+    ReadingRobot bookworm = new ReadingRobot();
+    bookworm.giveTask();
+  }
+}`,
+    hints: [
+      "Definiere ReadingRobot mit einer void-Methode giveTask().",
+      "Gib in ReadingRobot.giveTask() den Text \"Ich kann lesen.\" aus.",
+      "Achte auf die Reihenfolge: robin.giveTask() vor bookworm.giveTask()."
+    ],
+    starter: `public class Main {
+  static class Robot {
+    void giveTask() {
+      System.out.println("Ich kann helfen.");
+    }
+  }
+
+  // Erstelle hier die Klasse ReadingRobot mit giveTask().
+  /* DEIN_CODE_HIER */
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    // Erzeuge bookworm und rufe zuerst robin.giveTask(), dann bookworm.giveTask() auf.
+  }
+}`
+  }
+ ];
