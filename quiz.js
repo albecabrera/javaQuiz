@@ -1119,7 +1119,7 @@ const codeExercises = [
   },
   {
     id: "1.8.1",
-    chapter: "chapter7",
+    chapter: "chapter8",
     title: "Java Einstieg Woche1 Lerninhalte Spielwiese",
     prompt: "Vervollständige ExampleClass mit den vorgegebenen Attributen und der Methode combinedAttributes(). Setze in main example.text auf \"Das Ergebnis lautet: \" und gib example.combinedAttributes() aus.",
     expectedOutput: "Alle Attribute dieses Objekts hintereinander: Das Ergebnis lautet: 21.2",

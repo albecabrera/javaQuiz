@@ -10,7 +10,7 @@ curriculum.chapters.chapter4.slides = curriculum.chapters.chapter3.slides.splice
 const codeExercises = vm.runInNewContext(`${fs.readFileSync(require.resolve('../quiz.js'), 'utf8')}\ncodeExercises`);
 
 test('each chapter puts its lessons before one copy of each question and coding task', () => {
-  for (const chapterId of ['chapter1', 'chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6', 'chapter7']) {
+  for (const chapterId of ['chapter1', 'chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6', 'chapter7', 'chapter8']) {
     const steps = curriculum.chapterSteps(chapterId);
     const kinds = Array.from(steps, (step) => step.kind);
     const lessonCount = kinds.filter((kind) => kind === 'lesson').length;
@@ -36,6 +36,12 @@ test('the landing page and presentation use viewport width at phone, tablet and 
   assert.match(css, /@media \(min-width: 561px\) and \(max-width: 1024px\)/);
   assert.match(css, /@media \(max-width: 560px\)[^\n]*\.presentation-layout \{ grid-template-columns: 1fr; \}/);
   assert.match(css, /\.slide-overview \{ order: -1; max-height: 35svh; overflow-y: auto; \}/);
+});
+
+test('chapter 1.8 is its own module 1 chapter', () => {
+  assert.equal(curriculum.chapters.chapter8.label, 'Kapitel 1.8 · Lerninhalte Spielwiese');
+  assert.deepEqual(Array.from(curriculum.chapterTaskMap.chapter8, (task) => task.id), ['1.8.1']);
+  assert.equal(codeExercises.find((exercise) => exercise.id === '1.8.1').chapter, 'chapter8');
 });
 
 test('the final step of a chapter comes before the next chapter', () => {

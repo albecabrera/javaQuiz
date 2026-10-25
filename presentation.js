@@ -95,6 +95,13 @@ const chapters = {
       { kicker: "KAPITEL 1.7 · ERGEBNIS", title: "Rückgabewerte verbinden Methoden.", text: "Du kannst Rückgabetypen wählen, return verwenden, Ergebnisse speichern und Methoden miteinander verbinden. Jetzt bist du bereit für eigene Methoden.", code: '<span class="concept-highlight attention-target">getName()</span> <span class="attention-arrow">→</span> <span class="concept-highlight attention-target">sayHi()</span> <span class="attention-arrow">→</span> <span class="concept-highlight attention-target">System.out.println()</span>\n\n<span class="attention-arrow">→ Hi, ich bin Robin</span>', character: "robot", caption: "Methoden mit Rückgabewerten verstanden!" }
     ]
   },
+  chapter8: {
+    label: "Kapitel 1.8 · Lerninhalte Spielwiese",
+    slides: [
+      { kicker: "KAPITEL 1.8 · START", title: "Lerninhalte Spielwiese", text: "Hier kannst du bekannte Konstrukte frei kombinieren. In dieser Aufgabe verbindest du Attribute, eine Methode mit Rückgabewert und eine Ausgabe.", code: '<span class="concept-highlight attention-target">ExampleClass</span>\n  Attribute + Methode\n\n<span class="attention-arrow">↳ Ausprobieren hilft beim Lernen.</span>', character: "robot", caption: "Jetzt wird gespielt und kombiniert." },
+      { kicker: "KAPITEL 1.8 · ERGEBNIS", title: "Attribute gemeinsam ausgeben", text: "Du hast Attribute in einer Methode verkettet und das Ergebnis in main() ausgegeben. Im Editor kannst du die Werte jetzt selbst verändern.", code: '<span class="concept-highlight attention-target">example.text</span> + <span class="concept-highlight attention-target">zahl</span> + <span class="concept-highlight attention-target">fließkommazahl</span>\n\n<span class="attention-arrow">→ Bereit zum Ausprobieren!</span>', character: "detective", caption: "Deine Spielwiese ist startklar." }
+    ]
+  },
   chapter21: {
     label: "Kapitel 2.1 · Parameter",
     slides: [
@@ -309,7 +316,9 @@ const chapterTaskMap = {
     { id: "1.7.1", label: "1.7.1 · Java Einstieg Rückgabewerte Aufgabe 1" },
     { id: "1.7.2", label: "1.7.2 · Java Einstieg Rückgabewerte Aufgabe 2" },
     { id: "1.7.3", label: "1.7.3 · Java Einstieg Recap 1 Aufgabe 1" },
-    { id: "bonus1.1", label: "Bonus · Java Einstieg Woche1 Bonus4" },
+    { id: "bonus1.1", label: "Bonus · Java Einstieg Woche1 Bonus4" }
+  ],
+  chapter8: [
     { id: "1.8.1", label: "1.8 · Java Einstieg Woche1 Lerninhalte Spielwiese" }
   ]
 };
@@ -622,7 +631,7 @@ const themeIcon = $("#theme-icon");
 const chapterButtons = [...document.querySelectorAll(".chapter-button")];
 chapters.chapter4.slides = chapters.chapter3.slides.splice(9);
 const moduleGroups = [
-  { id: "module1", label: "Modul 1 · Java-Grundlagen", description: "Kapitel 1.1 bis 1.7 · Vom ersten Programm bis zu Methoden mit Rückgabewerten", chapterIds: ["chapter1", "chapter2", "chapter3", "chapter4", "chapter5", "chapter6", "chapter7"] },
+  { id: "module1", label: "Modul 1 · Java-Grundlagen", description: "Kapitel 1.1 bis 1.8 · Vom ersten Programm bis zur Lerninhalte-Spielwiese", chapterIds: ["chapter1", "chapter2", "chapter3", "chapter4", "chapter5", "chapter6", "chapter7", "chapter8"] },
   { id: "module2", label: "Modul 2 · Methoden erweitern", description: "Kapitel 2.1 bis 2.6 · Parameter, Boolean, Verzweigungen, Schleifen, Arrays und Konstruktoren", chapterIds: ["chapter21", "chapter22", "chapter23", "chapter24", "chapter25", "chapter26"] },
   { id: "module3", label: "Modul 3 · Vererbung und Sichtbarkeit", description: "Kapitel 3.1 bis 3.8 · Vererbung, Sichtbarkeiten, Kapselung, Override, Overload, abstrakte Klassen, Polymorphie sowie this und super", chapterIds: ["chapter31", "chapter32", "chapter33", "chapter34", "chapter35", "chapter36", "chapter37", "chapter38"] }
 ];
