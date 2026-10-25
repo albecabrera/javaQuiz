@@ -36,6 +36,8 @@ test('the landing page and presentation use viewport width at phone, tablet and 
   assert.match(css, /@media \(min-width: 561px\) and \(max-width: 1024px\)/);
   assert.match(css, /@media \(max-width: 560px\)[^\n]*\.presentation-layout \{ grid-template-columns: 1fr; \}/);
   assert.match(css, /\.slide-overview \{ order: -1; max-height: 35svh; overflow-y: auto; \}/);
+  assert.match(css, /\.chapter-nav \{[^}]*overflow-x: auto/);
+  assert.match(css, /\.chapter-button \{[^}]*min-width: clamp\(/);
 });
 
 test('chapter 1.8 is its own module 1 chapter', () => {

@@ -31,7 +31,7 @@ function element() {
 function presentation(chapter = 'chapter1', slide = 0) {
   const nodes = new Map();
   const get = (selector) => nodes.get(selector) || (nodes.set(selector, element()), nodes.get(selector));
-  const chapterButtons = Array.from({ length: 7 }, (_, index) => Object.assign(element(), { dataset: { chapter: `chapter${index + 1}`, module: 'module1' } }));
+  const chapterButtons = Array.from({ length: 8 }, (_, index) => Object.assign(element(), { dataset: { chapter: `chapter${index + 1}`, module: 'module1' } }));
   const moduleButtons = ['module1', 'module2', 'module3'].map((name) => Object.assign(element(), { dataset: { module: name } }));
   const document = {
     querySelector: get, createElement: element,
@@ -114,6 +114,12 @@ test('chapter 1.6 links its methods coding task after the lesson', () => {
   assert.match(finalStep.className, /step-code/);
   finalStep.click();
   assert.match(ui.get('#slide-exercise-options').children[0].href, /exercise=1\.6\.3&returnChapter=chapter7&returnSlide=0/);
+});
+
+test('chapter 1.8 is reachable from the chapter navigation', () => {
+  const ui = presentation('chapter8');
+  assert.equal(ui.chapterButtons.find((button) => button.dataset.chapter === 'chapter8').hidden, false);
+  assert.equal(ui.chapterButtons.find((button) => button.dataset.chapter === 'chapter8').classList.contains('is-active'), true);
 });
 
 test('chapter 1.7 presents its return-value question', () => {
