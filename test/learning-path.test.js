@@ -40,6 +40,17 @@ test('the landing page and presentation use viewport width at phone, tablet and 
   assert.match(css, /\.chapter-button \{[^}]*min-width: clamp\(/);
 });
 
+test('course navigation names modules and chapters and keeps reading controls legible', () => {
+  const html = fs.readFileSync(require.resolve('../presentation.html'), 'utf8');
+  const css = fs.readFileSync(require.resolve('../styles.css'), 'utf8');
+  assert.match(html, /class="chapter-nav"[^>]*aria-describedby="chapter-nav-hint"/);
+  assert.match(html, /id="chapter-nav-hint"[^>]*>Kapitel seitlich scrollen/);
+  assert.match(html, /data-chapter="chapter8"[^>]*>Kapitel 1\.8/);
+  assert.match(css, /body\s*\{[^}]*font-family:\s*[^;]*sans-serif/);
+  assert.match(css, /\.chapter-button\s*\{[^}]*font-size:\s*1rem/);
+  assert.match(css, /\.module-button\s*\{[^}]*font-size:\s*1rem/);
+});
+
 test('chapter 1.8 is its own module 1 chapter', () => {
   assert.equal(curriculum.chapters.chapter8.label, 'Kapitel 1.8 · Lerninhalte Spielwiese');
   assert.deepEqual(Array.from(curriculum.chapterTaskMap.chapter8, (task) => task.id), ['1.8.1']);
