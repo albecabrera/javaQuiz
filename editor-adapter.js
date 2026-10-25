@@ -157,6 +157,10 @@
     }).catch((error) => { notify({ state: "unavailable", text: `Editor local nicht verfügbar: ${error.message}` }); return null; });
   }
 
+  function setValue(value) {
+    if (model) model.setValue(value);
+  }
+
   global.addEventListener?.("resize", () => adaptEditorTypography());
-  global.devquizEditor = { mount, getValue: () => model ? model.getValue() : null, focus: () => editor && editor.focus(), setReadOnly: (value) => editor && editor.updateOptions({ readOnly: value }), selectRange, adaptTypography: adaptEditorTypography, isMounted: () => Boolean(editor) };
+  global.devquizEditor = { mount, getValue: () => model ? model.getValue() : null, setValue, focus: () => editor && editor.focus(), setReadOnly: (value) => editor && editor.updateOptions({ readOnly: value }), selectRange, adaptTypography: adaptEditorTypography, isMounted: () => Boolean(editor) };
 })(window);

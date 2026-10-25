@@ -112,7 +112,6 @@ h1 { margin: 0 0 .7rem; color: #f1f5fb; font-family: Inter, ui-sans-serif, syste
 .app-shell.devquiz-started .panel-return { display: inline-flex; }
 
 .terminal-window { position: relative; overflow: hidden; border: 1px solid var(--terminal-border); border-radius: .85rem; background: var(--terminal); box-shadow: var(--shadow), 0 0 0 1px rgba(255,255,255,.025); }
-
 .terminal-window::after { position: absolute; inset: 0; z-index: 0; background: url("assets/presentation/java-transparent.png") right 2.5rem top 4rem / min(10rem, 18vw) auto no-repeat; content: ""; opacity: .1; filter: drop-shadow(-10px 8px 14px rgba(0, 0, 0, .3)); pointer-events: none; }
 .terminal-window > * { position: relative; z-index: 1; }
 .devquiz-light .terminal-window::after { opacity: .08; filter: none; }
@@ -173,12 +172,22 @@ h1 { margin: 0 0 .7rem; color: #f1f5fb; font-family: Inter, ui-sans-serif, syste
 
 .terminal-prompt { display: flex; align-items: flex-start; min-height: 1.7rem; margin-top: .9rem; }.terminal-prompt[data-awaiting-next="true"] .prompt-label, .terminal-prompt[data-awaiting-next="true"] .terminal-input { opacity: 0; pointer-events: none; }.terminal-prompt:has(.terminal-editor:not([hidden])), .terminal-prompt:has(#monaco-editor:not([hidden])) { display: block; }.terminal-prompt:has(.terminal-editor:not([hidden])) .prompt-label, .terminal-prompt:has(#monaco-editor:not([hidden])) .prompt-label { display: block; }
 .prompt-label { flex: 0 0 auto; color: #f0f5fc; font-size: clamp(.76rem, 1.6vw, .9rem); }.prompt-user { color: var(--green); }.prompt-at, .prompt-path { color: var(--muted); }.prompt-host { color: var(--cyan); }.terminal-input { min-width: 2px; flex: 1; margin-left: .55rem; border: 0; outline: 0; background: transparent; color: #f0f5fc; caret-color: var(--green); font-size: clamp(.76rem, 1.6vw, .9rem); }.terminal-input::placeholder { color: #4e5e75; }.terminal-input:disabled { opacity: .5; }.monaco-editor { width: 100%; height: 290px; margin: .5rem 0 0; border: 1px solid var(--terminal-border); border-radius: .35rem; overflow: hidden; }.editor-status { margin: .4rem 0 0; color: var(--muted); font-size: .68rem; }.editor-status.ready { color: var(--green); }.editor-status.unavailable { color: var(--yellow); }.terminal-editor { width: 100%; min-height: 190px; margin: .5rem 0 0; padding: .75rem; border: 1px solid var(--terminal-border); border-radius: .35rem; outline: 0; resize: vertical; background: #0a0f17; color: #dce6f4; font: inherit; font-size: clamp(.76rem, 1.6vw, .9rem); line-height: 1.5; tab-size: 2; }.terminal-editor:focus { border-color: var(--green-dim); box-shadow: 0 0 0 1px var(--green-dim); }
+.guided-exercise { margin-top: .85rem; padding: .9rem 1rem; border: 1px solid var(--cyan); border-radius: .4rem; background: rgba(105, 216, 255, .06); }
+.guided-exercise h3 { margin: 0 0 .35rem; color: var(--cyan); font-size: .9em; }
+.guided-instruction { margin: 0 0 .65rem; color: var(--text); font-size: .88em; }
+.guided-steps { display: flex; flex-wrap: wrap; gap: .5rem; }
+.guided-step { padding: .5rem .7rem; border: 1px solid var(--cyan); border-radius: .35rem; background: rgba(105, 216, 255, .08); color: var(--cyan); cursor: pointer; }
+.guided-step:hover, .guided-step:focus-visible { background: rgba(105, 216, 255, .18); }
+.guided-step:disabled { border-color: var(--muted); color: var(--muted); cursor: not-allowed; opacity: .65; }
 .exercise-actions { display: flex; justify-content: flex-end; gap: .55rem; margin-top: .65rem; }
-.hint-button { padding: .55rem .85rem; border: 1px solid var(--yellow); border-radius: .35rem; background: rgba(249, 216, 120, .08); color: var(--yellow); cursor: pointer; }
-.hint-button:hover, .hint-button:focus-visible { background: rgba(249, 216, 120, .18); }
-.hint-button[hidden] { display: none; }
+.hint-button, .solution-button { padding: .55rem .85rem; border: 1px solid var(--yellow); border-radius: .35rem; background: rgba(249, 216, 120, .08); color: var(--yellow); cursor: pointer; }
+.hint-button:hover, .hint-button:focus-visible, .solution-button:hover, .solution-button:focus-visible { background: rgba(249, 216, 120, .18); }
+.hint-button[hidden], .solution-button[hidden] { display: none; }
+.solution-button { border-color: var(--cyan); background: rgba(105, 216, 255, .08); color: var(--cyan); }
+.exercise-solution { margin-top: .85rem; padding: .85rem 1rem; border: 1px solid var(--cyan); border-left-width: 3px; border-radius: .35rem; background: rgba(105, 216, 255, .06); }
+.exercise-solution h3 { margin: 0 0 .55rem; color: var(--cyan); font-size: .8em; }
+.exercise-solution pre { max-height: 28rem; margin: 0; overflow: auto; color: var(--text); font: inherit; font-size: .88em; line-height: 1.55; white-space: pre-wrap; }
 .app-shell.devquiz-started .exercise-hint-line { padding: .7rem 1rem; border-left: 3px solid var(--yellow); border-radius: .35rem; background: rgba(249, 216, 120, .08); }
-
 
 .results-evaluation-line { margin-top: 1.2rem; }
 .results-evaluation { padding: clamp(1rem, 2.5vw, 1.5rem); border: 1px solid var(--terminal-border); border-radius: .7rem; background: linear-gradient(145deg, rgba(19, 32, 49, .8), rgba(14, 19, 29, .94)); }

@@ -64,11 +64,17 @@
             <textarea id="terminal-editor" class="terminal-editor" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Gib deinen Java-Code ein" hidden></textarea>
             <div id="monaco-editor" class="monaco-editor" aria-label="Java-Code-Editor" hidden></div>
             <p id="editor-status" class="editor-status" role="status">Lokaler Editor · JDT LS wird geprüft…</p>
+            <section id="guided-exercise" class="guided-exercise" hidden aria-label="Geführte Programmieraufgabe"></section>
             <div class="exercise-actions">
               <button id="exercise-hint" class="hint-button" type="button" hidden>Hinweis anzeigen</button>
+              <button id="exercise-solution-button" class="solution-button" type="button" hidden aria-expanded="false" aria-controls="exercise-solution">Lösung anzeigen</button>
               <button id="next-exercise" class="next-button" type="button" hidden>Weiter →</button>
               <button id="skip-exercise" class="skip-button" type="button" hidden>Übung überspringen →</button>
             </div>
+            <section id="exercise-solution" class="exercise-solution" hidden aria-label="Vollständige Lösung">
+              <h3>Vollständige Lösung</h3>
+              <pre id="exercise-solution-code" tabindex="0"></pre>
+            </section>
           </form>
         </div>
 

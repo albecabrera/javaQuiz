@@ -46,3 +46,19 @@ test('chapter 1.6.3 stores age and prints it through sayAge', () => {
   assert.equal(exercise.expectedOutput, 'Ich bin 1 Jahr alt.');
   assert.match(exercise.solution, /int age = 1;[\s\S]*void sayAge\(\)[\s\S]*Ich bin .* age .* Jahr alt\.[\s\S]*Robot robin = new Robot\(\);[\s\S]*robin\.sayAge\(\);/);
 });
+
+test('chapter 1.7.1 provides a clickable return-value path', () => {
+  const exercise = exercises.find(({ id }) => id === '1.7.1');
+  assert.ok(exercise);
+  assert.equal(exercise.expectedOutput, 'Ich infiltriere die Geheimbasis und suche Paco.\nIch lese codierte Nachrichten.');
+  assert.equal(exercise.guidedSteps.length, 4);
+  assert.match(exercise.guidedSteps.at(-1).code, /System\.out\.println\(robin\.getTask\(\)\);[\s\S]*System\.out\.println\(alex\.getTask\(\)\);/);
+});
+
+test('chapter 1.7.2 provides a clickable age return path', () => {
+  const exercise = exercises.find(({ id }) => id === '1.7.2');
+  assert.ok(exercise);
+  assert.equal(exercise.expectedOutput, 'Robin ist 5 Jahre alt.');
+  assert.equal(exercise.guidedSteps.length, 3);
+  assert.match(exercise.guidedSteps.at(-1).code, /int getAge\(\)[\s\S]*return age;[\s\S]*Robin ist .* robin\.getAge\(\)/);
+});

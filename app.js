@@ -7,11 +7,15 @@ const terminalInput = document.querySelector("#terminal-input");
 const terminalEditor = document.querySelector("#terminal-editor");
 const monacoContainer = document.querySelector("#monaco-editor");
 const editorStatus = document.querySelector("#editor-status");
+const guidedExercise = document.querySelector("#guided-exercise");
 const skipExerciseButton = document.querySelector("#skip-exercise");
 const nextExerciseButton = document.querySelector("#next-exercise");
 const modeToggle = document.querySelector("#mode-toggle");
 const editorPresentationToggle = document.querySelector("#editor-presentation-toggle");
 const exerciseHintButton = document.querySelector("#exercise-hint");
+const exerciseSolutionButton = document.querySelector("#exercise-solution-button");
+const exerciseSolution = document.querySelector("#exercise-solution");
+const exerciseSolutionCode = document.querySelector("#exercise-solution-code");
 const progressBar = document.querySelector("#progress-bar");
 const scoreBadge = document.querySelector("#score-badge");
 const terminalProgress = document.querySelector("#terminal-progress");
@@ -68,7 +72,6 @@ if (typeof window.addEventListener === "function") {
 
 const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[character]));
-
 const practiceLinks = {
   "main() als Startpunkt": { label: "Übung 1.1.1 öffnen", href: "index.html?exercise=1.1.1#devquiz-terminal" },
   "Datentypen und Variablen": { label: "Übung 1.3.1 öffnen", href: "index.html?exercise=1.3.1#devquiz-terminal" },
@@ -131,10 +134,64 @@ function adaptFallbackEditor(value) {
   terminalEditor.style.minHeight = `${Math.min(680, Math.max(230, lineCount * fontSize * 1.55 + 36))}px`;
 }
 
+function resetExerciseSolution() {
+  exerciseSolution.hidden = true;
+  exerciseSolutionCode.textContent = "";
+  exerciseSolutionButton.textContent = "Lösung anzeigen";
+  exerciseSolutionButton.setAttribute("aria-expanded", "false");
+}
+
+function setEditorContent(source) {
+  terminalEditor.value = source;
+  adaptFallbackEditor(source);
+  if (typeof window.devquizEditor?.setValue === "function") window.devquizEditor.setValue(source);
+  terminalEditor.selectionStart = source.length;
+  terminalEditor.selectionEnd = source.length;
+  if (window.devquizEditor?.isMounted?.()) window.devquizEditor.focus();
+  else terminalEditor.focus();
+}
+
+function renderGuidedExercise(exercise) {
+  guidedExercise.innerHTML = "";
+  guidedExercise.hidden = !exercise.guidedSteps?.length;
+  if (guidedExercise.hidden) return;
+
+  const heading = document.createElement("h3");
+  heading.textContent = "Gemeinsam lösen";
+  guidedExercise.appendChild(heading);
+  const instruction = document.createElement("p");
+  instruction.className = "guided-instruction";
+  guidedExercise.appendChild(instruction);
+  const steps = document.createElement("div");
+  steps.className = "guided-steps";
+  guidedExercise.appendChild(steps);
+  let completed = -1;
+  exercise.guidedSteps.forEach((step, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "guided-step";
+    button.textContent = step.label;
+    button.disabled = index > 0;
+    button.addEventListener("click", () => {
+      if (index > completed + 1) return;
+      setEditorContent(step.code);
+      completed = index;
+      instruction.textContent = step.instruction;
+      button.disabled = true;
+      const next = steps.children[index + 1];
+      if (next) next.disabled = false;
+      if (!next) instruction.textContent = `${step.instruction} Klicke jetzt auf Ausführen.`;
+    });
+    steps.appendChild(button);
+  });
+  instruction.textContent = exercise.guidedSteps[0].instruction;
+}
+
 function printExercise() {
   terminalOutput.innerHTML = "";
   hintIndex = 0;
   exerciseHintButton.hidden = true;
+  resetExerciseSolution();
   const exercise = codeExercises[currentExerciseIndex];
   terminalMode.textContent = "CODE-MODUS";
   editorPresentationToggle.hidden = false;
@@ -145,6 +202,7 @@ function printExercise() {
   addLine("Enter führt aus · Umschalt + Enter fügt eine Zeile ein · nach Fehlern gibt es schrittweise Hinweise · Cmd + P führt den Editor vor.", "terminal-line muted-line");
   terminalEditor.value = exercise.starter;
   adaptFallbackEditor(terminalEditor.value);
+  renderGuidedExercise(exercise);
   const answerMarker = "/* DEIN_CODE_HIER */";
   const answerPosition = exercise.starter.indexOf(answerMarker);
   if (typeof window.devquizEditor?.mount === "function") {
@@ -173,6 +231,7 @@ function printExercise() {
   terminalEditor.disabled = false;
   skipExerciseButton.hidden = false;
   skipExerciseButton.disabled = false;
+  exerciseSolutionButton.hidden = false;
   if (window.devquizEditor?.isMounted?.()) window.devquizEditor.focus();
   else terminalEditor.focus();
 }
@@ -402,6 +461,8 @@ function switchToQuiz() {
   setEditorPresentation(false);
   editorPresentationToggle.hidden = true;
   exerciseHintButton.hidden = true;
+  resetExerciseSolution();
+  exerciseSolutionButton.hidden = true;
   mode = "quiz";
   modeToggle.textContent = "Code-Übungen";
   skipExerciseButton.hidden = true;
@@ -466,6 +527,8 @@ function restartQuiz() {
   appShell?.classList?.remove("is-editor-presenting");
   editorPresentationToggle.hidden = true;
   exerciseHintButton.hidden = true;
+  resetExerciseSolution();
+  exerciseSolutionButton.hidden = true;
   terminalOutput.innerHTML = "";
   terminalEditor.hidden = true;
   terminalEditor.disabled = true;
@@ -507,6 +570,15 @@ modeToggle.addEventListener("click", () => {
   if (mode === "code") switchToQuiz(); else switchToCode();
 });
 
+exerciseSolutionButton.addEventListener("click", () => {
+  if (mode !== "code" || exerciseSolutionButton.hidden) return;
+  const visible = exerciseSolution.hidden;
+  exerciseSolution.hidden = !visible;
+  exerciseSolutionCode.textContent = visible ? codeExercises[currentExerciseIndex].solution : "";
+  exerciseSolutionButton.textContent = visible ? "Lösung ausblenden" : "Lösung anzeigen";
+  exerciseSolutionButton.setAttribute("aria-expanded", String(visible));
+  if (visible) exerciseSolutionCode.focus();
+});
 exerciseHintButton.addEventListener("click", () => {
   if (mode !== "code" || codeRunning || exerciseHintButton.hidden) return;
   const hints = codeExercises[currentExerciseIndex].hints || [];

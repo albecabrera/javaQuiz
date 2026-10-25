@@ -262,3 +262,17 @@ test('final results include topic graph and actionable learning links', () => {
   assert.match(html, /presentation\.html\?chapter=chapter3/);
   assert.match(html, /index\.html\?exercise=1\.1\.1/);
 });
+
+test('guided exercises expose the next code step through clicks', () => {
+  const ui = terminal(async () => { throw new Error('unexpected fetch'); });
+  vm.runInContext('currentExerciseIndex = codeExercises.findIndex((exercise) => exercise.id === "1.7.1"); printExercise()', ui.context);
+  const guided = ui.get('#guided-exercise');
+  assert.equal(guided.hidden, false);
+  assert.equal(guided.children.length, 3);
+  const steps = guided.children[2];
+  assert.equal(steps.children.length, 4);
+  steps.children[0].listeners.click();
+  assert.match(ui.get('#terminal-editor').value, /class ReadingRobot/);
+  assert.equal(steps.children[0].disabled, true);
+  assert.equal(steps.children[1].disabled, false);
+});

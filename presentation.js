@@ -304,6 +304,10 @@ const chapterTaskMap = {
     { id: "1.6.1", label: "1.6.1 · Java Einstieg Methoden Aufgabe 1" },
     { id: "1.6.2", label: "1.6.2 · Java Einstieg Methoden Aufgabe 2" },
     { id: "1.6.3", label: "1.6.3 · Java Einstieg Methoden Aufgabe 3" }
+  ],
+  chapter7: [
+    { id: "1.7.1", label: "1.7.1 · Java Einstieg Rückgabewerte Aufgabe 1" },
+    { id: "1.7.2", label: "1.7.2 · Java Einstieg Rückgabewerte Aufgabe 2" }
   ]
 };
 

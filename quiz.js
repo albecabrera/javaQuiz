@@ -465,5 +465,254 @@ const codeExercises = [
     // Erzeuge Robot robin und rufe robin.sayAge() auf.
   }
 }`
+  },
+  {
+    id: "1.7.1",
+    chapter: "chapter7",
+    title: "Java Einstieg Rückgabewerte Aufgabe 1",
+    prompt: "Implementiere getTask() mit dem Rückgabetyp String für Robot und ReadingRobot. Beide Methoden sollen ihr task-Attribut zurückgeben. Erzeuge in main robin und alex und gib beide Rückgabewerte aus.",
+    expectedOutput: "Ich infiltriere die Geheimbasis und suche Paco.\nIch lese codierte Nachrichten.",
+    solution: `public class Main {
+  static class Robot {
+    String task = "Ich infiltriere die Geheimbasis und suche Paco.";
+
+    String getTask() {
+      return task;
+    }
   }
- ];
+
+  static class ReadingRobot {
+    String task = "Ich lese codierte Nachrichten.";
+
+    String getTask() {
+      return task;
+    }
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    ReadingRobot alex = new ReadingRobot();
+    System.out.println(robin.getTask());
+    System.out.println(alex.getTask());
+  }
+}`,
+    hints: [
+      "Eine Methode mit String-Rückgabe beginnt mit String getTask().",
+      "Gib das Attribut mit return task; zurück.",
+      "In Story werden beide Methoden mit System.out.println(...) aufgerufen."
+    ],
+    starter: `public class Main {
+  static class Robot {
+    String task = "Ich infiltriere die Geheimbasis und suche Paco.";
+    // Ergänze String getTask() und gib task zurück.
+    /* DEIN_CODE_HIER */
+  }
+
+  static class ReadingRobot {
+    String task = "Ich lese codierte Nachrichten.";
+    // Ergänze auch hier String getTask().
+  }
+
+  public static void main(String[] args) {
+    // Erzeuge robin und alex und gib beide Rückgabewerte aus.
+  }
+}`,
+    guidedSteps: [
+      {
+        label: "1 · ReadingRobot anlegen",
+        instruction: "Klicke, um ReadingRobot mit task und getTask() einzufügen.",
+        code: `public class Main {
+  static class Robot {
+    String task = "Ich infiltriere die Geheimbasis und suche Paco.";
+
+    String getTask() {
+      return task;
+    }
+  }
+
+  static class ReadingRobot {
+    String task = "Ich lese codierte Nachrichten.";
+
+    String getTask() {
+      return task;
+    }
+  }
+
+  public static void main(String[] args) {
+    // Klicke den nächsten Schritt, um Story zu ergänzen.
+  }
+}`
+      },
+      {
+        label: "2 · Robot getTask() prüfen",
+        instruction: "Klicke, um den Rückgabewert von Robot sichtbar zu machen.",
+        code: `public class Main {
+  static class Robot {
+    String task = "Ich infiltriere die Geheimbasis und suche Paco.";
+
+    String getTask() {
+      return task;
+    }
+  }
+
+  static class ReadingRobot {
+    String task = "Ich lese codierte Nachrichten.";
+
+    String getTask() {
+      return task;
+    }
+  }
+
+  public static void main(String[] args) {
+    // Die beiden Objekte werden im nächsten Schritt erzeugt.
+  }
+}`
+      },
+      {
+        label: "3 · Objekte erzeugen",
+        instruction: "Klicke, um robin und alex in main zu erzeugen.",
+        code: `public class Main {
+  static class Robot {
+    String task = "Ich infiltriere die Geheimbasis und suche Paco.";
+
+    String getTask() {
+      return task;
+    }
+  }
+
+  static class ReadingRobot {
+    String task = "Ich lese codierte Nachrichten.";
+
+    String getTask() {
+      return task;
+    }
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    ReadingRobot alex = new ReadingRobot();
+  }
+}`
+      },
+      {
+        label: "4 · Rückgaben ausgeben",
+        instruction: "Klicke, um beide Rückgabewerte auszugeben. Danach kannst du den Code ausführen.",
+        code: `public class Main {
+  static class Robot {
+    String task = "Ich infiltriere die Geheimbasis und suche Paco.";
+
+    String getTask() {
+      return task;
+    }
+  }
+
+  static class ReadingRobot {
+    String task = "Ich lese codierte Nachrichten.";
+
+    String getTask() {
+      return task;
+    }
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    ReadingRobot alex = new ReadingRobot();
+    System.out.println(robin.getTask());
+    System.out.println(alex.getTask());
+  }
+}`
+      }
+    ]
+  },
+  {
+    id: "1.7.2",
+    chapter: "chapter7",
+    title: "Java Einstieg Rückgabewerte Aufgabe 2",
+    prompt: "Ergänze in der Klasse Robot die Methode getAge(). Sie soll den ganzzahligen Wert 5 zurückgeben. Erstelle dafür ein int-Attribut age.",
+    expectedOutput: "Robin ist 5 Jahre alt.",
+    solution: `public class Main {
+  static class Robot {
+    int age = 5;
+
+    int getAge() {
+      return age;
+    }
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    System.out.println("Robin ist " + robin.getAge() + " Jahre alt.");
+  }
+}`,
+    hints: [
+      "Definiere int age = 5 in Robot.",
+      "Der Rückgabetyp von getAge() ist int; gib age mit return zurück.",
+      "Verkette robin.getAge() mit dem Ausgabetext."
+    ],
+    starter: `public class Main {
+  static class Robot {
+    // Lege int age = 5 an und implementiere int getAge().
+    /* DEIN_CODE_HIER */
+  }
+
+  public static void main(String[] args) {
+    // Erzeuge robin und gib sein Alter im vorgegebenen Format aus.
+  }
+}`,
+    guidedSteps: [
+      {
+        label: "1 · Alter speichern",
+        instruction: "Klicke, um age = 5 und getAge() einzufügen.",
+        code: `public class Main {
+  static class Robot {
+    int age = 5;
+
+    int getAge() {
+      return age;
+    }
+  }
+
+  public static void main(String[] args) {
+    // Erzeuge robin und ergänze danach die Ausgabe.
+  }
+}`
+      },
+      {
+        label: "2 · robin erzeugen",
+        instruction: "Klicke, um das Robot-Objekt robin zu erzeugen.",
+        code: `public class Main {
+  static class Robot {
+    int age = 5;
+
+    int getAge() {
+      return age;
+    }
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+  }
+}`
+      },
+      {
+        label: "3 · Alter ausgeben",
+        instruction: "Klicke, um robin.getAge() im geforderten Satz auszugeben. Danach kannst du ausführen.",
+        code: `public class Main {
+  static class Robot {
+    int age = 5;
+
+    int getAge() {
+      return age;
+    }
+  }
+
+  public static void main(String[] args) {
+    Robot robin = new Robot();
+    System.out.println("Robin ist " + robin.getAge() + " Jahre alt.");
+  }
+}`
+      }
+    ]
+  }
+
+];
