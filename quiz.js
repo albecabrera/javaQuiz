@@ -1116,6 +1116,112 @@ const codeExercises = [
 }`
       }
     ]
+  },
+  {
+    id: "1.8.1",
+    chapter: "chapter7",
+    title: "Java Einstieg Woche1 Lerninhalte Spielwiese",
+    prompt: "Vervollständige ExampleClass mit den vorgegebenen Attributen und der Methode combinedAttributes(). Setze in main example.text auf \"Das Ergebnis lautet: \" und gib example.combinedAttributes() aus.",
+    expectedOutput: "Alle Attribute dieses Objekts hintereinander: Das Ergebnis lautet: 21.2",
+    solution: `public class Main {
+  static class ExampleClass {
+    int zahl = 2;
+    double fließkommazahl = 1.2;
+    String text;
+
+    String combinedAttributes() {
+      return "Alle Attribute dieses Objekts hintereinander: " + text + zahl + fließkommazahl;
+    }
+  }
+
+  public static void main(String[] args) {
+    ExampleClass example = new ExampleClass();
+    example.text = "Das Ergebnis lautet: ";
+    System.out.println(example.combinedAttributes());
+  }
+}`,
+    hints: [
+      "Lege zahl, fließkommazahl und text in ExampleClass an.",
+      "combinedAttributes() gibt den festen Text und danach text, zahl und fließkommazahl zurück.",
+      "Setze example.text und gib example.combinedAttributes() aus."
+    ],
+    starter: `public class Main {
+  static class ExampleClass {
+    int zahl = 2;
+    double fließkommazahl = 1.2;
+    String text;
+    // Ergänze combinedAttributes().
+    /* DEIN_CODE_HIER */
+  }
+
+  public static void main(String[] args) {
+    ExampleClass example = new ExampleClass();
+    // Setze text und gib combinedAttributes() aus.
+  }
+}`,
+    guidedSteps: [
+      {
+        label: "1 · ExampleClass vervollständigen",
+        instruction: "Klicke, um combinedAttributes() mit der Attributverkettung einzufügen.",
+        code: `public class Main {
+  static class ExampleClass {
+    int zahl = 2;
+    double fließkommazahl = 1.2;
+    String text;
+
+    String combinedAttributes() {
+      return "Alle Attribute dieses Objekts hintereinander: " + text + zahl + fließkommazahl;
+    }
+  }
+
+  public static void main(String[] args) {
+    ExampleClass example = new ExampleClass();
+    // Setze text im nächsten Schritt.
+  }
+}`
+      },
+      {
+        label: "2 · Text setzen",
+        instruction: "Klicke, um den Text in example zu speichern.",
+        code: `public class Main {
+  static class ExampleClass {
+    int zahl = 2;
+    double fließkommazahl = 1.2;
+    String text;
+
+    String combinedAttributes() {
+      return "Alle Attribute dieses Objekts hintereinander: " + text + zahl + fließkommazahl;
+    }
+  }
+
+  public static void main(String[] args) {
+    ExampleClass example = new ExampleClass();
+    example.text = "Das Ergebnis lautet: ";
+  }
+}`
+      },
+      {
+        label: "3 · Ergebnis ausgeben",
+        instruction: "Klicke, um combinedAttributes() auszugeben. Danach kannst du ausführen.",
+        code: `public class Main {
+  static class ExampleClass {
+    int zahl = 2;
+    double fließkommazahl = 1.2;
+    String text;
+
+    String combinedAttributes() {
+      return "Alle Attribute dieses Objekts hintereinander: " + text + zahl + fließkommazahl;
+    }
+  }
+
+  public static void main(String[] args) {
+    ExampleClass example = new ExampleClass();
+    example.text = "Das Ergebnis lautet: ";
+    System.out.println(example.combinedAttributes());
+  }
+}`
+      }
+    ]
   }
 
 ];

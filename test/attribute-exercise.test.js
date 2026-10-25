@@ -78,3 +78,11 @@ test('module 1 bonus provides a clickable multi-robot return path', () => {
   assert.equal(exercise.guidedSteps.length, 4);
   assert.match(exercise.guidedSteps.at(-1).code, /carl\.getName\(\)[\s\S]*putzi\.getTask\(\)/);
 });
+
+test('chapter 1.8 provides a clickable attribute-combination path', () => {
+  const exercise = exercises.find(({ id }) => id === '1.8.1');
+  assert.ok(exercise);
+  assert.equal(exercise.expectedOutput, 'Alle Attribute dieses Objekts hintereinander: Das Ergebnis lautet: 21.2');
+  assert.equal(exercise.guidedSteps.length, 3);
+  assert.match(exercise.guidedSteps.at(-1).code, /example\.text = "Das Ergebnis lautet: ";[\s\S]*combinedAttributes\(\)/);
+});
