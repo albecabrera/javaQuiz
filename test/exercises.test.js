@@ -5,8 +5,8 @@ const vm = require('node:vm');
 
 const codeExercises = vm.runInNewContext(`${fs.readFileSync(require.resolve('../quiz.js'), 'utf8')}\ncodeExercises`);
 
-test('Chapter 1.1 programming exercises match the presentation tasks', () => {
-  assert.equal(codeExercises.length, 12)
+test('programming exercises match the presentation tasks', () => {
+  assert.equal(codeExercises.length, 18);
   assert.deepEqual(Array.from(codeExercises, (exercise) => exercise.title), [
     'Mehrzeiliger Kommentar und Ausgabe', 'Eine Ausgabe mit println', 'Output Aufgabe 1', 'Syntaxfehler finden', 'Java Einstieg Variablen Aufgabe 1', 'Java Einstieg Variablen Aufgabe 2', 'Java Einstieg Variablen Aufgabe 3', 'Java Einstieg Variablen Aufgabe 4', 'Java Einstieg Attribute Aufgabe 1', 'Java Einstieg Attribute Aufgabe 2', 'Java Einstieg Methoden Aufgabe 1', 'Java Einstieg Methoden Aufgabe 2', 'Java Einstieg Methoden Aufgabe 3', 'Java Einstieg Rückgabewerte Aufgabe 1', 'Java Einstieg Rückgabewerte Aufgabe 2', 'Java Einstieg Recap 1 Aufgabe 1', 'Java Einstieg Woche1 Bonus4', 'Java Einstieg Woche1 Lerninhalte Spielwiese'
   ]);

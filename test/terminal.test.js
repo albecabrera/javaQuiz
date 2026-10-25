@@ -23,6 +23,7 @@ function terminal(fetch, fastBoot = false) {
       value: '', textContent: '', hidden: false, disabled: false,
       set innerHTML(value) { this._html = value; if (!value) this.children = []; },
       get innerHTML() { return this._html || ''; },
+      setAttribute(name, value) { this[name] = value; },
       style: {}, scrollHeight: 0, selectionStart: 0, selectionEnd: 0,
       children: [], listeners,
       appendChild(child) { this.children.push(child); },
@@ -131,7 +132,7 @@ test('skip advances to the next answer and focuses its selected marker', () => {
   vm.runInContext('switchToCode()', ui.context);
   assert.equal(ui.get('#terminal-progress').textContent, '01 / 18');
   ui.get('#skip-exercise').listeners.click();
-  assert.equal(ui.get('#terminal-progress').textContent, '02 / 10');
+  assert.equal(ui.get('#terminal-progress').textContent, '02 / 18');
   const editor = ui.get('#terminal-editor');
   assert.equal(ui.document.activeElement, editor);
   assert.equal(editor.value.slice(editor.selectionStart, editor.selectionEnd), '/* DEIN_CODE_HIER */');
@@ -149,7 +150,7 @@ test('successful execution keeps the result visible until Weiter is clicked', as
   assert.equal(nextButton.hidden, false);
   assert.match(ui.get('#terminal-output').children.map((child) => child.innerHTML).join(' '), /Hallo, ich bin Duke/);
   nextButton.listeners.click();
-  assert.equal(ui.get('#terminal-progress').textContent, '02 / 10');
+  assert.equal(ui.get('#terminal-progress').textContent, '02 / 18');
   assert.equal(nextButton.hidden, true);
 });
 
